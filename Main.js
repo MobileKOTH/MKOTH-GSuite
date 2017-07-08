@@ -11,7 +11,6 @@ var ManagementLogSheet = DataSheetApp.getSheetByName("Management Logs");
 function Main()
 {
     Logger.log("Hello MKOTH");
-    var player = new Player();
 }
 
 function onOpen()
