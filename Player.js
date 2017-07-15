@@ -16,8 +16,8 @@ var ClassRank =
     //The max cap rank possition of a class
     KING: 1,
     NOBLEMAN: 10,
-    SQUIRE: 20,
-    VASSAL: 40
+    SQUIRE: 30,
+    VASSAL: 50
   }
 
 var Playerlist = GetPlayerList();

@@ -192,7 +192,7 @@ function Series(date, type, player1, player2, player1wins, player2wins, draws)
       }
       else
       {
-        return 10;
+        return 7;
       }
     }
 
@@ -208,7 +208,7 @@ function Series(date, type, player1, player2, player1wins, player2wins, draws)
     {
       if (this.GetLoser().class == PlayerClass.NOBLEMAN)
       {
-        return 10;
+        return 7;
       }
       if (this.GetLoser().class == PlayerClass.SQUIRE)
       {
