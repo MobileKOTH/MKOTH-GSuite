@@ -1,5 +1,5 @@
 //Player ENUMS
-var PlayerClass = function()
+var PlayerClass = function ()
 {
   //Player class constants
   this.KING = "King";
@@ -11,13 +11,13 @@ var PlayerClass = function()
   this.KNIGHT = " (Knight)";
 }
 
-var ClassRank = function()
+var ClassRank = function ()
 {
   //The max cap rank possition of a class
   this.KING = 1;
-  this.NOBLEMAN = 20;
-  this.SQUIRE = 30;
-  this.VASSAL = 55;
+  this.NOBLEMAN = 10;
+  this.SQUIRE = 20;
+  this.VASSAL = 40;
 }
 
 var Playerlist = GetPlayerList();
@@ -40,7 +40,7 @@ function Player(name)
   this.isKnight = false;
   this.isRemoved = false;
   this.isHoliday = false;
-  
+
   /**
   * Add the new player into the player statatistic sheet and ranking
   * @returns {Boolean} if the addition is valid
@@ -75,7 +75,7 @@ function Player(name)
     PlayerStatsSheet.appendRow([this.name, this.joinDate, this.class, this.wins, this.loss, this.draws, this.GetWinrate(), this.GetGamesCount()]);
     RankingSheet.appendRow([this.rank, this.name, this.class, this.points]);
 
-    ManagementLogSheet.appendRow([new Date(), "Add Player", this.name]);
+    ManagementLogSheet.appendRow([new Date(), "Add Player", JSON.stringify(this)]);
     return true;
   }
 
@@ -117,7 +117,7 @@ function Player(name)
       realrank++;
     }
     RankingSheet.getRange(2, 1, ranklistarr.length, RankingSheet.getLastColumn()).setValues(ranklistarr);
-    ManagementLogSheet.appendRow([new Date(), "Remove Player", "Name: " + this.name + ", Rank: " + this.rank + ", Points: " + this.points]);
+    ManagementLogSheet.appendRow([new Date(), "Remove Player", JSON.stringify(this)]);
     return true;
   }
 
@@ -177,7 +177,7 @@ function Player(name)
     }
     if (this.rank > ClassRank.VASSAL)
     {
-      this.class = PlayerClass.VASSAL;
+      this.class = PlayerClass.PEASANT;
     }
     this.UpdateClassRank();
   }
@@ -235,36 +235,43 @@ function checkPlayerRepeat(name)
 function GetPlayerList()
 {
   var playerlist = [];
-  PlayerStatsSheet.sort(2);
-  RankingSheet.sort(1);
-  var playerDB = PlayerStatsSheet.getRange(2, 1, PlayerStatsSheet.getLastRow() - 1, 11).getValues();
-  var playerRankDB = RankingSheet.getRange(2, 1, RankingSheet.getLastRow() - 1, 4).getValues();
-  for (i = 0; i < playerDB.length; i++)
+  try 
   {
-    playerlist.push(new Player(playerDB[i][0]));
-    playerlist[i].joinDate = playerDB[i][1];
-    playerlist[i].class = playerDB[i][2];
-    if (playerlist[i].class.indexOf("Knight") > -1)
+    PlayerStatsSheet.sort(2);
+    RankingSheet.sort(1);
+    var playerDB = PlayerStatsSheet.getRange(2, 1, PlayerStatsSheet.getLastRow() - 1, 11).getValues();
+    var playerRankDB = RankingSheet.getRange(2, 1, RankingSheet.getLastRow() - 1, 4).getValues();
+    for (i = 0; i < playerDB.length; i++)
     {
-      playerlist[i].class = playerlist[i].class.replace(" (Knight)", "");
-      playerlist[i].isKnight = true;
-    }
-    playerlist[i].wins = playerDB[i][3];
-    playerlist[i].loss = playerDB[i][4];
-    playerlist[i].draws = playerDB[i][5];
-    if (playerDB[i][10] == "Removed")
-    {
-      playerlist[i].isRemoved = true;
-      playerlist[i].rank = 0;
-    }
-    for (j = 0; j < playerRankDB.length; j++)
-    {
-      if (playerRankDB[j][1] == playerlist[i].name)
+      playerlist.push(new Player(playerDB[i][0]));
+      playerlist[i].joinDate = playerDB[i][1];
+      playerlist[i].class = playerDB[i][2];
+      if (playerlist[i].class.indexOf("Knight") > -1)
       {
-        playerlist[i].rank = playerRankDB[j][0];
-        playerlist[i].points = playerRankDB[j][3];
+        playerlist[i].class = playerlist[i].class.replace(" (Knight)", "");
+        playerlist[i].isKnight = true;
+      }
+      playerlist[i].wins = playerDB[i][3];
+      playerlist[i].loss = playerDB[i][4];
+      playerlist[i].draws = playerDB[i][5];
+      if (playerDB[i][10] == "Removed")
+      {
+        playerlist[i].isRemoved = true;
+        playerlist[i].rank = 0;
+      }
+      for (j = 0; j < playerRankDB.length; j++)
+      {
+        if (playerRankDB[j][1] == playerlist[i].name)
+        {
+          playerlist[i].rank = playerRankDB[j][0];
+          playerlist[i].points = playerRankDB[j][3];
+        }
       }
     }
+  } 
+  catch (error) 
+  {
+    RunError(error);
   }
   return playerlist;
 }

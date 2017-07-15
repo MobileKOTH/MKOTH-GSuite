@@ -197,11 +197,11 @@ function Series(date, type, player1, player2, player1wins, player2wins, draws)
       }
     }
 
-    if (this.type == SeriesType.KING)
+    if (this.type == SeriesType.KNIGHT)
     {
       if (this.player2.isKnight == true && this.GetWinner() == this.player2)
       {
-        return 4;
+        return 5;
       }
     }
 
@@ -234,15 +234,19 @@ function Series(date, type, player1, player2, player1wins, player2wins, draws)
 
   this.GetCostPoint = function ()
   {
-    if (this.type == SeriesType.KING && this.player1.rank > 10)
+    // if (this.type == SeriesType.KING && this.player1.rank > 10)
+    // {
+    //   return 30;
+    // }
+    if (this.type == SeriesType.KING)
     {
-      return 30;
+      return 15;
     }
     if (this.type == SeriesType.KNIGHT)
     {
       return 18;
     }
-    if (this.type == SeriesType.POINT)
+    if (this.type == SeriesType.RANKED)
     {
       if (this.player1.class == PlayerClass.VASSAL && this.player2.class == PlayerClass.SQUIRE)
       {

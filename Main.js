@@ -22,12 +22,10 @@ function onOpen()
         "Remove Player", 
         "Submit Series", 
         "Rebuild Ranking", 
-        "Promote Knight"]
-        );
+        "Promote Knight"]);
     var run = SpreadsheetApp.newDataValidation().requireValueInList([
         "Not Run", 
-        "Run"
-        ]);
+        "Run"]);
     actions.setAllowInvalid(false);
     run.setAllowInvalid(false);
     ManagementLogSheet.getRange("B1").setDataValidation(actions);

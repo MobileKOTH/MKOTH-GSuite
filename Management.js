@@ -146,6 +146,6 @@ function PromoteKnight(input)
   var player = new Player(input);
   player.LoadPlayerData();
   player.PromoteKnight();
-  ManagementLogSheet.appendRow([new Date(), "Knight Promotion", player.name]);
+  ManagementLogSheet.appendRow([new Date(), "Knight Promotion", JSON.stringify(player)]);
   return true;
 }
