@@ -11,3 +11,4 @@ Basic series validations are in place but series submissions are still to be man
 - Rank cleansing
 - More validation
 - Fake series revert overhaul
+- ELO
