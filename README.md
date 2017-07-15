@@ -1,15 +1,15 @@
 # Mobile King of the Hill Series Processor
 ## Introduction
-The Google App Script code for series processing and automation.
-Loosely based on the old MKOTH code posted by Gim Leng aka saynotobloons aka icewarm2 on Pastebin:  
+The Google App Script code for series processing and automation.  
+This is loosely based on the old MKOTH code posted by Gim Leng aka saynotobloons aka icewarm2 on Pastebin:  
 https://pastebin.com/4x2nQfhm  
 https://pastebin.com/nwkaAsQm  
 https://pastebin.com/wMefPGjn
 
 ## Prerequisite
-Basic series validations are in place but series submissions are still to be manually verified for authenticity, as anyone can use the form to submit.
+For series submissions, basic validations are in place but these submissions are still recommended to be manually verified for authenticity, as anyone can use the submission form to create a malicious submission.
 
-The code is also designed to able to revert fake series submissions.
+The code is however also designed to be able to revert any fake series submissions.
 
 ## TODO
 - More JSON logging style to ease event parsing in the future
