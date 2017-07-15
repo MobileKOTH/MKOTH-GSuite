@@ -1,4 +1,4 @@
-# MobileKingoftheHillSeriesProcessor
+# Mobile King of the Hill Series Processor
 Google App Script codes for series processing and automation
 
 ## Prerequisite
