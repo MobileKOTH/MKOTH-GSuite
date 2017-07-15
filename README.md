@@ -2,7 +2,9 @@
 Google App Script codes for series processing and automation.
 Loosely based on the old MKOTH code posted by Gim Leng aka saynotobloons aka icewarm2 on Pastebin:
 https://pastebin.com/4x2nQfhm
+
 https://pastebin.com/nwkaAsQm
+
 https://pastebin.com/wMefPGjn
 
 ## Prerequisite
