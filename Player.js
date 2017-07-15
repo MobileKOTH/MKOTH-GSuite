@@ -1,24 +1,24 @@
 //Player ENUMS
-var PlayerClass = function ()
-{
-  //Player class constants
-  this.KING = "King";
-  this.KNIGHT = "Knight";
-  this.NOBLEMAN = "Nobleman";
-  this.SQUIRE = "Squire";
-  this.VASSAL = "Vassal";
-  this.PEASANT = "Peasant";
-  this.KNIGHT = " (Knight)";
-}
+var PlayerClass =
+  {
+    //Player class constants
+    KING: "King",
+    KNIGHT: "Knight",
+    NOBLEMAN: "Nobleman",
+    SQUIRE: "Squire",
+    VASSAL: "Vassal",
+    PEASANT: "Peasant",
+    KNIGHT: " (Knight)"
+  }
 
-var ClassRank = function ()
-{
-  //The max cap rank possition of a class
-  this.KING = 1;
-  this.NOBLEMAN = 10;
-  this.SQUIRE = 20;
-  this.VASSAL = 40;
-}
+var ClassRank =
+  {
+    //The max cap rank possition of a class
+    KING: 1,
+    NOBLEMAN: 10,
+    SQUIRE: 20,
+    VASSAL: 40
+  }
 
 var Playerlist = GetPlayerList();
 
@@ -62,11 +62,11 @@ function Player(name)
     {
       this.class = PlayerClass.KING;
     }
-    if (RankingSheet.getLastRow() > Squirerank)
+    if (RankingSheet.getLastRow() > ClassRank.SQUIRE)
     {
       this.class = PlayerClass.VASSAL;
     }
-    if (RankingSheet.getLastRow() > Vassalrank)
+    if (RankingSheet.getLastRow() > ClassRank.VASSAL)
     {
       this.class = PlayerClass.PEASANT;
     }
@@ -136,7 +136,18 @@ function Player(name)
     {
       if (Playerlist[i].name.toLowerCase() == this.name.toLowerCase())
       {
-        this = Playerlist[i];
+        var loadedplayer = Playerlist[i];
+        this.name = loadedplayer.name;
+        this.joinDate = loadedplayer.joinDate;
+        this.class = loadedplayer.class;
+        this.rank = loadedplayer.rank;
+        this.points = loadedplayer.points;
+        this.wins = loadedplayer.wins;
+        this.loss = loadedplayer.loss;
+        this.draws = loadedplayer.draws;
+        this.isKnight = loadedplayer.isKnight;
+        this.isRemoved = loadedplayer.isRemoved;
+        this.isHoliday = loadedplayer.isHoliday;
       }
     }
   }
@@ -268,7 +279,7 @@ function GetPlayerList()
         }
       }
     }
-  } 
+  }
   catch (error) 
   {
     RunError(error);

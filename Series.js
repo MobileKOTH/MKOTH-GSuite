@@ -1,14 +1,13 @@
 //Series ENUMS
-var SeriesType = function ()
+var SeriesType = 
 {
-  this.RANKED = "Ranked";
-  this.KNIGHT = "Knight";
-  this.KING = "King";
-  this.POINT = "Point";
+  RANKED : "Ranked",
+  KNIGHT : "Knight",
+  KING : "King",
+  POINT : "Point"
 }
 
 var invalidReason = "";
-var series = new Series();
 
 function Series(date, type, player1, player2, player1wins, player2wins, draws)
 {

@@ -1,10 +1,10 @@
 //Action ENUMS
-var Action = new function ()
+var Action = 
 {
-  this.SELECT = "Select Action";
-  this.ADDPLAYER = "Add Player";
-  this.REMOVEPLAYER = "Remove Player";
-  this.SUBMITSERIES = "Submit Series";
+  SELECT : "Select Action",
+  ADDPLAYER : "Add Player",
+  REMOVEPLAYER : "Remove Player",
+  SUBMITSERIES : "Submit Series"
 }
 
 
