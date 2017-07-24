@@ -83,6 +83,7 @@ function Player(name)
   {
     this.LoadPlayerData();
     this.isRemoved = true;
+    ManagementLogSheet.appendRow([new Date(), "Remove Player", JSON.stringify(this)]);
     this.rank = 0;
     this.Update();
     for (row = 1; row < PlayerStatsSheet.getLastRow(); row++)
@@ -118,7 +119,6 @@ function Player(name)
       realrank++;
     }
     RankingSheet.getRange(2, 1, ranklistarr.length, RankingSheet.getLastColumn()).setValues(ranklistarr);
-    ManagementLogSheet.appendRow([new Date(), "Remove Player", JSON.stringify(this)]);
     return true;
   }
 
