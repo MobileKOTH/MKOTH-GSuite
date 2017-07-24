@@ -1,11 +1,11 @@
 //Action ENUMS
-var Action = 
-{
-  SELECT : "Select Action",
-  ADDPLAYER : "Add Player",
-  REMOVEPLAYER : "Remove Player",
-  SUBMITSERIES : "Submit Series"
-}
+var Action =
+  {
+    SELECT: "Select Action",
+    ADDPLAYER: "Add Player",
+    REMOVEPLAYER: "Remove Player",
+    SUBMITSERIES: "Submit Series"
+  }
 
 
 
@@ -73,6 +73,7 @@ function RunSuccess(action, runtime)
   ManagementLogSheet.getRange("B4").setFontColor("#00ff00");
   ManagementLogSheet.getRange("A2:B3").clearContent();
   FullLogSheet.appendRow([new Date(), "onClickRun", action + " Time used: " + ((new Date()).getTime() - runtime) / 1000 + "secs"]);
+  ManagementLogSheet.sort(1, false);
 }
 
 function AddPlayer(input)

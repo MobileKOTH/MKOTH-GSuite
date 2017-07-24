@@ -1,11 +1,11 @@
 //Series ENUMS
-var SeriesType = 
-{
-  RANKED : "Ranked",
-  KNIGHT : "Knight",
-  KING : "King",
-  POINT : "Point"
-}
+var SeriesType =
+  {
+    RANKED: "Ranked",
+    KNIGHT: "Knight",
+    KING: "King",
+    POINT: "Point"
+  }
 
 var invalidReason = "";
 
@@ -225,7 +225,7 @@ function Series(date, type, player1, player2, player1wins, player2wins, draws)
     }
     if (this.type == SeriesType.POINT)
     {
-      return 1;
+      return 2;
     }
 
     return 0;

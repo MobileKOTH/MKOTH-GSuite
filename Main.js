@@ -17,14 +17,13 @@ function onOpen()
 {
     //Create Management Control Panel
     var actions = SpreadsheetApp.newDataValidation().requireValueInList([
-        "Select Action", 
-        "Add Player", 
-        "Remove Player", 
-        "Submit Series", 
-        "Rebuild Ranking", 
+        "Select Action",
+        "Add Player",
+        "Remove Player",
+        "Submit Series",
         "Promote Knight"]);
     var run = SpreadsheetApp.newDataValidation().requireValueInList([
-        "Not Run", 
+        "Not Run",
         "Run"]);
     actions.setAllowInvalid(false);
     run.setAllowInvalid(false);
@@ -37,10 +36,9 @@ function onOpen()
 function onEdit(e)
 {
     //debug logging for non management edits
-    var eString = e.source.getSheetName() + " " + e.range.getA1Notation() + " " + e.user.getEmail() + Logger.log(e).getLog();
     if (e.source.getSheetName() != "Management Logs")
     {
-        FullLogSheet.appendRow([new Date(), "onEdit", String(eString)]);
+        FullLogSheet.appendRow([new Date(), "onEdit", e.source.getSheetName() + JSON.stringify(e.range.getA1Notation()) + JSON.stringify(e.user) + JSON.stringify(e)]);
     }
 
     //Management Actions UI
@@ -103,3 +101,5 @@ function GetPlayerValidationList()
     var players = SpreadsheetApp.newDataValidation().requireValueInList(playernames);
     ManagementLogSheet.getRange("B2").setDataValidation(players);
 }
+
+FullLogSheet.sort(1, false);

@@ -81,6 +81,7 @@ function Player(name)
 
   this.Remove = function ()
   {
+    this.LoadPlayerData();
     this.isRemoved = true;
     this.rank = 0;
     this.Update();
@@ -248,7 +249,7 @@ function GetPlayerList()
   var playerlist = [];
   try 
   {
-    PlayerStatsSheet.sort(2);
+    PlayerStatsSheet.sort(1);
     RankingSheet.sort(1);
     var playerDB = PlayerStatsSheet.getRange(2, 1, PlayerStatsSheet.getLastRow() - 1, 11).getValues();
     var playerRankDB = RankingSheet.getRange(2, 1, RankingSheet.getLastRow() - 1, 4).getValues();
