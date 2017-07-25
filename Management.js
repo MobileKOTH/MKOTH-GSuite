@@ -4,10 +4,16 @@ var Action =
     SELECT: "Select Action",
     ADDPLAYER: "Add Player",
     REMOVEPLAYER: "Remove Player",
-    SUBMITSERIES: "Submit Series"
+    SUBMITSERIES: "Submit Series",
+    SWAPSERIESPLAYERS: "Swap Series Players",
+    PROMOTEKNIGHT: "Promote Knight"
   }
 
-
+var Comfirmation =
+  {
+    YES: "Run",
+    NO: "NOT Run"
+  }
 
 var runtime = new Date().getTime();
 
@@ -23,35 +29,39 @@ function onClickRun()
   var success = false;
 
   //Parsing actions
-  if (action == "Select Action")
+  switch (action)
   {
-    RunError("No Action Selected!");
-  }
-  if (action == "Add Player")
-  {
-    success = AddPlayer(input1);
-  }
-  if (action == "Remove Player")
-  {
-    success = RemovePlayer(input1);
-  }
-  if (action == "Submit Series")
-  {
-    success = SubmitSeries();
-  }
-  if (action == "Promote Knight")
-  {
-    success = PromoteKnight(input1);
-  }
-  if (action == "Rebuild Ranking")
-  {
-    success = RebuildRank();
+    case Action.SELECT:
+      RunError("No Action Selected!");
+      break;
+
+    case Action.ADDPLAYER:
+      success = AddPlayer(input1);
+      break;
+
+    case Action.REMOVEPLAYER:
+      success = RemovePlayer(input1);
+      break;
+
+    case Action.SUBMITSERIES:
+      success = SubmitSeries();
+      break;
+
+    case Action.SWAPSERIESPLAYERS:
+      success = SwapSeriesPlayers();
+      break;
+
+    case Action.PROMOTEKNIGHT:
+      success = PromoteKnight(input1);
+      break;
   }
 
   if (success)
   {
     RunSuccess(action, runtime);
   }
+  FullLogSheet.sort(1, false);
+  ManagementLogSheet.sort(1, false);
 }
 
 function RunError(message)
@@ -73,7 +83,6 @@ function RunSuccess(action, runtime)
   ManagementLogSheet.getRange("B4").setFontColor("#00ff00");
   ManagementLogSheet.getRange("A2:B3").clearContent();
   FullLogSheet.appendRow([new Date(), "onClickRun", action + " Time used: " + ((new Date()).getTime() - runtime) / 1000 + "secs"]);
-  ManagementLogSheet.sort(1, false);
 }
 
 function AddPlayer(input)
@@ -140,6 +149,14 @@ function SubmitSeries()
     ManagementLogSheet.appendRow([new Date(), "Series Submission", "Series Processed: " + processed + " Time used: " + ((new Date()).getTime() - runtime) / 1000 + "secs"]);
     return success;
   }
+}
+
+function SwapSeriesPlayers()
+{
+  var seriesData = ValidationSheet.getRange(2, 3, 1, 4).getValues()[0];
+  ValidationSheet.getRange(2, 3, 1, 4).setValues([[seriesData[1], seriesData[0], seriesData[3], seriesData[2]]]);
+  ManagementLogSheet.appendRow([new Date(), "Swap Series Players", JSON.stringify({ "From": seriesData, "To": [seriesData[1], seriesData[0], seriesData[3], seriesData[2]] })]);
+  return true;
 }
 
 function PromoteKnight(input)

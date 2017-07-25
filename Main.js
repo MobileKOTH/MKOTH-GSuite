@@ -17,26 +17,27 @@ function onOpen()
 {
     //Create Management Control Panel
     var actions = SpreadsheetApp.newDataValidation().requireValueInList([
-        "Select Action",
-        "Add Player",
-        "Remove Player",
-        "Submit Series",
-        "Promote Knight"]);
+        Action.SELECT,
+        Action.ADDPLAYER,
+        Action.REMOVEPLAYER,
+        Action.SUBMITSERIES,
+        Action.SWAPSERIESPLAYERS,
+        Action.PROMOTEKNIGHT]);
     var run = SpreadsheetApp.newDataValidation().requireValueInList([
-        "Not Run",
-        "Run"]);
+        Comfirmation.NO,
+        Comfirmation.YES]);
     actions.setAllowInvalid(false);
     run.setAllowInvalid(false);
     ManagementLogSheet.getRange("B1").setDataValidation(actions);
     ManagementLogSheet.getRange("B1").setValue(actions[0]);
     ManagementLogSheet.getRange("B5").setDataValidation(run);
-    ManagementLogSheet.getRange("B5").setValue("Not Run");
+    ManagementLogSheet.getRange("B5").setValue(Comfirmation.NO);
 }
 
 function onEdit(e)
 {
     //debug logging for non management edits
-    if (e.source.getSheetName() != "Management Logs")
+    if (e.source.getSheetName() != ManagementLogSheet.getName())
     {
         FullLogSheet.appendRow([new Date(), "onEdit", e.source.getSheetName() + JSON.stringify(e.range.getA1Notation()) + JSON.stringify(e.user) + JSON.stringify(e)]);
     }
@@ -51,35 +52,44 @@ function onEdit(e)
             var action = ManagementLogSheet.getRange("B1").getValue();
 
             //Parsing action names and create action hint
-            if (action == ("Add Player"))
+            switch (action)
             {
-                ManagementLogSheet.getRange("A2").setValue("Enter player Name: ");
-            }
-            if (action == ("Remove Player"))
-            {
-                GetPlayerValidationList();
-            }
-            if (action == ("Submit Series"))
-            {
-                ManagementLogSheet.getRange("A2").setValue("Submit all series ");
-                ManagementLogSheet.getRange("A3").setValue("from validation sheet.");
-                ManagementLogSheet.getRange("B2:B3").clearContent();
-            }
-            if (action == ("Promote Knight"))
-            {
-                GetPlayerValidationList();
-            }
-            if (action == ("Rebuild Ranking"))
-            {
-                ManagementLogSheet.getRange("A2").setValue("Recalculate ranking");
-                ManagementLogSheet.getRange("A3").setValue("takes very long time");
+                case Action.ADDPLAYER:
+                    ManagementLogSheet.getRange("A2").setValue("Enter player Name: ");
+                    break;
+
+                case Action.REMOVEPLAYER:
+                    ManagementLogSheet.getRange("A2").setValue("Choose player Name: ");
+                    GetPlayerValidationList();
+                    break;
+
+                case Action.SUBMITSERIES:
+                    ManagementLogSheet.getRange("A2").setValue("Submit all series ");
+                    ManagementLogSheet.getRange("A3").setValue("from validation sheet.");
+                    ManagementLogSheet.getRange("B2:B3").clearContent();
+                    break;
+
+                case Action.SWAPSERIESPLAYERS:
+                    ManagementLogSheet.getRange("A2").setValue("Fix wrong player orders");
+                    ManagementLogSheet.getRange("A3").setValue("from validation sheet.");
+                    ManagementLogSheet.getRange("B2:B3").clearContent();
+                    break;
+
+                case Action.PROMOTEKNIGHT:
+                    ManagementLogSheet.getRange("A2").setValue("Choose player Name: ");
+                    GetPlayerValidationList();
+                    break;
+
+                default:
+                    ManagementLogSheet.getRange("A2").setValue("No Action Selected");
+                    break;
             }
         }
 
         //Run Management Action
         if (e.range.getA1Notation() == "B5")
         {
-            if (ManagementLogSheet.getRange("B5").getValue() == ("Run"))
+            if (ManagementLogSheet.getRange("B5").getValue() == Comfirmation.YES)
             {
                 onClickRun();
             }
@@ -97,9 +107,6 @@ function GetPlayerValidationList()
     {
         playernames.push(playerlist[i].name);
     }
-    ManagementLogSheet.getRange("A2").setValue("Choose player Name: ");
     var players = SpreadsheetApp.newDataValidation().requireValueInList(playernames);
     ManagementLogSheet.getRange("B2").setDataValidation(players);
 }
-
-FullLogSheet.sort(1, false);
