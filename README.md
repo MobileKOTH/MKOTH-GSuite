@@ -13,6 +13,7 @@ The code is however also designed to be able to revert any fake series submissio
 
 ## TODO
 - More JSON logging style to ease event parsing in the future
+- Pass by reference for all player objects
 - Holiday mode
 - Point Adjustment
 - Rank cleansing
