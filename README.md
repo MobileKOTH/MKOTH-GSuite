@@ -1,6 +1,6 @@
 # Mobile King of the Hill Series Processor
 ## Introduction
-The Google App Script code for series processing and automation.  
+The Google App Script project for MKOTH series processing and automation.  
 This is loosely based on the old MKOTH code posted by Gim Leng aka saynotobloons aka icewarm2 on Pastebin:  
 https://pastebin.com/4x2nQfhm  
 https://pastebin.com/nwkaAsQm  
