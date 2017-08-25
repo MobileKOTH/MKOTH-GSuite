@@ -30,73 +30,70 @@ function onFormSubmit(e)
 
 function SetValidation()
 {
-    var validateitem = form.getItems()[8].asListItem();
-    validateitem.setTitle("Validation List Choice");
-    validateitem.setRequired(true);
+    var requirednumber = RandomRange(8, 10);
+    var validateitem1 = form.getItemById(1509786018).asListItem();
+    validateitem1.setRequired(false);
+    SetValidationItem(validateitem1);
+    validateitem1.setRequired(IsValidationRequiredItem(8, requirednumber, validateitem1));
 
+    var validateitem2 = form.getItemById(1695237563).asMultipleChoiceItem();
+    validateitem2.setRequired(false);
+    SetValidationItem(validateitem2);
+    validateitem2.setRequired(IsValidationRequiredItem(9, requirednumber, validateitem2));
+    var choices = validateitem2.getChoices();
+    choices.push(validateitem2.createChoice("Accidental Click (-_-\")"));
+    validateitem2.setChoices(choices);
+
+    var validateitem3 = form.getItemById(1461338387).asCheckboxItem();
+    validateitem3.setRequired(false);
+    SetValidationItem(validateitem3);
+    validateitem3.setRequired(IsValidationRequiredItem(10, requirednumber, validateitem3));
+}
+
+function SetValidationItem(validateitem)
+{
     var correctchoice = RandomRange(0, 3);
     var choices = new Array(4);
     for (var i = 0; i < choices.length; i++)
     {
         if (i == correctchoice) 
         {
-            var a = RandomRange(1, 9);
-            var b = RandomRange(1, 9);
+            var a = RandomRange(0, 9);
+            var b = RandomRange(0, 9);
             var c = a + b;
             var choicestring = a + " + " + b + " = " + c;
             choices[i] = validateitem.createChoice(choicestring);
         }
         else
         {
-            var a = RandomRange(1, 9);
-            var b = RandomRange(1, 9);
-            var c = a + b + RandomRange(-9, 9);
-            while (a + b == c) 
+            var a, b, c;
+            do
             {
-                a = RandomRange(1, 9);
-                b = RandomRange(1, 9);
-                c = a + b + RandomRange(-9, 9);
+                a = RandomRange(0, 9);
+                b = RandomRange(0, 9);
+                c = RandomRange(1, 18);
             }
+            while (a + b == c)
+
             var choicestring = a + " + " + b + " = " + c;
             choices[i] = validateitem.createChoice(choicestring);
         }
     }
     validateitem.setChoices(choices);
+}
 
-
-    validateitem = form.getItems()[9].asMultipleChoiceItem();
-    validateitem.setTitle("Validation MCQ" + " (NOT REQUIRED)");
-    validateitem.setRequired(false);
-
-    var correctchoice = RandomRange(0, 3);
-    var choices = new Array(4);
-    for (var i = 0; i < choices.length; i++)
+function IsValidationRequiredItem(questionNumber, requiredNumber, validateitem)
+{
+    Logger.log(requiredNumber);
+    if (questionNumber == requiredNumber) 
     {
-        if (i == correctchoice) 
-        {
-            var a = RandomRange(1, 9);
-            var b = RandomRange(1, 9);
-            var c = a + b;
-            var choicestring = a + " + " + b + " = " + c;
-            choices[i] = validateitem.createChoice(choicestring);
-        }
-        else
-        {
-            var a = RandomRange(1, 9);
-            var b = RandomRange(1, 9);
-            var c = a + b + RandomRange(-9, 9);
-            while (a + b == c) 
-            {
-                a = RandomRange(1, 9);
-                b = RandomRange(1, 9);
-                c = a + b + RandomRange(-9, 9);
-            }
-            var choicestring = a + " + " + b + " = " + c;
-            choices[i] = validateitem.createChoice(choicestring);
-        }
+        form.moveItem(validateitem.getIndex(), 8);
+        return true;
     }
-    choices.push(validateitem.createChoice("Accidental Clicked (-_-\")"));
-    validateitem.setChoices(choices);
+    else
+    {
+        return false;
+    }
 }
 
 function GetPlayerValidationList()
