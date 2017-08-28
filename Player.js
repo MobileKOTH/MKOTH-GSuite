@@ -24,11 +24,14 @@ var Playerlist = GetPlayerList();
 
 /**
 * Represents a player.
-* @constructor
-* @param {String} the name of the Player
+* @class
+* @param {String} name the name of the Player
 */
 function Player(name)
 {
+  /**
+   * @type {String}
+   */
   this.name = name;
   this.joinDate = new Date();
   this.class = PlayerClass.SQUIRE;
@@ -42,7 +45,8 @@ function Player(name)
   this.isHoliday = false;
 
   /**
-  * Add the new player into the player statatistic sheet and ranking
+  * @method
+  * @name Add
   * @returns {Boolean} if the addition is valid
   */
   this.Add = function ()
@@ -227,6 +231,11 @@ function Player(name)
   }
 }
 
+/**
+ * 
+ * @param {String} name
+ * @returns {Boolean}
+ */
 function checkPlayerRepeat(name)
 {
   for (i = 0; i < Playerlist.length; i++)
@@ -241,8 +250,7 @@ function checkPlayerRepeat(name)
 
 /**
 * Get the player list from ranking and player stats
-*
-* @returns {Array}
+* @returns {Player[]}
 */
 function GetPlayerList()
 {

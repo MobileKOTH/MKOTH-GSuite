@@ -33,20 +33,14 @@ function SetValidation()
     var requirednumber = RandomRange(8, 10);
     var validateitem1 = form.getItemById(1509786018).asListItem();
     validateitem1.setRequired(false);
-    SetValidationItem(validateitem1);
     validateitem1.setRequired(IsValidationRequiredItem(8, requirednumber, validateitem1));
 
     var validateitem2 = form.getItemById(1695237563).asMultipleChoiceItem();
     validateitem2.setRequired(false);
-    SetValidationItem(validateitem2);
     validateitem2.setRequired(IsValidationRequiredItem(9, requirednumber, validateitem2));
-    var choices = validateitem2.getChoices();
-    choices.push(validateitem2.createChoice("Accidental Click (-_-\")"));
-    validateitem2.setChoices(choices);
 
     var validateitem3 = form.getItemById(1461338387).asCheckboxItem();
     validateitem3.setRequired(false);
-    SetValidationItem(validateitem3);
     validateitem3.setRequired(IsValidationRequiredItem(10, requirednumber, validateitem3));
 }
 
@@ -88,10 +82,14 @@ function IsValidationRequiredItem(questionNumber, requiredNumber, validateitem)
     if (questionNumber == requiredNumber) 
     {
         form.moveItem(validateitem.getIndex(), 8);
+        SetValidationItem(validateitem);
         return true;
     }
     else
     {
+        var choice = new Array(1);
+        choice[0] = validateitem.createChoice("NOT APPLICABLE");
+        validateitem.setChoices(choice);
         return false;
     }
 }
