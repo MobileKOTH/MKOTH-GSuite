@@ -40,6 +40,7 @@ function Player(name)
   this.wins = 0;
   this.loss = 0;
   this.draws = 0;
+  this.discordid = 0;
   this.isKnight = false;
   this.isRemoved = false;
   this.isHoliday = false;
@@ -150,6 +151,7 @@ function Player(name)
         this.wins = loadedplayer.wins;
         this.loss = loadedplayer.loss;
         this.draws = loadedplayer.draws;
+        this.discordid = loadedplayer.discordid;
         this.isKnight = loadedplayer.isKnight;
         this.isRemoved = loadedplayer.isRemoved;
         this.isHoliday = loadedplayer.isHoliday;
@@ -274,6 +276,7 @@ function GetPlayerList()
       playerlist[i].wins = playerDB[i][3];
       playerlist[i].loss = playerDB[i][4];
       playerlist[i].draws = playerDB[i][5];
+      playerlist[i].discordid = playerDB[i][9];
       if (playerDB[i][10] == "Removed")
       {
         playerlist[i].isRemoved = true;
