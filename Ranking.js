@@ -1,6 +1,47 @@
+/**
+ * 
+ * @param {Player} player 
+ */
 function Ranking(player)
 {
   this.player = player;
+  this.oldPoints = player.points;
+  this.oldRank = player.rank;
+  this.rankChanges = 0;
+  this.pointChanges = 0;
+
+  this.GetRankChangesText = function ()
+  {
+    this.rankChanges = this.oldRank - this.player.rank;
+    if (this.rankChanges == 0) 
+    {
+      return " － ";
+    }
+    if (this.rankChanges > 0) 
+    {
+      return ":arrow_up_small:*" + this.rankChanges + "* ";
+    }
+    else
+    {
+      return ":small_red_triangle_down:*" + this.rankChanges + "* ";
+    }
+  }
+  this.GetPointChangesText = function ()
+  {
+    this.pointChanges = this.player.points - this.oldPoints;
+    if (this.pointChanges == 0) 
+    {
+      return " － ";
+    }
+    if (this.pointChanges > 0) 
+    {
+      return ":arrow_up_small:*" + this.pointChanges + "* ";
+    }
+    else
+    {
+      return ":small_red_triangle_down:*" + this.pointChanges + "* ";
+    }
+  }
 }
 
 function RankList()
@@ -73,6 +114,135 @@ function RankList()
     }
     RankingSheet.getRange(2, 1, ranklistarr.length, RankingSheet.getLastColumn()).setValues(ranklistarr);
   }
+
+  this.PostWebhook = function ()
+  {
+    PostSeriesInstructionWebhook();
+    var sheeturl = "https://docs.google.com/spreadsheets/d/1VRfWwvRSMQizzBanGNRMFVzoYFthrsNKzOgF5wKVM5I";
+    var description = "";
+    for (var ni = 1; ni < this.list.length; ni++)
+    {
+      var element = this.list[ni];
+      if (element.player.class == PlayerClass.NOBLEMAN) 
+      {
+        description += element.player.rank + element.GetRankChangesText() + element.player.name +
+          " <@!" + element.player.discordid + "> " + element.player.points + element.GetPointChangesText() + "\n";
+      }
+    }
+    var payload =
+      {
+        "content": "**RANKINGS**",
+        "embeds":
+        [
+          {
+            "author":
+            {
+              "name": "King" + this.list[0].GetRankChangesText() + this.list[0].player.name + " - " + this.list[0].player.points + this.list[0].GetPointChangesText(),
+              "icon_url": "https://cdn.discordapp.com/attachments/341163606605299716/352026213306335234/crown.png",
+            },
+            "url": sheeturl,
+            "title": "Nobles",
+            "description": description,
+            "color": 16772608
+          }
+        ]
+      }
+    SendWebHook(payload);
+
+    description = "";
+    for (var si = 0; si < this.list.length; si++)
+    {
+      var element = this.list[si];
+      if (element.player.class == PlayerClass.SQUIRE) 
+      {
+        description += element.player.rank + element.GetRankChangesText() + element.player.name +
+          " <@!" + element.player.discordid + "> " + element.player.points + element.GetPointChangesText() + "\n";
+      }
+    }
+    var payload =
+      {
+        "content": null,
+        "embeds":
+        [
+          {
+            "author":
+            {
+              "name": "|",
+              "icon_url": "https://cdn.discordapp.com/attachments/341163606605299716/352093192918663171/swords.png",
+            },
+            "url": sheeturl,
+            "title": "Squires",
+            "description": description,
+            "color": 34304
+          }
+        ]
+      }
+    SendWebHook(payload);
+
+    description = "";
+    for (var si = 0; si < this.list.length; si++)
+    {
+      var element = this.list[si];
+      if (element.player.class == PlayerClass.VASSAL) 
+      {
+        description += element.player.rank + element.GetRankChangesText() + element.player.name +
+          " <@!" + element.player.discordid + "> " + element.player.points + element.GetPointChangesText() + "\n";
+      }
+    }
+    var payload =
+      {
+        "content": null,
+        "embeds":
+        [
+          {
+            "author":
+            {
+              "name": "|",
+              "icon_url": "https://cdn.discordapp.com/attachments/341163606605299716/352093197335265296/sword.png",
+            },
+            "url": sheeturl,
+            "title": "Vassals",
+            "description": description,
+            "color": 16770666
+          }
+        ]
+      }
+    SendWebHook(payload);
+
+    description = "";
+    for (var si = 0; si < this.list.length; si++)
+    {
+      if (description.length > 1920)
+      {
+        break;
+      }
+      var element = this.list[si];
+      if (element.player.class == PlayerClass.PEASANT) 
+      {
+        description += element.player.rank + element.GetRankChangesText() + element.player.name +
+          " <@!" + element.player.discordid + "> " + element.player.points + element.GetPointChangesText() + "\n";
+      }
+    }
+    var payload =
+      {
+        "content": null,
+        "embeds":
+        [
+          {
+            "author":
+            {
+              "name": "|",
+              "icon_url": "https://cdn.discordapp.com/attachments/341163606605299716/352093195087380482/axe.png",
+            },
+            "url": sheeturl,
+            "title": "Peasants",
+            "description": description,
+            "color": 16777215
+          }
+        ]
+      }
+    SendWebHook(payload);
+  }
 }
 
 function RebuildRank()
@@ -130,6 +300,9 @@ function RebuildRank()
   return true;
 }
 
+/**
+ * @returns {Ranking[]}
+ */
 function GetRankList()
 {
   var rankinglist = [];

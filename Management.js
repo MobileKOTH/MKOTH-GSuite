@@ -146,6 +146,8 @@ function SubmitSeries()
     RankingSheet.getRange(2, 1, RankingSheet.getLastRow() - 1, RankingSheet.getLastColumn()).clearContent();
     RankingSheet.getRange(2, 1, ranklistarr.length, RankingSheet.getLastColumn()).setValues(ranklistarr);
     UpdatePlayerlist();
+    PostSeriesInstructionWebhook();
+    ranklist.PostWebhook();
     ManagementLogSheet.appendRow([new Date(), "Series Submission", "Series Processed: " + processed + " Time used: " + ((new Date()).getTime() - runtime) / 1000 + "secs"]);
     return success;
   }
@@ -166,4 +168,58 @@ function PromoteKnight(input)
   player.PromoteKnight();
   ManagementLogSheet.appendRow([new Date(), "Knight Promotion", JSON.stringify(player)]);
   return true;
+}
+
+function PostSeriesInstructionWebhook()
+{
+  var payload =
+    {
+      "content": "For MKOTH related commands: `.mkothhelp` (Beta)",
+      "embeds":
+      [
+        {
+          "title": "RULES OF SERIES SUBMISSION",
+          "description": "**Only winners will submit the series.**\n\n" +
+          "1. Select the exact ranking names of you and your opponent.\n\n" +
+          "2. The earlier you submit your series the better. E.g Player A completes his series with player B on 10/13/16, and submits their series on the same day. Player C and player D completes their series on 9/10/16 but submits their submits series on 11/13/16, it will be recorded that player A and B played their series first.\n\n" +
+          "3. If you accidentally submit a series with wrong information, approach a manager IMMEDIATELY as severe errors cannot be undone.\n\n" +
+          "4. SUBMITTING A FALSE SERIES WILL RESULT IN A PERMANENT BAN FROM MKOTH.\n",
+          "timestamp": new Date(),
+          "footer":
+          {
+            "text": "Updated",
+          },
+          "fields":
+          [
+            { "name": "Rank and Player Stats", "value": "https://docs.google.com/spreadsheets/d/1VRfWwvRSMQizzBanGNRMFVzoYFthrsNKzOgF5wKVM5I", "inline": false },
+            { "name": "Series Submission Form", "value": "https://docs.google.com/forms/d/e/1FAIpQLSdGJnCOl0l5HjxuYexVV_sOKPR1iScq3eiSxGiqKULX3zG4-Q/viewform", "inline": false },
+            { "name": "Raw Series Submissions", "value": "https://docs.google.com/spreadsheets/d/1zQMN_t94oS55TwO5kI7p-QRkJti0dRwvGwEuGqkxMY4", "inline": false },
+            {
+              "name": "Attributions", "value": "Icons made by Vectors Market from https://www.flaticon.com is licensed by CC 3.0 BY\n" +
+              "Icons made by Freepik from https://www.flaticon.com is licensed by CC 3.0 BY", "inline": false
+            }
+          ],
+          "color": 9803157
+        }
+      ]
+    }
+  SendWebHook(payload);
+}
+
+
+function SendWebHook(payload)
+{
+  var options =
+    {
+      'method': 'post',
+      'contentType': 'application/json',
+      'payload': JSON.stringify(payload)
+    }
+  var response = UrlFetchApp.fetch(Webhookurl, options);
+  var responseobj = JSON.parse(JSON.stringify(response.getHeaders()));
+
+  if (Number(responseobj["x-ratelimit-remaining"]) == 1) 
+  {
+    Utilities.sleep(Number(responseobj["x-ratelimit-reset"]) * 1000 - new Date().getTime());
+  }
 }

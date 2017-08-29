@@ -11,6 +11,8 @@ var ManagementLogSheet = DataSheetApp.getSheetByName("Management Logs");
 function Main()
 {
     Logger.log("Hello MKOTH");
+    var ranklist = new RankList();
+    ranklist.PostWebhook();
 }
 
 function onOpen()
