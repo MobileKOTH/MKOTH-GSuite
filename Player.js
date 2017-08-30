@@ -45,6 +45,9 @@ function Player(name)
   this.isRemoved = false;
   this.isHoliday = false;
 
+  this.oldrank = 0;
+  this.oldpoints = 0;
+
   /**
   * @method
   * @name Add
@@ -155,6 +158,8 @@ function Player(name)
         this.isKnight = loadedplayer.isKnight;
         this.isRemoved = loadedplayer.isRemoved;
         this.isHoliday = loadedplayer.isHoliday;
+        this.oldrank = loadedplayer.oldrank;
+        this.oldpoints = loadedplayer.oldpoints;
       }
     }
   }
@@ -288,6 +293,8 @@ function GetPlayerList()
         {
           playerlist[i].rank = playerRankDB[j][0];
           playerlist[i].points = playerRankDB[j][3];
+          playerlist[i].oldrank = playerRankDB[j][0];
+          playerlist[i].oldpoints = playerRankDB[j][3];
         }
       }
     }

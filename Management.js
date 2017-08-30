@@ -101,12 +101,13 @@ function SubmitSeries()
 {
   var success = true;
   var serieslist = GetValidateList();
+  var ranklist = new RankList();
   var processed = 0;
   for (k = 0; k < serieslist.length; k++)
   {
     if (serieslist[k].isValid())
     {
-      var ranklist = new RankList();
+      ranklist = new RankList();
       serieslist[k].Submit();
       serieslist[k].ReloadPlayers();
       ranklist.Update(serieslist[k]);
@@ -124,30 +125,30 @@ function SubmitSeries()
   if (success && processed > 0)
   {
     RunProgress("Updating Player Stats");
+    PostSeriesInstructionWebhook();
+    ranklist.PostWebhook();
   }
   if (processed > 0)
   {
-    var ranklist = GetRankList();
+    var rankingarr = GetRankList();
     var ranklistarr = [];
     var realrank = 1;
-    for (n = 0; n < ranklist.length; n++)
+    for (n = 0; n < rankingarr.length; n++)
     {
-      if (ranklist[n].player.isRemoved == false)
+      if (rankingarr[n].player.isRemoved == false)
       {
-        var classStr = ranklist[n].player.class;
-        if (ranklist[n].player.isKnight)
+        var classStr = rankingarr[n].player.class;
+        if (rankingarr[n].player.isKnight)
         {
-          classStr = ranklist[n].player.class + " (Knight)";
+          classStr = rankingarr[n].player.class + " (Knight)";
         }
-        ranklistarr.push([realrank, ranklist[n].player.name, classStr, ranklist[n].player.points]);
+        ranklistarr.push([realrank, rankingarr[n].player.name, classStr, rankingarr[n].player.points]);
         realrank++;
       }
     }
     RankingSheet.getRange(2, 1, RankingSheet.getLastRow() - 1, RankingSheet.getLastColumn()).clearContent();
     RankingSheet.getRange(2, 1, ranklistarr.length, RankingSheet.getLastColumn()).setValues(ranklistarr);
     UpdatePlayerlist();
-    PostSeriesInstructionWebhook();
-    ranklist.PostWebhook();
     ManagementLogSheet.appendRow([new Date(), "Series Submission", "Series Processed: " + processed + " Time used: " + ((new Date()).getTime() - runtime) / 1000 + "secs"]);
     return success;
   }
@@ -209,6 +210,7 @@ function PostSeriesInstructionWebhook()
 
 function SendWebHook(payload)
 {
+  RunProgress("Posting Webhooks");
   var options =
     {
       'method': 'post',
@@ -218,8 +220,14 @@ function SendWebHook(payload)
   var response = UrlFetchApp.fetch(Webhookurl, options);
   var responseobj = JSON.parse(JSON.stringify(response.getHeaders()));
 
-  if (Number(responseobj["x-ratelimit-remaining"]) == 1) 
+  try
   {
-    Utilities.sleep(Number(responseobj["x-ratelimit-reset"]) * 1000 - new Date().getTime());
+    if (Number(responseobj["x-ratelimit-remaining"]) == 1) 
+    {
+      Utilities.sleep(Number(responseobj["x-ratelimit-reset"]) * 1000 - new Date().getTime());
+    }
+  } catch (error)
+  {
+    RunError(error.message);
   }
 }

@@ -5,41 +5,39 @@
 function Ranking(player)
 {
   this.player = player;
-  this.oldPoints = player.points;
-  this.oldRank = player.rank;
   this.rankChanges = 0;
   this.pointChanges = 0;
 
   this.GetRankChangesText = function ()
   {
-    this.rankChanges = this.oldRank - this.player.rank;
+    this.rankChanges = this.player.oldrank - this.player.rank;
     if (this.rankChanges == 0) 
     {
-      return " － ";
+      return "";
     }
     if (this.rankChanges > 0) 
     {
-      return ":arrow_up_small:*" + this.rankChanges + "* ";
+      return " ▲" + this.rankChanges + " ";
     }
     else
     {
-      return ":small_red_triangle_down:*" + this.rankChanges + "* ";
+      return " ▼" + this.rankChanges + " ";
     }
   }
   this.GetPointChangesText = function ()
   {
-    this.pointChanges = this.player.points - this.oldPoints;
+    this.pointChanges = this.player.points - this.player.oldpoints;
     if (this.pointChanges == 0) 
     {
-      return " － ";
+      return "p**";
     }
     if (this.pointChanges > 0) 
     {
-      return ":arrow_up_small:*" + this.pointChanges + "* ";
+      return "p** **▵**" + this.pointChanges + " ";
     }
     else
     {
-      return ":small_red_triangle_down:*" + this.pointChanges + "* ";
+      return "p** **▿**" + this.pointChanges + " ";
     }
   }
 }
@@ -117,130 +115,210 @@ function RankList()
 
   this.PostWebhook = function ()
   {
-    PostSeriesInstructionWebhook();
     var sheeturl = "https://docs.google.com/spreadsheets/d/1VRfWwvRSMQizzBanGNRMFVzoYFthrsNKzOgF5wKVM5I";
-    var description = "";
+    var fields = [];
+    fields.push({
+      "name": ":crown: King: " + this.list[0].player.name + this.list[0].GetRankChangesText(),
+      "value": " <@!" + this.list[0].player.discordid + "> **" + this.list[0].player.points + this.list[0].GetPointChangesText() + "\n",
+      "inline": false
+    });
+    for (var ni = 0; ni < this.list.length; ni++)
+    {
+      var element = this.list[ni];
+      if (element.player.isKnight) 
+      {
+        fields.push({
+          "name": ":shield: Knight: " + element.player.name + " #" + element.player.rank + element.GetRankChangesText(),
+          "value": " <@!" + element.player.discordid + "> **" + element.player.points + element.GetPointChangesText() + "\n",
+          "inline": false
+        });
+      }
+    }
     for (var ni = 1; ni < this.list.length; ni++)
     {
       var element = this.list[ni];
       if (element.player.class == PlayerClass.NOBLEMAN) 
       {
-        description += element.player.rank + element.GetRankChangesText() + element.player.name +
-          " <@!" + element.player.discordid + "> " + element.player.points + element.GetPointChangesText() + "\n";
+        fields.push({
+          "name": ":trophy: Nobleman: " + element.player.name + " #" + element.player.rank + element.GetRankChangesText(),
+          "value": " <@!" + element.player.discordid + "> **" + element.player.points + element.GetPointChangesText() + "\n",
+          "inline": false
+        });
       }
     }
     var payload =
       {
-        "content": "**RANKINGS**",
+        "username": "MKOTH Rankings",
+        "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
+        "content": "**May not be mobile friendly.**\nDM a manager if your discord ID missing and has no numbers.",
         "embeds":
         [
           {
             "author":
             {
-              "name": "King" + this.list[0].GetRankChangesText() + this.list[0].player.name + " - " + this.list[0].player.points + this.list[0].GetPointChangesText(),
+              "name": "MKOTH Elites",
               "icon_url": "https://cdn.discordapp.com/attachments/341163606605299716/352026213306335234/crown.png",
+              "url": sheeturl
             },
-            "url": sheeturl,
-            "title": "Nobles",
-            "description": description,
+            "title": null,
+            "description": "The ranking system consists of the :crown:**King**, who is in rank 1, and 4 different classes of players.\n" +
+            "**Knights** are the strongest players in Mobile King of the Hill and protect their King and the Noblemen. " +
+            "You can challenge one of the Knights into a best of 5 knight series but that will cost you 18 points.\n" +
+            "If you succeed beating one of the strong Knights, you are officially one of the mighty Noblemen in Mobile King of the Hill.\n" +
+            "Knights are chosen manually.\n" +
+            "**Nobleman** may challenge the King’s position by playing a best of 5 **King Series** with him and with the cost of 15 points.",
+            "fields": fields,
             "color": 16772608
           }
         ]
-      }
+      };
     SendWebHook(payload);
 
-    description = "";
+    fields = [];
     for (var si = 0; si < this.list.length; si++)
     {
       var element = this.list[si];
-      if (element.player.class == PlayerClass.SQUIRE) 
+      if (element.player.class == PlayerClass.SQUIRE && element.player.rank <= 20) 
       {
-        description += element.player.rank + element.GetRankChangesText() + element.player.name +
-          " <@!" + element.player.discordid + "> " + element.player.points + element.GetPointChangesText() + "\n";
+        fields.push({
+          "name": "#" + element.player.rank + " " + element.player.name + element.GetRankChangesText(),
+          "value": " <@!" + element.player.discordid + "> **" + element.player.points + element.GetPointChangesText() + "\n",
+          "inline": false
+        });
       }
     }
+    var fields2 = [];
+    for (var si = 0; si < this.list.length; si++)
+    {
+      var element = this.list[si];
+      if (element.player.class == PlayerClass.SQUIRE && element.player.rank > 20) 
+      {
+        fields2.push({
+          "name": "#" + element.player.rank + " " + element.player.name + element.GetRankChangesText(),
+          "value": " <@!" + element.player.discordid + "> **" + element.player.points + element.GetPointChangesText() + "\n",
+          "inline": false
+        });
+      }
+    };
     var payload =
       {
+        "username": "MKOTH Rankings",
+        "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
         "content": null,
         "embeds":
         [
           {
             "author":
             {
-              "name": "|",
+              "name": "Squires",
               "icon_url": "https://cdn.discordapp.com/attachments/341163606605299716/352093192918663171/swords.png",
+              "url": sheeturl
             },
-            "url": sheeturl,
-            "title": "Squires",
-            "description": description,
+            "title": null,
+            "description": "This class includes players who are on or below rank 30 but has not won at least one **Knight Series** as a challenger. " +
+            "Hence, this class behaves differently from the previous 2 classes. " +
+            "The number of players in this class may decrease as more people beat Knights to enter the Nobleman class. " +
+            "This class will no longer become smaller when it has 20 players. ",
+            "fields": fields,
+            "color": 34304
+          },
+          {
+            "author":
+            {
+              "name": "Squires",
+              "icon_url": "https://cdn.discordapp.com/attachments/341163606605299716/352093192918663171/swords.png",
+              "url": sheeturl
+            },
+            "title": null,
+            "description": null,
+            "fields": fields2,
             "color": 34304
           }
         ]
-      }
+      };
     SendWebHook(payload);
 
-    description = "";
+    fields = [];
     for (var si = 0; si < this.list.length; si++)
     {
       var element = this.list[si];
       if (element.player.class == PlayerClass.VASSAL) 
       {
-        description += element.player.rank + element.GetRankChangesText() + element.player.name +
-          " <@!" + element.player.discordid + "> " + element.player.points + element.GetPointChangesText() + "\n";
+        fields.push({
+          "name": "#" + element.player.rank + " " + element.player.name + element.GetRankChangesText(),
+          "value": " <@!" + element.player.discordid + "> **" + element.player.points + element.GetPointChangesText() + "\n",
+          "inline": false
+        });
       }
     }
     var payload =
       {
+        "username": "MKOTH Rankings",
+        "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
         "content": null,
         "embeds":
         [
           {
             "author":
             {
-              "name": "|",
+              "name": "Vassals",
               "icon_url": "https://cdn.discordapp.com/attachments/341163606605299716/352093197335265296/sword.png",
+              "url": sheeturl
             },
-            "url": sheeturl,
-            "title": "Vassals",
-            "description": description,
+            "title": null,
+            "description": "The third highest class is the Vassals class. This class includes all players under rank 30 to rank 50. " +
+            "If you want to move to a higher class, you need to pay an extra fee of 12 points to start a **Ranked Series with a Squire**.",
+            "fields": fields,
             "color": 16770666
           }
         ]
-      }
+      };
     SendWebHook(payload);
 
-    description = "";
+    fields = [];
     for (var si = 0; si < this.list.length; si++)
     {
-      if (description.length > 1920)
+      if (fields.length >= 25)
       {
         break;
       }
       var element = this.list[si];
       if (element.player.class == PlayerClass.PEASANT) 
       {
-        description += element.player.rank + element.GetRankChangesText() + element.player.name +
-          " <@!" + element.player.discordid + "> " + element.player.points + element.GetPointChangesText() + "\n";
+        fields.push({
+          "name": "#" + element.player.rank + " " + element.player.name + element.GetRankChangesText(),
+          "value": " <@!" + element.player.discordid + "> **" + element.player.points + element.GetPointChangesText() + "\n",
+          "inline": false
+        });
       }
     }
     var payload =
       {
+        "username": "MKOTH Rankings",
+        "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
         "content": null,
         "embeds":
         [
           {
             "author":
             {
-              "name": "|",
+              "name": "Peasants",
               "icon_url": "https://cdn.discordapp.com/attachments/341163606605299716/352093195087380482/axe.png",
+              "url": sheeturl
             },
-            "url": sheeturl,
-            "title": "Peasants",
-            "description": description,
+            "title": null,
+            "description": "The lowest class in the ranking is the Peasant class. This class includes all players under rank 50. " +
+            "If you want to move to a higher class, you need to pay an extra fee of 6 points to start a **Ranked Series with a Vassal**.",
+            "fields": fields,
+            "timestamp": new Date(),
+            "footer":
+            {
+              "text": "Updated",
+            },
             "color": 16777215
           }
         ]
-      }
+      };
     SendWebHook(payload);
   }
 }

@@ -123,8 +123,26 @@ function GenerateWinText(series)
     {
         scoretext = series.player2wins + " : " + series.player1wins;
     }
+    var pointchange = 0;
+    if (series.GetWinner() == series.player1) 
+    {
+        pointchange = series.GetRewardPoints() - series.GetCostPoint();
+    }
+    else
+    {
+        pointchange = series.GetRewardPoints();
+    }
+    var gainlosspointtext = "";
+    if (pointchange >= 0)
+    {
+        gainlosspointtext = " to gain " + pointchange;
+    }
+    else
+    {
+        gainlosspointtext = " to lose " + Math.abs(pointchange);
+    }
 
-    var content = winnerping + " has defeated " + loserping + " to gain " + series.GetRewardPoints() + " points in a " + series.type + " series to with a score of " + scoretext;
+    var content = winnerping + " has defeated " + loserping + gainlosspointtext + " points in a " + series.type + " series to with a score of " + scoretext;
 
     return content;
 }
