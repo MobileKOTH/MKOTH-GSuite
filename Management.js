@@ -179,8 +179,10 @@ function PostSeriesInstructionWebhook()
       "embeds":
       [
         {
-          "title": "RULES OF SERIES SUBMISSION",
-          "description": "**Only winners will submit the series.**\n\n" +
+          "thumbnail": { "url": "https://cdn.discordapp.com/attachments/271109067261476866/330727796647395330/Untitled12111.jpg" },
+          "author": { "name": "RULES OF SERIES SUBMISSION", "icon_url": "https://cdn.discordapp.com/attachments/341163606605299716/352709311442452490/checklist.png" },
+          "title": "Only winners will submit the series",
+          "description":
           "1. Select the exact ranking names of you and your opponent.\n\n" +
           "2. The earlier you submit your series the better. E.g Player A completes his series with player B on 10/13/16, and submits their series on the same day. Player C and player D completes their series on 9/10/16 but submits their submits series on 11/13/16, it will be recorded that player A and B played their series first.\n\n" +
           "3. If you accidentally submit a series with wrong information, approach a manager IMMEDIATELY as severe errors cannot be undone.\n\n" +
@@ -192,13 +194,10 @@ function PostSeriesInstructionWebhook()
           },
           "fields":
           [
-            { "name": "Rank and Player Stats", "value": "https://docs.google.com/spreadsheets/d/1VRfWwvRSMQizzBanGNRMFVzoYFthrsNKzOgF5wKVM5I", "inline": false },
-            { "name": "Series Submission Form", "value": "https://docs.google.com/forms/d/e/1FAIpQLSdGJnCOl0l5HjxuYexVV_sOKPR1iScq3eiSxGiqKULX3zG4-Q/viewform", "inline": false },
-            { "name": "Raw Series Submissions", "value": "https://docs.google.com/spreadsheets/d/1zQMN_t94oS55TwO5kI7p-QRkJti0dRwvGwEuGqkxMY4", "inline": false },
-            {
-              "name": "Attributions", "value": "Icons made by Vectors Market from https://www.flaticon.com is licensed by CC 3.0 BY\n" +
-              "Icons made by Freepik from https://www.flaticon.com is licensed by CC 3.0 BY", "inline": false
-            }
+            { "name": "Rank and Player Stats", "value": "Weblink: [MKOTH Series Data](https://docs.google.com/spreadsheets/d/1VRfWwvRSMQizzBanGNRMFVzoYFthrsNKzOgF5wKVM5I)", "inline": false },
+            { "name": "Series Submission Form", "value": "Weblink: [MKOTH Series Submission Form](https://docs.google.com/forms/d/e/1FAIpQLSdGJnCOl0l5HjxuYexVV_sOKPR1iScq3eiSxGiqKULX3zG4-Q/viewform)", "inline": false },
+            { "name": "Raw Series Submissions", "value": "Weblink: [MKOTH Series Pending and Validations](https://docs.google.com/spreadsheets/d/1zQMN_t94oS55TwO5kI7p-QRkJti0dRwvGwEuGqkxMY4)", "inline": false },
+            { "name": "Attributions", "value": "Icons made by [Vectors Market](https://www.flaticon.com/authors/vectors-market) and [Freepik](http://www.freepik.com) from [Flaticon](https://www.flaticon.com) is licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/)", "inline": false }
           ],
           "color": 9803157
         }
