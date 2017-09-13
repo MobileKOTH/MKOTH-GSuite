@@ -7,8 +7,42 @@ var HistorySheet = DataSheetApp.getSheetByName("Series History");
 var RankingSheet = DataSheetApp.getSheetByName("Rankings");
 var PlayerStatsSheet = DataSheetApp.getSheetByName("Player Statistics");
 var ManagementLogSheet = DataSheetApp.getSheetByName("Management Logs");
+var Form = FormApp.openById("1Ccym-20keX_AbFlELm1s0nYNsST71GJMzUcIusz7bIU");
 
-var lastRow = ValidationSheet.getRange(ValidationSheet.getLastRow(), 1, 1, 12);
+var lastRow = ValidationSheet.getRange(ValidationSheet.getLastRow(), 1, 1, 13);
+var previousInviteCodesRange = ValidationSheet.getRange(1, 13, (ValidationSheet.getLastRow() <= 1) ? 1 : ValidationSheet.getLastRow() - 1, 1).getValues();
+var previousInviteCodes = [];
+var validgamecode = true;
+
+for (var key in previousInviteCodesRange)
+{
+    if (previousInviteCodesRange.hasOwnProperty(key))
+    {
+        var element = previousInviteCodesRange[key];
+        previousInviteCodes.push(element[0]);
+    }
+}
+
+function Main()
+{
+
+}
+
+function onMinuteTrigger()
+{
+    if (!Form.isAcceptingResponses())
+    {
+        var lastSubmissionTime = new Date(lastRow.getValues()[0][0]).getTime();
+        var currenttime = new Date().getTime();
+        var timespan = currenttime - lastSubmissionTime;
+        timespan = timespan / 1000 / 60;
+
+        if (timespan * 10 >= RandomRange(20, 100))
+        {
+            Form.setAcceptingResponses(true);
+        }
+    }
+}
 
 function onFormSubmit(e)
 {
@@ -18,6 +52,7 @@ function onFormSubmit(e)
     validation.push(lastrowvalues[10]);
     validation.push(lastrowvalues[11]);
     var answer = "";
+    var gamecode = lastrowvalues[12];
 
     var haswronganswer = false;
     var validationstatus = " -> passed`\n";
@@ -57,10 +92,11 @@ function onFormSubmit(e)
     var description = "`validation: " + answer + validationstatus;
     if (!series.isValid()) 
     {
-        description += "However, " + invalidReason.toLowerCase() + ", the series will be looked into and to be considered as void."
+        description += "However, " + invalidReason.toLowerCase() + ", the series will be looked into and to be considered as void.\n"
         lastRow.getCell(1, 9).setValue(invalidReason);
         lastRow.getCell(1, 9).setBackground("red");
     }
+    description += GetBattleTVLinkString(gamecode);
     var color = GenerateSeriesColor(series, haswronganswer);
     var runTime = new Date().getTime();
     var content = "`Webhook delay: " + (runTime - series.date.getTime()) + " ms`\n" + GenerateWinText(series);
@@ -102,7 +138,6 @@ function onFormSubmit(e)
 
     var response = UrlFetchApp.fetch(Webhookurl, options);
     Logger.log(response.getHeaders());
-
 }
 
 /**
@@ -229,7 +264,7 @@ function GenerateSeriesIcon(series)
  */
 function GenerateSeriesColor(series, haswronganswer)
 {
-    if (!series.isValid() || haswronganswer) 
+    if (!series.isValid() || haswronganswer || !validgamecode) 
     {
         return 16711680;
     }
@@ -242,12 +277,62 @@ function GenerateSeriesColor(series, haswronganswer)
         default:
             if (series.player2wins > series.player1wins) 
             {
-                return 13228792;
+                return 43775;
             }
             else
             {
-                return 43775;
+                return 16766208;
             }
             break;
     }
+}
+
+/**
+ * 
+ * @param {String} gamecode
+ * @returns {String}
+ */
+function GetBattleTVLinkString(gamecode)
+{
+    var battleTVlink = "https://battles.tv/watch/" + gamecode;
+    for (var key in previousInviteCodes)
+    {
+        if (previousInviteCodes.hasOwnProperty(key))
+        {
+            var element = previousInviteCodes[key];
+            if (element == gamecode) 
+            {
+                validgamecode = false;
+                lastRow.getCell(1, 13).setBackground("red");
+                lastRow.getCell(1, 9).setBackground("red");
+                lastRow.getCell(1, 9).setValue("Repeated game code");
+                return "This game code is already used by another series!"
+            }
+        }
+    }
+    var options = { muteHttpExceptions: true };
+    var response = UrlFetchApp.fetch(battleTVlink, options);
+    if (response.getResponseCode() != 200)
+    {
+        validgamecode = false;
+        lastRow.getCell(1, 13).setBackground("red");
+        lastRow.getCell(1, 9).setBackground("red");
+        lastRow.getCell(1, 9).setValue("Invalid game code");
+        return "Invalid game code used!"
+    }
+    return "Battles TV: " + battleTVlink;
+}
+
+/**
+ * Returns a range int range from the parameters inclusive.
+ * @param {number} min 
+ * @param {number} max
+ * @returns {number}
+ */
+function RandomRange(min, max)
+{
+    var difference = max - min + 1;
+    var randomrange = Math.random() * difference;
+    randomrange = Math.floor(randomrange);
+    return min + randomrange;
 }

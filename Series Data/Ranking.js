@@ -17,11 +17,11 @@ function Ranking(player)
     }
     if (this.rankChanges > 0) 
     {
-      return " ▲" + this.rankChanges + " ";
+      return " :arrow_up:" + this.rankChanges + " ";
     }
     else
     {
-      return " ▼" + this.rankChanges + " ";
+      return " :arrow_down:" + this.rankChanges + " ";
     }
   }
   this.GetPointChangesText = function ()
@@ -33,11 +33,11 @@ function Ranking(player)
     }
     if (this.pointChanges > 0) 
     {
-      return "p** **▵**" + this.pointChanges + " ";
+      return "p** `▲" + this.pointChanges + "` ";
     }
     else
     {
-      return "p** **▿**" + this.pointChanges + " ";
+      return "p** `▼" + this.pointChanges + "` ";
     }
   }
 }
@@ -122,6 +122,20 @@ function RankList()
       "value": " <@!" + this.list[0].player.discordid + "> **" + this.list[0].player.points + this.list[0].GetPointChangesText() + "\n",
       "inline": false
     });
+
+    for (var ni = 1; ni < this.list.length; ni++)
+    {
+      var element = this.list[ni];
+      if (element.player.class == PlayerClass.NOBLEMAN) 
+      {
+        fields.push({
+          "name": ":champagne_glass: Nobleman: " + element.player.name + " #" + element.player.rank + element.GetRankChangesText(),
+          "value": " <@!" + element.player.discordid + "> **" + element.player.points + element.GetPointChangesText() + "\n",
+          "inline": false
+        });
+      }
+    }
+
     for (var ni = 0; ni < this.list.length; ni++)
     {
       var element = this.list[ni];
@@ -129,18 +143,6 @@ function RankList()
       {
         fields.push({
           "name": ":shield: Knight: " + element.player.name + " #" + element.player.rank + element.GetRankChangesText(),
-          "value": " <@!" + element.player.discordid + "> **" + element.player.points + element.GetPointChangesText() + "\n",
-          "inline": false
-        });
-      }
-    }
-    for (var ni = 1; ni < this.list.length; ni++)
-    {
-      var element = this.list[ni];
-      if (element.player.class == PlayerClass.NOBLEMAN) 
-      {
-        fields.push({
-          "name": ":trophy: Nobleman: " + element.player.name + " #" + element.player.rank + element.GetRankChangesText(),
           "value": " <@!" + element.player.discordid + "> **" + element.player.points + element.GetPointChangesText() + "\n",
           "inline": false
         });
@@ -161,12 +163,12 @@ function RankList()
               "url": sheeturl
             },
             "title": null,
-            "description": "The ranking system consists of the :crown:**King**, who is in rank 1, and 4 different classes of players.\n" +
-            "**Knights** are the strongest players in Mobile King of the Hill and protect their King and the Noblemen. " +
+            "description": "The ranking system consists of the :crown: **King**, who is in rank 1, and 4 different classes of players.\n" +
+            ":shield: **Knights** are the strongest players in Mobile King of the Hill and protect their King and the Noblemen. " +
             "You can challenge one of the Knights into a best of 5 knight series but that will cost you 18 points.\n" +
             "If you succeed beating one of the strong Knights, you are officially one of the mighty Noblemen in Mobile King of the Hill.\n" +
             "Knights are chosen manually.\n" +
-            "**Nobleman** may challenge the King’s position by playing a best of 5 **King Series** with him and with the cost of 15 points.",
+            ":champagne_glass: **Nobleman** may challenge the King’s position by playing a best of 5 **King Series** with him and with the cost of 15 points.",
             "fields": fields,
             "color": 16772608
           }

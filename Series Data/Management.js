@@ -125,6 +125,7 @@ function SubmitSeries()
   if (success && processed > 0)
   {
     RunProgress("Updating Player Stats");
+    ranklist = new RankList();
     PostSeriesInstructionWebhook();
     ranklist.PostWebhook();
   }
@@ -188,45 +189,84 @@ function PostSeriesInstructionWebhook()
           "3. If you accidentally submit a series with wrong information, approach a manager IMMEDIATELY as severe errors cannot be undone.\n\n" +
           "4. SUBMITTING A FALSE SERIES WILL RESULT IN A PERMANENT BAN FROM MKOTH.\n",
           "timestamp": new Date(),
-          "footer":
-          {
-            "text": "Updated",
-          },
+          "footer": { "text": "Updated" },
           "fields":
           [
-            { "name": "Rank and Player Stats", "value": "Weblink: [MKOTH Series Data](https://docs.google.com/spreadsheets/d/1VRfWwvRSMQizzBanGNRMFVzoYFthrsNKzOgF5wKVM5I)", "inline": false },
-            { "name": "Series Submission Form", "value": "Weblink: [MKOTH Series Submission Form](https://docs.google.com/forms/d/e/1FAIpQLSdGJnCOl0l5HjxuYexVV_sOKPR1iScq3eiSxGiqKULX3zG4-Q/viewform)", "inline": false },
-            { "name": "Raw Series Submissions", "value": "Weblink: [MKOTH Series Pending and Validations](https://docs.google.com/spreadsheets/d/1zQMN_t94oS55TwO5kI7p-QRkJti0dRwvGwEuGqkxMY4)", "inline": false },
-            { "name": "Attributions", "value": "Icons made by [Vectors Market](https://www.flaticon.com/authors/vectors-market) and [Freepik](http://www.freepik.com) from [Flaticon](https://www.flaticon.com) is licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/)", "inline": false }
+            {
+              "name": "Rank and Player Stats",
+              "value": "Weblink: [MKOTH Series Data](https://docs.google.com/spreadsheets/d/1VRfWwvRSMQizzBanGNRMFVzoYFthrsNKzOgF5wKVM5I)",
+              "inline": false
+            },
+            {
+              "name": "Series Submission Form",
+              "value": "Weblink: [MKOTH Series Submission Form](https://docs.google.com/forms/d/e/1FAIpQLSdGJnCOl0l5HjxuYexVV_sOKPR1iScq3eiSxGiqKULX3zG4-Q/viewform)",
+              "inline": false
+            },
+            {
+              "name": "Raw Series Submissions",
+              "value": "Weblink: [MKOTH Series Pending and Validations](https://docs.google.com/spreadsheets/d/1zQMN_t94oS55TwO5kI7p-QRkJti0dRwvGwEuGqkxMY4)",
+              "inline": false
+            },
+            {
+              "name": "Attributions",
+              "value": "Icons made by [Vectors Market](https://www.flaticon.com/authors/vectors-market) and [Freepik](http://www.freepik.com) from [Flaticon](https://www.flaticon.com) is licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/)",
+              "inline": false
+            }
           ],
           "color": 9803157
         }
       ]
-    }
+    };
   SendWebHook(payload);
 }
 
 
 function SendWebHook(payload)
 {
-  RunProgress("Posting Webhooks");
-  var options =
-    {
-      'method': 'post',
-      'contentType': 'application/json',
-      'payload': JSON.stringify(payload)
-    }
-  var response = UrlFetchApp.fetch(Webhookurl, options);
-  var responseobj = JSON.parse(JSON.stringify(response.getHeaders()));
-
   try
   {
+    var options =
+      {
+        'method': 'post',
+        'contentType': 'application/json',
+        'payload': JSON.stringify(payload)
+      }
+    var response = UrlFetchApp.fetch(Webhookurl, options);
+    var responseobj = JSON.parse(JSON.stringify(response.getHeaders()));
+    RunProgress("Posting Webhooks");
     if (Number(responseobj["x-ratelimit-remaining"]) == 1) 
     {
-      Utilities.sleep(Number(responseobj["x-ratelimit-reset"]) * 1000 - new Date().getTime());
+      Utilities.sleep(Math.abs((responseobj["x-ratelimit-reset"]) * 1000 - new Date().getTime()));
     }
-  } catch (error)
+  }
+  catch (error)
   {
     RunError(error.message);
   }
+}
+
+function SendTestWebHook(payload)
+{
+  var success = true;
+  try
+  {
+    var options =
+      {
+        'method': 'post',
+        'contentType': 'application/json',
+        'payload': JSON.stringify(payload)
+      }
+    var response = UrlFetchApp.fetch(Webhooktesturl, options);
+    var responseobj = JSON.parse(JSON.stringify(response.getHeaders()));
+    if (Number(responseobj["x-ratelimit-remaining"]) == 1) 
+    {
+      Utilities.sleep(Math.abs((responseobj["x-ratelimit-reset"]) * 1000 - new Date().getTime()));
+    }
+  }
+  catch (error)
+  {
+    RunError(error.message);
+    success = false;
+  }
+  return success;
 }

@@ -1,7 +1,6 @@
-//Player ENUMS
+/** Player class constants */
 var PlayerClass =
   {
-    //Player class constants
     KING: "King",
     KNIGHT: "Knight",
     NOBLEMAN: "Nobleman",
@@ -11,9 +10,9 @@ var PlayerClass =
     KNIGHT: " (Knight)"
   }
 
+/** The max cap rank possition of a class */
 var ClassRank =
   {
-    //The max cap rank possition of a class
     KING: 1,
     NOBLEMAN: 10,
     SQUIRE: 30,
@@ -23,15 +22,11 @@ var ClassRank =
 var Playerlist = GetPlayerList();
 
 /**
-* Represents a player.
-* @class
-* @param {String} name the name of the Player
-*/
+ * Represents a player.
+ * @param {String} name the name of the Player
+ */
 function Player(name)
 {
-  /**
-   * @type {String}
-   */
   this.name = name;
   this.joinDate = new Date();
   this.class = PlayerClass.SQUIRE;
@@ -48,11 +43,7 @@ function Player(name)
   this.oldrank = 0;
   this.oldpoints = 0;
 
-  /**
-  * @method
-  * @name Add
-  * @returns {Boolean} if the addition is valid
-  */
+  /** Adds the Player to MKOTH */
   this.Add = function ()
   {
     if (this.name == "")
@@ -236,6 +227,16 @@ function Player(name)
       }
     }
   }
+}
+
+/**
+ * Fetch a player object reference from playerlist
+ * @param {String} playername Player name to fetch
+ * @returns {Player} of the name
+ */
+Player.Fetch = function (playername)
+{
+  return new Player(playername);
 }
 
 /**
