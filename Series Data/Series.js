@@ -9,87 +9,62 @@ var SeriesType =
 
 var invalidReason = "";
 
+/**
+ * Represents a series
+ * @param {Date} date 
+ * @param {String} type 
+ * @param {String} player1 
+ * @param {String} player2
+ * @param {Number} player1wins 
+ * @param {Number} player2wins 
+ * @param {Number} draws 
+ */
 function Series(date, type, player1, player2, player1wins, player2wins, draws)
 {
   this.date = date;
   this.type = type;
-  this.player1 = new Player(player1);
-  this.player2 = new Player(player2);
-  this.player1.LoadPlayerData();
-  this.player2.LoadPlayerData();
+  this.player1 = Player.Fetch(player1);
+  this.player2 = Player.Fetch(player2);
   this.player1wins = player1wins;
   this.player2wins = player2wins;
   this.draws = draws;
 
-  this.ReloadPlayers = function ()
-  {
-    this.player1.LoadPlayerData();
-    this.player2.LoadPlayerData();
-  }
-
   /**
   * Get the Winner player of the series
-  * @method
   * @returns {Player} the player object
   */
   this.GetWinner = function ()
   {
-    if (this.player1wins > this.player2wins)
+    if (this.player1wins < this.player2wins)
     {
-      return this.player1;
+      return this.player2;
     }
     else
     {
-      return this.player2;
+      return this.player1;
     }
   }
 
   this.GetLoser = function ()
   {
-    if (this.player1wins > this.player2wins)
-    {
-      return this.player2;
-    }
-    else
+    if (this.player1wins < this.player2wins)
     {
       return this.player1;
     }
+    else
+    {
+      return this.player2;
+    }
   }
-
-  //  this.totalgames = this.GetTotalGames();
-  //  
-  //  this.GetTotalGames = function()
-  //  {
-  //    //Best of 5 for king and knight series
-  //    if (type == kingSeries || type == knightSeries)
-  //    {
-  //      return 5; 
-  //    }
-  //    //Best of 5 for ranked between noble man
-  //    if (type == rankSeries && (player1.class == "Nobleman"))
-  //    {
-  //      return 5;
-  //    }
-  //    if(type == rankSeries && (player1.class != "Nobleman"))
-  //    {
-  //      return 3;
-  //    }
-  //    if(type == pointSeries)
-  //    {
-  //      return 3;
-  //    }
-  //  }
 
   this.Submit = function ()
   {
+    ValidationSheet.deleteRows(2, 1);
     HistorySheet.appendRow([this.date, this.type, this.player1.name, this.player2.name, this.player1wins, this.player2wins, this.draws]);
   }
 
   this.UpdatePlayers = function ()
   {
-    this.player1.LoadPlayerData();
-    this.player2.LoadPlayerData();
-
     this.player1.wins = this.player1.wins + this.player1wins;
     this.player2.wins = this.player2.wins + this.player2wins;
     this.player1.draws = this.player1.draws + this.draws;
@@ -99,14 +74,10 @@ function Series(date, type, player1, player2, player1wins, player2wins, draws)
 
     this.player1.points = this.player1.points - this.GetCostPoint();
     this.GetWinner().points = this.GetWinner().points + this.GetRewardPoints();
-
-    this.player1.Update();
-    this.player2.Update();
   }
 
   this.isValid = function ()
   {
-    var playerlist = GetPlayerlistCache();
     var player1 = new Player("chanllenger");
     var player2 = new Player("defender");
     var isvalidplayer1 = false;
@@ -119,17 +90,17 @@ function Series(date, type, player1, player2, player1wins, player2wins, draws)
       ValidationSheet.getRange(2, 9).setBackground("#ff0000");
       return false;
     }
-    for (i = 0; i < playerlist.length; i++)
+    for (i = 0; i < PlayerList.length; i++)
     {
-      if (this.player1.name.toLowerCase() == playerlist[i].name.toLowerCase())
+      if (this.player1.name.toLowerCase() == PlayerList[i].name.toLowerCase())
       {
         isvalidplayer1 = true;
-        player1 = playerlist[i];
+        player1 = PlayerList[i];
       }
-      if ((this.player2.name.toLowerCase() == playerlist[i].name.toLowerCase()))
+      if ((this.player2.name.toLowerCase() == PlayerList[i].name.toLowerCase()))
       {
         isvalidplayer2 = true;
-        player2 = playerlist[i];
+        player2 = PlayerList[i];
       }
       if (player1.isRemoved || player2.isRemoved)
       {
@@ -155,10 +126,20 @@ function Series(date, type, player1, player2, player1wins, player2wins, draws)
     }
     if (this.type == SeriesType.RANKED)
     {
+      if (player2.rank == 1)
+      {
+        isvalidplayer2 = false;
+        invalidReason = "King cannot play ranked series";
+      }
       if (player1.rank < player2.rank)
       {
         isvalidplayer1 = false;
         invalidReason = "Player 1 rank is higher than player 2";
+      }
+      if (player1.class == PlayerClass.PEASANT && player2.class == PlayerClass.SQUIRE)
+      {
+        isvalidplayer1 = false;
+        invalidReason = "Player 1 cannot jump more than 1 class";
       }
       if (player2.class == PlayerClass.NOBLEMAN)
       {
@@ -233,17 +214,20 @@ function Series(date, type, player1, player2, player1wins, player2wins, draws)
 
   this.GetCostPoint = function ()
   {
-    // if (this.type == SeriesType.KING && this.player1.rank > 10)
-    // {
-    //   return 30;
-    // }
     if (this.type == SeriesType.KING)
     {
       return 15;
     }
     if (this.type == SeriesType.KNIGHT)
     {
-      return 18;
+      if (this.player1.class == PlayerClass.NOBLEMAN)
+      {
+        return 0;
+      }
+      else
+      {
+        return 18;
+      }
     }
     if (this.type == SeriesType.RANKED)
     {
@@ -272,6 +256,11 @@ function GetValidateList()
   return serieslist;
 }
 
+/**
+ * 
+ * @param {GoogleAppsScript.Spreadsheet.Sheet} Matchsheet
+ * @returns {Series[]}
+ */
 function GetMatchListFromSheet(Matchsheet)
 {
   try
@@ -292,6 +281,10 @@ function GetMatchListFromSheet(Matchsheet)
   return serieslist;
 }
 
+/**
+ * Check the pending series list in validation sheet and state if there is any invalid series
+ * @param {Series[]} uncheckSeriesList 
+ */
 function CheckSeriesList(uncheckSeriesList)
 {
   for (k = 0; k < uncheckSeriesList.length; k++)

@@ -1,5 +1,5 @@
 /**
- * 
+ * A ranking position data
  * @param {Player} player 
  */
 function Ranking(player)
@@ -42,7 +42,7 @@ function Ranking(player)
   }
 }
 
-function RankList()
+function RankingList()
 {
   this.list = GetRankList();
 
@@ -50,7 +50,7 @@ function RankList()
   {
     for (m = 0; m < this.list.length; m++)
     {
-      if (this.list[m].player.class == "Squire")
+      if (this.list[m].player.class == PlayerClass.SQUIRE)
       {
         return m;
       }
@@ -58,36 +58,40 @@ function RankList()
     return 1;
   }
 
+  /**
+   * Update the ranking after a series input
+   * @param {Series} newseries
+   */
   this.Update = function (newseries)
   {
     newseries.UpdatePlayers();
-    if (newseries.type == "Ranked")
+    if (newseries.type == SeriesType.RANKED)
     {
       if (newseries.GetWinner() == newseries.player1)
       {
         var rankjumper = this.list.splice(newseries.player1.rank - 1, 1);
         this.list.splice(newseries.player2.rank - 1, 0, rankjumper[0]);
-        ManagementLogSheet.appendRow([new Date(), "Rank change", "Player: " + newseries.player1.name + " Old Position: " + newseries.player1.rank + " New Position: " + newseries.player2.rank]);
+        ManagementLogSheet.appendRow([new Date(), "Rank Change", JSON.stringify({ Player: newseries.player1.name, OldPosition: newseries.player1.rank, NewPosition: newseries.player2.rank })]);
       }
     }
-    if (newseries.type == "King")
+    if (newseries.type == SeriesType.KING)
     {
       if (newseries.GetWinner() == newseries.player1)
       {
         var rankjumper = this.list.splice(newseries.player1.rank - 1, 1);
         this.list.splice(0, 0, rankjumper[0]);
-        ManagementLogSheet.appendRow([new Date(), "King change", "New King: " + newseries.player1.name + " Old Position: " + newseries.player1.rank]);
-        this.list[1].player.SetClass("Nobleman");
+        ManagementLogSheet.appendRow([new Date(), "King Change", JSON.stringify({ NewKing: newseries.player1.name, OldPosition: newseries.player1.rank })]);
+        this.list[1].player.class = PlayerClass.NOBLEMAN;
       }
     }
-    if (newseries.type == "Knight")
+    if (newseries.type == SeriesType.KNIGHT)
     {
       if (newseries.GetWinner() == newseries.player1)
       {
         var rankjumper = this.list.splice(newseries.player1.rank - 1, 1);
         this.list.splice(this.GetLastNoblemanPosition(), 0, rankjumper[0]);
-        ManagementLogSheet.appendRow([new Date(), "Nobleman Earned", "Player: " + newseries.player1.name + " Old Position: " + newseries.player1.rank + " New Position: " + (this.GetLastNoblemanPosition() + 1)]);
-        this.list[this.GetLastNoblemanPosition()].player.SetClass("Nobleman");
+        ManagementLogSheet.appendRow([new Date(), "Nobleman Earned", JSON.stringify({ Player: newseries.player1.name, OldPosition: newseries.player1.rank, NewPosition: (this.GetLastNoblemanPosition() + 1) })]);
+        this.list[this.GetLastNoblemanPosition()].player.class = PlayerClass.NOBLEMAN;
       }
     }
     this.Refresh();
@@ -100,17 +104,22 @@ function RankList()
       this.list[n].player.rank = n + 1;
       this.list[n].player.RefreshClass();
     }
-    var ranklistarr = [];
-    for (n = 0; n < this.list.length; n++)
+  }
+
+  /**
+   * @param {String} playername
+   */
+  this.PurgePlayer = function (playername)
+  {
+    for (var rl = 0; rl < this.list.length; rl++)
     {
-      var classStr = this.list[n].player.class;
-      if (this.list[n].player.isKnight)
+      var element = this.list[rl];
+      if (element.player.name == playername)
       {
-        classStr = this.list[n].player.class + " (Knight)";
+        this.list.splice(rl, 1);
       }
-      ranklistarr.push([n + 1, this.list[n].player.name, classStr, this.list[n].player.points]);
     }
-    RankingSheet.getRange(2, 1, ranklistarr.length, RankingSheet.getLastColumn()).setValues(ranklistarr);
+    this.Refresh();
   }
 
   this.PostWebhook = function ()
@@ -325,96 +334,36 @@ function RankList()
   }
 }
 
-function RebuildRank()
-{
-  var rankinglist = [];
-  var playerDB = GetPlayerlistCache();
-  RunProgress("1%: Gathering Player Data");
-  for (l = 0; l < playerDB.length; l++)
-  {
-    rankinglist.push(new Ranking(playerDB[l]));
-    rankinglist[l].player.rank = l + 1;
-    rankinglist[l].player.Reset();
-    rankinglist[l].player.RefreshClass();
-  }
-  RunProgress("5%: Resetting All Data");
-  var ranklistarr = [];
-  for (n = 0; n < rankinglist.length; n++)
-  {
-    ranklistarr.push([n + 1, rankinglist[n].player.name, rankinglist[n].player.class, rankinglist[n].player.points]);
-  }
-  RankingSheet.getRange(2, 1, ranklistarr.length, RankingSheet.getLastColumn()).setValues(ranklistarr);
-  RunProgress("10%: Loading Series History");
-  var serieslist = GetSeriesList();
-  for (r = 0; r < serieslist.length; r++)
-  {
-    var ranklist = new RankList();
-    serieslist[r].ReloadPlayers();
-    ranklist.Update(serieslist[r]);
-    RunProgress("Series Rebuilded: " + (r + 1) + "/" + serieslist.length);
-  }
-  var ranklist = GetRankList();
-  var ranklistarr = [];
-  var realrank = 1;
-  for (n = 0; n < ranklist.length; n++)
-  {
-    if (ranklist[n].player.isRemoved == false)
-    {
-      var classStr = ranklist[n].player.class;
-      if (ranklist[n].player.isKnight)
-      {
-        classStr = ranklist[n].player.class + " (Knight)";
-      }
-      ranklistarr.push([realrank, ranklist[n].player.name, classStr, ranklist[n].player.points]);
-      realrank++;
-    }
-  }
-  RunProgress("95%: Rebuilded Rank");
-  RankingSheet.getRange(2, 1, RankingSheet.getLastRow() - 1, RankingSheet.getLastColumn()).clearContent();
-  RankingSheet.getRange(2, 1, ranklistarr.length, RankingSheet.getLastColumn()).setValues(ranklistarr);
-  RunProgress("99%: Updating Player Stats");
-  UpdatePlayerlist();
-  var newranklist = new RankList();
-  newranklist.list = GetPurgedRankList();
-  newranklist.Refresh();
-  return true;
-}
+var RankList = new RankingList();
 
 /**
  * @returns {Ranking[]}
  */
 function GetRankList()
 {
-  var rankinglist = [];
-  var playerDB = GetPlayerlistCache();
-  for (l = 0; l < playerDB.length; l++)
+  var ranklist = [];
+  for (l = 0; l < PlayerList.length; l++)
   {
-    for (ll = 0; ll < playerDB.length; ll++)
+    for (ll = 0; ll < PlayerList.length; ll++)
     {
-      if (playerDB[ll].rank == l + 1)
+      if (PlayerList[ll].rank == l + 1)
       {
-        rankinglist.push(new Ranking(playerDB[ll]))
+        ranklist.push(new Ranking(PlayerList[ll]))
         break;
       }
     }
   }
-  return rankinglist;
+  return ranklist;
 }
 
-function GetPurgedRankList()
+function UpdateRankList()
 {
-  var rankinglist = [];
-  var playerDB = GetPlayerList();
-  for (l = 0; l < playerDB.length; l++)
+  var ranklistarr = [];
+  for (n = 0; n < RankList.list.length; n++)
   {
-    for (ll = 0; ll < playerDB.length; ll++)
-    {
-      if (playerDB[ll].rank == l + 1)
-      {
-        rankinglist.push(new Ranking(playerDB[ll]))
-        break;
-      }
-    }
+    var classStr = (RankList.list[n].player.isKnight) ? RankList.list[n].player.class + " (Knight)" : RankList.list[n].player.class;
+    ranklistarr.push([n + 1, RankList.list[n].player.name, classStr, RankList.list[n].player.points]);
   }
-  return rankinglist;
+  RankingSheet.getRange(2, 1, RankingSheet.getLastRow() - 1, RankingSheet.getLastColumn()).clearContent();
+  RankingSheet.getRange(2, 1, ranklistarr.length, RankingSheet.getLastColumn()).setValues(ranklistarr);
 }

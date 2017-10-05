@@ -26,7 +26,6 @@ function onFormSubmit(e)
     SetValidation();
     FullLogSheet.appendRow([new Date(), "FormSubmitOpen", JSON.stringify(e)]);
     FullLogSheet.sort(1, false);
-    form.setAcceptingResponses(false);
 }
 
 function SetValidation()

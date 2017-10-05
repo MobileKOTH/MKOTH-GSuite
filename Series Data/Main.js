@@ -2,6 +2,7 @@
 var ValidationSheetApp = SpreadsheetApp.openById("1zQMN_t94oS55TwO5kI7p-QRkJti0dRwvGwEuGqkxMY4");
 var DataSheetApp = SpreadsheetApp.openById("1VRfWwvRSMQizzBanGNRMFVzoYFthrsNKzOgF5wKVM5I");
 var ValidationSheet = ValidationSheetApp.getSheetByName("Series Form Submissions");
+var PlayerCodeSheet = ValidationSheetApp.getSheetByName("Player Code");
 var FullLogSheet = ValidationSheetApp.getSheetByName("Full Logs");
 var HistorySheet = DataSheetApp.getSheetByName("Series History");
 var RankingSheet = DataSheetApp.getSheetByName("Rankings");
@@ -10,45 +11,35 @@ var ManagementLogSheet = DataSheetApp.getSheetByName("Management Logs");
 
 function Main()
 {
-    Logger.log("Hello MKOTH");
+
 }
 
 function onOpen()
 {
     //Create Management Control Panel
-    var actions = SpreadsheetApp.newDataValidation().requireValueInList
-        ([
-            Action.SELECT,
-            Action.ADDPLAYER,
-            Action.REMOVEPLAYER,
-            Action.SUBMITSERIES,
-            Action.SWAPSERIESPLAYERS,
-            Action.PROMOTEKNIGHT
-        ]);
-    var run = SpreadsheetApp.newDataValidation().requireValueInList
-        ([
-            Comfirmation.NO,
-            Comfirmation.YES
-        ]);
+    var actionlist = []
+    for (var key in Action)
+    {
+        var element = Action[key];
+        actionlist.push(element);
+    }
+    var actions = SpreadsheetApp.newDataValidation().requireValueInList(actionlist);
+    var run = SpreadsheetApp.newDataValidation().requireValueInList([Comfirmation.NO, Comfirmation.YES]);
     actions.setAllowInvalid(false);
     run.setAllowInvalid(false);
     ManagementLogSheet.getRange("B1").setDataValidation(actions);
-    ManagementLogSheet.getRange("B1").setValue(actions[0]);
+    ManagementLogSheet.getRange("B1").setValue(Action.SELECT);
     ManagementLogSheet.getRange("B5").setDataValidation(run);
     ManagementLogSheet.getRange("B5").setValue(Comfirmation.NO);
 }
 
-function onEdit(e)
+function onAdvancedEdit(e)
 {
     //debug logging for non management edits
     if (e.source.getSheetName() != ManagementLogSheet.getName())
     {
         FullLogSheet.appendRow([new Date(), "onEdit", e.source.getSheetName() + JSON.stringify(e.range.getA1Notation()) + JSON.stringify(e.user) + JSON.stringify(e)]);
     }
-}
-
-function onAdvancedEdit(e)
-{
     //Management Actions UI
     if (e.source.getSheetName() == ManagementLogSheet.getSheetName())
     {
@@ -107,12 +98,13 @@ function onAdvancedEdit(e)
 
 function GetPlayerValidationList()
 {
-    var playerlist = [];
     var playernames = [];
-    playerlist = GetPlayerList();
-    for (i = 0; i < playerlist.length; i++)
+    for (i = 0; i < PlayerList.length; i++)
     {
-        playernames.push(playerlist[i].name);
+        if (!PlayerList[i].isRemoved)
+        {
+            playernames.push(PlayerList[i].name);
+        }
     }
     var players = SpreadsheetApp.newDataValidation().requireValueInList(playernames);
     ManagementLogSheet.getRange("B2").setDataValidation(players);

@@ -2,7 +2,6 @@
 var PlayerClass =
   {
     KING: "King",
-    KNIGHT: "Knight",
     NOBLEMAN: "Nobleman",
     SQUIRE: "Squire",
     VASSAL: "Vassal",
@@ -16,10 +15,48 @@ var ClassRank =
     KING: 1,
     NOBLEMAN: 10,
     SQUIRE: 30,
-    VASSAL: 50
+    VASSAL: 50,
+
+    /**
+     * Parse a player class name to return its rank cap
+     * @param {String} playerclass
+     * @returns {Number}
+     */
+    ParsePlayerClass: function (playerclass)
+    {
+      switch (playerclass)
+      {
+        case PlayerClass.KING:
+          return ClassRank.KING;
+          break;
+
+        case PlayerClass.NOBLEMAN:
+          return ClassRank.NOBLEMAN;
+          break;
+
+        case PlayerClass.SQUIRE:
+          return ClassRank.SQUIRE;
+          break;
+
+        case PlayerClass.VASSAL:
+          return ClassRank.VASSAL;
+          break;
+
+        case PlayerClass.PEASANT:
+          return ClassRank.PEASANT;
+          break;
+      }
+    }
   }
 
-var Playerlist = GetPlayerList();
+var PlayerStatus =
+  {
+    ACTIVE: "Active",
+    HOLIDAY: "Holiday",
+    REMOVED: "Removed"
+  }
+
+var PlayerList = GetPlayerList();
 
 /**
  * Represents a player.
@@ -71,8 +108,11 @@ function Player(name)
     }
 
     this.rank = RankingSheet.getLastRow();
-    PlayerStatsSheet.appendRow([this.name, this.joinDate, this.class, this.wins, this.loss, this.draws, this.GetWinrate(), this.GetGamesCount()]);
+    PlayerStatsSheet.appendRow([this.name, this.joinDate, this.class, this.wins, this.loss, this.draws, this.GetWinrate(), this.GetGamesCount(), 0, null, null]);
     RankingSheet.appendRow([this.rank, this.name, this.class, this.points]);
+    PlayerCodeSheet.appendRow([this.name]);
+    PlayerStatsSheet.sort(1);
+    PlayerStatsSheet.sort(11);
 
     ManagementLogSheet.appendRow([new Date(), "Add Player", JSON.stringify(this)]);
     return true;
@@ -80,79 +120,21 @@ function Player(name)
 
   this.Remove = function ()
   {
-    this.LoadPlayerData();
     this.isRemoved = true;
     ManagementLogSheet.appendRow([new Date(), "Remove Player", JSON.stringify(this)]);
     this.rank = 0;
-    this.Update();
     for (row = 1; row < PlayerStatsSheet.getLastRow(); row++)
     {
       if (PlayerStatsSheet.getRange(row, 1).getValue() == this.name)
       {
         PlayerStatsSheet.getRange(row, 11).setBackground("#ff0000");
-        PlayerStatsSheet.getRange(row, 11).setValue("Removed");
+        PlayerStatsSheet.getRange(row, 11).setValue(PlayerStatus.REMOVED);
         break;
       }
     }
-    for (row = 1; row < RankingSheet.getLastRow(); row++)
-    {
-      if (RankingSheet.getRange(row, 2).getValue() == this.name)
-      {
-        RankingSheet.deleteRow(row);
-        break;
-      }
-    }
-    var ranklist = new RankList();
-    ranklist.Refresh();
-    var ranklist = GetRankList();
-    var ranklistarr = [];
-    var realrank = 1;
-    for (n = 0; n < ranklist.length; n++)
-    {
-      var classStr = ranklist[n].player.class;
-      if (ranklist[n].player.isKnight)
-      {
-        classStr = ranklist[n].player.class + " (Knight)";
-      }
-      ranklistarr.push([realrank, ranklist[n].player.name, classStr, ranklist[n].player.points]);
-      realrank++;
-    }
-    RankingSheet.getRange(2, 1, ranklistarr.length, RankingSheet.getLastColumn()).setValues(ranklistarr);
+    RankList.PurgePlayer(this.name);
+    UpdateRankList();
     return true;
-  }
-
-  this.Reset = function ()
-  {
-    this.class = PlayerClass.SQUIRE;
-    this.points = 0;
-    this.wins = 0;
-    this.loss = 0;
-    this.draws = 0;
-  }
-
-  this.LoadPlayerData = function ()
-  {
-    for (i = 0; i < Playerlist.length; i++)
-    {
-      if (Playerlist[i].name.toLowerCase() == this.name.toLowerCase())
-      {
-        var loadedplayer = Playerlist[i];
-        this.name = loadedplayer.name;
-        this.joinDate = loadedplayer.joinDate;
-        this.class = loadedplayer.class;
-        this.rank = loadedplayer.rank;
-        this.points = loadedplayer.points;
-        this.wins = loadedplayer.wins;
-        this.loss = loadedplayer.loss;
-        this.draws = loadedplayer.draws;
-        this.discordid = loadedplayer.discordid;
-        this.isKnight = loadedplayer.isKnight;
-        this.isRemoved = loadedplayer.isRemoved;
-        this.isHoliday = loadedplayer.isHoliday;
-        this.oldrank = loadedplayer.oldrank;
-        this.oldpoints = loadedplayer.oldpoints;
-      }
-    }
   }
 
   this.GetWinrate = function ()
@@ -163,12 +145,6 @@ function Player(name)
   this.GetGamesCount = function ()
   {
     return this.wins + this.loss + this.draws;
-  }
-
-  this.SetClass = function (newClass)
-  {
-    this.class = newClass;
-    this.UpdateClassRank();
   }
 
   this.RefreshClass = function ()
@@ -193,50 +169,35 @@ function Player(name)
     {
       this.class = PlayerClass.PEASANT;
     }
-    this.UpdateClassRank();
   }
 
   this.PromoteKnight = function ()
   {
     this.isKnight = true;
-    this.Update();
-    UpdatePlayerlist();
-    var ranklist = new RankList();
-    ranklist.Refresh();
-  }
-
-  this.UpdateClassRank = function ()
-  {
-    for (u = 0; u < Playerlist.length; u++)
-    {
-      if (Playerlist[u].name == this.name)
-      {
-        Playerlist[u].rank = this.rank;
-        Playerlist[u].class = this.class;
-      }
-    }
-  }
-
-  this.Update = function ()
-  {
-    for (u = 0; u < Playerlist.length; u++)
-    {
-      if (Playerlist[u].name == this.name)
-      {
-        Playerlist[u] = this;
-      }
-    }
+    UpdatePlayerList();
+    UpdateRankList();
   }
 }
 
 /**
  * Fetch a player object reference from playerlist
  * @param {String} playername Player name to fetch
- * @returns {Player} of the name
+ * @returns {Player} player object reference of the name
  */
 Player.Fetch = function (playername)
 {
-  return new Player(playername);
+  for (var key in PlayerList)
+  {
+    if (PlayerList.hasOwnProperty(key))
+    {
+      var element = PlayerList[key];
+      if (element.name == playername)
+      {
+        return element;
+      }
+    }
+  }
+  return undefined;
 }
 
 /**
@@ -246,9 +207,9 @@ Player.Fetch = function (playername)
  */
 function checkPlayerRepeat(name)
 {
-  for (i = 0; i < Playerlist.length; i++)
+  for (i = 0; i < PlayerList.length; i++)
   {
-    if (Playerlist[i].name.toLowerCase() == name.toLowerCase())
+    if (PlayerList[i].name.toLowerCase() == name.toLowerCase())
     {
       return true;
     }
@@ -266,6 +227,7 @@ function GetPlayerList()
   try 
   {
     PlayerStatsSheet.sort(1);
+    PlayerStatsSheet.sort(11);
     RankingSheet.sort(1);
     var playerDB = PlayerStatsSheet.getRange(2, 1, PlayerStatsSheet.getLastRow() - 1, 11).getValues();
     var playerRankDB = RankingSheet.getRange(2, 1, RankingSheet.getLastRow() - 1, 4).getValues();
@@ -283,10 +245,15 @@ function GetPlayerList()
       playerlist[i].loss = playerDB[i][4];
       playerlist[i].draws = playerDB[i][5];
       playerlist[i].discordid = playerDB[i][9];
-      if (playerDB[i][10] == "Removed")
+      if (playerDB[i][10] == PlayerStatus.REMOVED)
       {
         playerlist[i].isRemoved = true;
         playerlist[i].rank = 0;
+      }
+      if (playerDB[i][10] == PlayerStatus.HOLIDAY)
+      {
+        playerlist[i].isHoliday = true;
+        playerlist[i].rank = ClassRank.ParsePlayerClass(playerlist[i].class);
       }
       for (j = 0; j < playerRankDB.length; j++)
       {
@@ -307,22 +274,15 @@ function GetPlayerList()
   return playerlist;
 }
 
-function GetPlayerlistCache()
-{
-  return Playerlist;
-}
-
-function UpdatePlayerlist()
+function UpdatePlayerList()
 {
   var playerlistarr = [];
-  for (uu = 0; uu < Playerlist.length; uu++)
+  for (uu = 0; uu < PlayerList.length; uu++)
   {
-    classStr = Playerlist[uu].class;
-    if (Playerlist[uu].isKnight)
-    {
-      classStr = Playerlist[uu].class + " (Knight)";
-    }
-    playerlistarr.push([classStr, Playerlist[uu].wins, Playerlist[uu].loss, Playerlist[uu].draws, Playerlist[uu].GetWinrate(), Playerlist[uu].GetGamesCount()]);
+    var classStr = (PlayerList[uu].isKnight) ? PlayerList[uu].class + " (Knight)" : PlayerList[uu].class;
+    playerlistarr.push([classStr, PlayerList[uu].wins, PlayerList[uu].loss, PlayerList[uu].draws, PlayerList[uu].GetWinrate(), PlayerList[uu].GetGamesCount()]);
   }
   PlayerStatsSheet.getRange(2, 3, PlayerStatsSheet.getLastRow() - 1, 6).setValues(playerlistarr);
+  PlayerStatsSheet.sort(1);
+  PlayerStatsSheet.sort(11);
 }

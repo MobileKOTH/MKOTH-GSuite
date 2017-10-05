@@ -1,0 +1,5 @@
+=CONCATENATE("Type: ", INDEX(  FILTER( 'Series Form Submissions'!B:B , NOT(ISBLANK('Series Form Submissions'!B:B))) , ROWS( FILTER( 'Series Form Submissions'!B:B , NOT(ISBLANK('Series Form Submissions'!B:B)) ) ) ) , "
+"
+, "Player1: ", INDEX(  FILTER( 'Series Form Submissions'!C:C , NOT(ISBLANK('Series Form Submissions'!C:C))) , ROWS( FILTER( 'Series Form Submissions'!C:C , NOT(ISBLANK('Series Form Submissions'!C:C)) ) ) ), "
+","Player2: ", INDEX(  FILTER( 'Series Form Submissions'!D:D , NOT(ISBLANK('Series Form Submissions'!D:D))) , ROWS( FILTER( 'Series Form Submissions'!D:D , NOT(ISBLANK('Series Form Submissions'!D:D)) ) ) ),"
+")

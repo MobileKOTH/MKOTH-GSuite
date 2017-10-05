@@ -1,0 +1,6 @@
+{user}, thank you for preventing false series. However if the series was valid you will be assessed for command abuse.
+{!role {user} +MKOTH Members, -Series Affirmer} 
+{!prune not ====================================== 100}
+{require:Series Affirmer}
+{require:#series_confirmation}
+{respond:#casual-chat} 

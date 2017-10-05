@@ -12,11 +12,11 @@ For series submissions, basic validations are in place but these submissions are
 The code is however also designed to be able to revert any fake series submissions.
 
 ## TODO
-- More JSON logging style to ease event parsing in the future
-- Pass by reference for all player objects
-- Holiday mode
-- Point Adjustment
-- Rank cleansing
-- More validation
+- ~~More JSON logging style to ease event parsing in the future~~
+- ~~Pass by reference for all player objects~~
+- Holiday mode (In Progress)
+- Point Adjustment (In Progress)
+- Rank cleansing (In Progress)
+- More validation (Rolled out testing)
 - Fake series revert overhaul
 - ELO

@@ -1,0 +1,7 @@
+{user}, you have been muted for 3 minutes to prevent abuse of `?serieswin` command. Thank you for your understanding.
+{!role {user} +MKOTH Members, -Series Winner, -Series Submitter} 
+{!mute {user} 3 Canceling a series submit} 
+{!prune not ====================================== 100} 
+{require:Series Winner} 
+{require:Series Submitter}
+{respond:#casual-chat} 

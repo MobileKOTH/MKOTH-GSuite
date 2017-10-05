@@ -1,0 +1,5 @@
+{user}, thank you for submitting a series.
+{!role {user} +MKOTH Members, -Series Submitter} 
+{!prune not ====================================== 100}
+{require:#series_submitter}
+{respond:#casual-chat} 
