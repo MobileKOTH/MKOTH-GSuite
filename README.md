@@ -19,4 +19,4 @@ The code is however also designed to be able to revert any fake series submissio
 - Rank cleansing (In Progress)
 - More validation (Rolled out testing)
 - Fake series revert overhaul
-- ELO
+- ~~ELO~~
