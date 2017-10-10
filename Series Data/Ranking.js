@@ -40,6 +40,13 @@ function Ranking(player)
       return "p** `▼" + this.pointChanges + "` ";
     }
   }
+
+  this.GetELOText = function ()
+  {
+    /**@type {Number} */
+    var elo = this.player.GetELO();
+    return " | ELO: " + elo.toPrecision(6);
+  }
 }
 
 function RankingList()
@@ -124,10 +131,11 @@ function RankingList()
 
   this.PostWebhook = function ()
   {
+    GetRankedSeriesELO();
     var sheeturl = "https://docs.google.com/spreadsheets/d/1VRfWwvRSMQizzBanGNRMFVzoYFthrsNKzOgF5wKVM5I";
     var fields = [];
     fields.push({
-      "name": ":crown: King: " + this.list[0].player.name + this.list[0].GetRankChangesText(),
+      "name": ":crown: King: " + this.list[0].player.name + this.list[0].GetRankChangesText() + this.list[0].GetELOText(),
       "value": " <@!" + this.list[0].player.discordid + "> **" + this.list[0].player.points + this.list[0].GetPointChangesText() + "\n",
       "inline": false
     });
@@ -138,7 +146,7 @@ function RankingList()
       if (element.player.class == PlayerClass.NOBLEMAN) 
       {
         fields.push({
-          "name": ":champagne_glass: Nobleman: " + element.player.name + " #" + element.player.rank + element.GetRankChangesText(),
+          "name": ":champagne_glass: Nobleman: " + element.player.name + " #" + element.player.rank + element.GetRankChangesText() + element.GetELOText(),
           "value": " <@!" + element.player.discordid + "> **" + element.player.points + element.GetPointChangesText() + "\n",
           "inline": false
         });
@@ -151,7 +159,7 @@ function RankingList()
       if (element.player.isKnight) 
       {
         fields.push({
-          "name": ":shield: Knight: " + element.player.name + " #" + element.player.rank + element.GetRankChangesText(),
+          "name": ":shield: Knight: " + element.player.name + " #" + element.player.rank + element.GetRankChangesText() + element.GetELOText(),
           "value": " <@!" + element.player.discordid + "> **" + element.player.points + element.GetPointChangesText() + "\n",
           "inline": false
         });
@@ -192,7 +200,7 @@ function RankingList()
       if (element.player.class == PlayerClass.SQUIRE && element.player.rank <= 20) 
       {
         fields.push({
-          "name": "#" + element.player.rank + " " + element.player.name + element.GetRankChangesText(),
+          "name": "#" + element.player.rank + " " + element.player.name + element.GetRankChangesText() + element.GetELOText(),
           "value": " <@!" + element.player.discordid + "> **" + element.player.points + element.GetPointChangesText() + "\n",
           "inline": false
         });
@@ -205,7 +213,7 @@ function RankingList()
       if (element.player.class == PlayerClass.SQUIRE && element.player.rank > 20) 
       {
         fields2.push({
-          "name": "#" + element.player.rank + " " + element.player.name + element.GetRankChangesText(),
+          "name": "#" + element.player.rank + " " + element.player.name + element.GetRankChangesText() + element.GetELOText(),
           "value": " <@!" + element.player.discordid + "> **" + element.player.points + element.GetPointChangesText() + "\n",
           "inline": false
         });
@@ -256,7 +264,7 @@ function RankingList()
       if (element.player.class == PlayerClass.VASSAL) 
       {
         fields.push({
-          "name": "#" + element.player.rank + " " + element.player.name + element.GetRankChangesText(),
+          "name": "#" + element.player.rank + " " + element.player.name + element.GetRankChangesText() + element.GetELOText(),
           "value": " <@!" + element.player.discordid + "> **" + element.player.points + element.GetPointChangesText() + "\n",
           "inline": false
         });
@@ -297,7 +305,7 @@ function RankingList()
       if (element.player.class == PlayerClass.PEASANT) 
       {
         fields.push({
-          "name": "#" + element.player.rank + " " + element.player.name + element.GetRankChangesText(),
+          "name": "#" + element.player.rank + " " + element.player.name + element.GetRankChangesText() + element.GetELOText(),
           "value": " <@!" + element.player.discordid + "> **" + element.player.points + element.GetPointChangesText() + "\n",
           "inline": false
         });
@@ -364,6 +372,6 @@ function UpdateRankList()
     var classStr = (RankList.list[n].player.isKnight) ? RankList.list[n].player.class + " (Knight)" : RankList.list[n].player.class;
     ranklistarr.push([n + 1, RankList.list[n].player.name, classStr, RankList.list[n].player.points]);
   }
-  RankingSheet.getRange(2, 1, RankingSheet.getLastRow() - 1, RankingSheet.getLastColumn()).clearContent();
-  RankingSheet.getRange(2, 1, ranklistarr.length, RankingSheet.getLastColumn()).setValues(ranklistarr);
+  RankingSheet.getRange(2, 1, RankingSheet.getLastRow() - 1, 4).clearContent();
+  RankingSheet.getRange(2, 1, ranklistarr.length, 4).setValues(ranklistarr);
 }

@@ -80,6 +80,8 @@ function Player(name)
   this.oldrank = 0;
   this.oldpoints = 0;
 
+  var elo = 1200;
+
   /** Adds the Player to MKOTH */
   this.Add = function ()
   {
@@ -177,6 +179,16 @@ function Player(name)
     UpdatePlayerList();
     UpdateRankList();
   }
+
+  this.GetELO = function ()
+  {
+    return elo;
+  }
+
+  this.SetELO = function (value)
+  {
+    elo = value;
+  }
 }
 
 /**
@@ -226,9 +238,12 @@ function GetPlayerList()
   var playerlist = [];
   try 
   {
-    PlayerStatsSheet.sort(1);
-    PlayerStatsSheet.sort(11);
-    RankingSheet.sort(1);
+    try
+    {
+      PlayerStatsSheet.sort(1);
+      PlayerStatsSheet.sort(11);
+      RankingSheet.sort(1);
+    } catch (error) { }
     var playerDB = PlayerStatsSheet.getRange(2, 1, PlayerStatsSheet.getLastRow() - 1, 11).getValues();
     var playerRankDB = RankingSheet.getRange(2, 1, RankingSheet.getLastRow() - 1, 4).getValues();
     for (i = 0; i < playerDB.length; i++)

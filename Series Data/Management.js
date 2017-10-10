@@ -6,7 +6,7 @@ var Action =
     REMOVEPLAYER: "Remove Player",
     SUBMITSERIES: "Submit Series",
     SWAPSERIESPLAYERS: "Swap Series Players",
-    PROMOTEKNIGHT: "Promote Knight"
+    PROMOTEKNIGHT: "Promote Knight",
   }
 
 var Comfirmation =
@@ -20,6 +20,7 @@ var runtime = new Date().getTime();
 //Running of Management Action
 function onClickRun()
 {
+  LoadValidationData();
   RunProgress("Running Please Wait");
   var action = ManagementLogSheet.getRange("B1").getValue();
   var input1 = ManagementLogSheet.getRange("B2").getValue();
@@ -123,9 +124,10 @@ function SubmitSeries()
   }
   if (success && processed > 0)
   {
-    RunProgress("Updating Player Stats");
+    RunProgress("Posting Webhooks");
     PostSeriesInstructionWebhook();
     RankList.PostWebhook();
+    RunProgress("Updating Player Stats");
   }
   if (processed > 0)
   {
@@ -147,6 +149,11 @@ function SwapSeriesPlayers()
 function PromoteKnight(input)
 {
   var player = Player.Fetch(input);
+  if (player == undefined)
+  {
+    RunError("Player not selected")
+    return false;
+  }
   player.PromoteKnight();
   ManagementLogSheet.appendRow([new Date(), "Knight Promotion", JSON.stringify(player)]);
   return true;
@@ -196,7 +203,6 @@ function SendWebHook(payload)
       }
     var response = UrlFetchApp.fetch(Webhookurl, options);
     var responseobj = JSON.parse(JSON.stringify(response.getHeaders()));
-    RunProgress("Posting Webhooks");
     if (Number(responseobj["x-ratelimit-remaining"]) <= 1) 
     {
       Utilities.sleep((responseobj["x-ratelimit-reset"]) * 1000 - Date.parse(responseobj["Date"]));

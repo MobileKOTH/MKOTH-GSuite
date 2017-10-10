@@ -1,13 +1,20 @@
 //Global Constants
-var ValidationSheetApp = SpreadsheetApp.openById("1zQMN_t94oS55TwO5kI7p-QRkJti0dRwvGwEuGqkxMY4");
-var DataSheetApp = SpreadsheetApp.openById("1VRfWwvRSMQizzBanGNRMFVzoYFthrsNKzOgF5wKVM5I");
-var ValidationSheet = ValidationSheetApp.getSheetByName("Series Form Submissions");
-var PlayerCodeSheet = ValidationSheetApp.getSheetByName("Player Code");
-var FullLogSheet = ValidationSheetApp.getSheetByName("Full Logs");
+var DataSheetApp = SpreadsheetApp.getActive();
 var HistorySheet = DataSheetApp.getSheetByName("Series History");
 var RankingSheet = DataSheetApp.getSheetByName("Rankings");
 var PlayerStatsSheet = DataSheetApp.getSheetByName("Player Statistics");
 var ManagementLogSheet = DataSheetApp.getSheetByName("Management Logs");
+var ValidationSheetApp;
+/**@type {GoogleAppsScript.Spreadsheet.Spreadsheet} */
+var ValidationSheet, PlayerCodeSheet, FullLogSheet;
+
+function LoadValidationData()
+{
+    ValidationSheetApp = SpreadsheetApp.openById("1zQMN_t94oS55TwO5kI7p-QRkJti0dRwvGwEuGqkxMY4");
+    ValidationSheet = ValidationSheetApp.getSheetByName("Series Form Submissions");
+    PlayerCodeSheet = ValidationSheetApp.getSheetByName("Player Code");
+    FullLogSheet = ValidationSheetApp.getSheetByName("Full Logs");
+}
 
 function Main()
 {
@@ -17,13 +24,7 @@ function Main()
 function onOpen()
 {
     //Create Management Control Panel
-    var actionlist = []
-    for (var key in Action)
-    {
-        var element = Action[key];
-        actionlist.push(element);
-    }
-    var actions = SpreadsheetApp.newDataValidation().requireValueInList(actionlist);
+    var actions = SpreadsheetApp.newDataValidation().requireValueInList(Tools.Arrayify(Action));
     var run = SpreadsheetApp.newDataValidation().requireValueInList([Comfirmation.NO, Comfirmation.YES]);
     actions.setAllowInvalid(false);
     run.setAllowInvalid(false);
@@ -35,11 +36,28 @@ function onOpen()
 
 function onAdvancedEdit(e)
 {
+    LoadValidationData();
     //debug logging for non management edits
-    if (e.source.getSheetName() != ManagementLogSheet.getName())
+    if (e.source.getSheetName() == ManagementLogSheet.getName())
     {
         FullLogSheet.appendRow([new Date(), "onEdit", e.source.getSheetName() + JSON.stringify(e.range.getA1Notation()) + JSON.stringify(e.user) + JSON.stringify(e)]);
     }
+
+    //Discord id for player
+    if (e.source.getSheetName() != PlayerStatsSheet.getName())
+    {
+        /** @type {GoogleAppsScript.Spreadsheet.Range} */
+        var range = e.range;
+        if (range.getColumn() == 10)
+        {
+            var payload =
+                {
+                    "content": "Welcome! <@!" + range.getValue() + ">, you are now officially added to the MKOTH Ranking, you will receive a submission id and be added to the submission form soon."
+                };
+            SendWebHook(payload);
+        }
+    }
+
     //Management Actions UI
     if (e.source.getSheetName() == ManagementLogSheet.getSheetName())
     {
