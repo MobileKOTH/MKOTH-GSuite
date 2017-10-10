@@ -1,4 +1,7 @@
-//Series ENUMS
+/**
+ * Series ENUMS
+ * @customfunction
+ */
 var SeriesType =
   {
     RANKED: "Ranked",

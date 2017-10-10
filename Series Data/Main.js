@@ -44,7 +44,7 @@ function onAdvancedEdit(e)
     }
 
     //Discord id for player
-    if (e.source.getSheetName() != PlayerStatsSheet.getName())
+    if (e.source.getSheetName() == PlayerStatsSheet.getName())
     {
         /** @type {GoogleAppsScript.Spreadsheet.Range} */
         var range = e.range;

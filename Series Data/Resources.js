@@ -1,4 +1,17 @@
 /**
+ * @customfunction
+ */
+var StatsType =
+    {
+        SERIES: 0,
+        GAMES: 1,
+        WIN: "W",
+        LOSS: "L"
+    }
+
+// -------------------------------- Player Listing -------------------------------- 
+
+/**
  * Get the list of player names
  * @return {String[]}
  * @customfunction
@@ -47,14 +60,16 @@ function GetPlayerStatus()
     return remarks;
 }
 
+// -------------------------------- Advanced Stats -------------------------------- 
+
 /**
  * @return {Number[]}
  * @customfunction
  */
-function GetTotalSeriesWins()
+function GetSeriesStats(seriestype, winloss)
 {
     var serieslist = GetSeriesList();
-    var values = ["W"];
+    var values = [winloss];
     for (var key in PlayerList)
     {
         if (PlayerList.hasOwnProperty(key))
@@ -66,9 +81,27 @@ function GetTotalSeriesWins()
                 if (serieslist.hasOwnProperty(key1))
                 {
                     var series = serieslist[key1];
-                    if (series.GetWinner().name == element)
+                    if (seriestype == series.type)
                     {
-                        count++;
+                        if (series.GetWinner().name == element && winloss == StatsType.WIN)
+                        {
+                            count++;
+                        }
+                        else if (series.GetLoser().name == element && winloss == StatsType.LOSS)
+                        {
+                            count++;
+                        }
+                    }
+                    else if (seriestype == "All")
+                    {
+                        if (series.GetWinner().name == element && winloss == StatsType.WIN)
+                        {
+                            count++;
+                        }
+                        else if (series.GetLoser().name == element && winloss == StatsType.LOSS)
+                        {
+                            count++;
+                        }
                     }
                 }
             }
@@ -78,42 +111,13 @@ function GetTotalSeriesWins()
     return values;
 }
 
-/**
- * @return {Number[]}
- * @customfunction
- */
-function GetTotalSeriesLoss()
-{
-    var serieslist = GetSeriesList();
-    var values = ["L"];
-    for (var key in PlayerList)
-    {
-        if (PlayerList.hasOwnProperty(key))
-        {
-            var element = PlayerList[key].name;
-            var count = 0;
-            for (var key1 in serieslist)
-            {
-                if (serieslist.hasOwnProperty(key1))
-                {
-                    var series = serieslist[key1];
-                    if (series.GetLoser().name == element)
-                    {
-                        count++;
-                    }
-                }
-            }
-            values.push(count);
-        }
-    }
-    return values;
-}
 
+// -------------------------------- ELO -------------------------------- 
 /**
  * @return {Number[]}
  * @customfunction
  */
-function GetRankedSeriesELO()
+function GetSeriesELO(seriestype)
 {
     var serieslist = GetSeriesList();
     var values = ["Ranked"]
@@ -122,7 +126,14 @@ function GetRankedSeriesELO()
         if (serieslist.hasOwnProperty(key))
         {
             var element = serieslist[key];
-            if (element.type != SeriesType.POINT)
+            if (seriestype == SeriesType.RANKED)
+            {
+                if (element.type != SeriesType.POINT)
+                {
+                    CalculateSeriesEloRating(element);
+                }
+            }
+            else if (seriestype == "All")
             {
                 CalculateSeriesEloRating(element);
             }
@@ -143,34 +154,7 @@ function GetRankedSeriesELO()
  * @return {Number[]}
  * @customfunction
  */
-function GetALLSeriesELO()
-{
-    var serieslist = GetSeriesList();
-    var values = ["All"]
-    for (var key in serieslist)
-    {
-        if (serieslist.hasOwnProperty(key))
-        {
-            var element = serieslist[key];
-            CalculateSeriesEloRating(element);
-        }
-    }
-    for (var key in PlayerList)
-    {
-        if (PlayerList.hasOwnProperty(key))
-        {
-            var element = PlayerList[key];
-            values.push(element.GetELO());
-        }
-    }
-    return values;
-}
-
-/**
- * @return {Number[]}
- * @customfunction
- */
-function GetRankedGamesELO()
+function GetGamesELO(seriestype)
 {
     var serieslist = GetSeriesList();
     var values = ["Ranked"]
@@ -179,37 +163,17 @@ function GetRankedGamesELO()
         if (serieslist.hasOwnProperty(key))
         {
             var element = serieslist[key];
-            if (element.type != SeriesType.POINT)
+            if (seriestype == SeriesType.RANKED)
+            {
+                if (element.type != SeriesType.POINT)
+                {
+                    CalculateGamesEloRating(element);
+                }
+            }
+            else if (seriestype == "All")
             {
                 CalculateGamesEloRating(element);
             }
-        }
-    }
-    for (var key in PlayerList)
-    {
-        if (PlayerList.hasOwnProperty(key))
-        {
-            var element = PlayerList[key];
-            values.push(element.GetELO());
-        }
-    }
-    return values;
-}
-
-/**
- * @return {Number[]}
- * @customfunction
- */
-function GetALLGamesELO()
-{
-    var serieslist = GetSeriesList();
-    var values = ["All"]
-    for (var key in serieslist)
-    {
-        if (serieslist.hasOwnProperty(key))
-        {
-            var element = serieslist[key];
-            CalculateGamesEloRating(element);
         }
     }
     for (var key in PlayerList)
@@ -287,6 +251,8 @@ function CalculateGamesEloRating(series)
         var r2 = Math.pow(10, score2 / 400)
         var s2 = Math.abs(s1 - 1)
         var final = [score1 + k * (s1 - (r1 / (r1 + r2))), score2 + k * (s2 - (r2 / (r1 + r2)))]
+        score1 = final[0];
+        score2 = final[1];
         series.player1.SetELO(final[0]);
         series.player2.SetELO(final[1]);
     }
@@ -298,6 +264,8 @@ function CalculateGamesEloRating(series)
         var r2 = Math.pow(10, score2 / 400)
         var s2 = Math.abs(s1 - 1)
         var final = [score1 + k * (s1 - (r1 / (r1 + r2))), score2 + k * (s2 - (r2 / (r1 + r2)))]
+        score1 = final[0];
+        score2 = final[1];
         series.player1.SetELO(final[0]);
         series.player2.SetELO(final[1]);
     }
@@ -309,11 +277,14 @@ function CalculateGamesEloRating(series)
         var r2 = Math.pow(10, score2 / 400)
         var s2 = Math.abs(s1 - 1)
         var final = [score1 + k * (s1 - (r1 / (r1 + r2))), score2 + k * (s2 - (r2 / (r1 + r2)))]
+        score1 = final[0];
+        score2 = final[1];
         series.player1.SetELO(final[0]);
         series.player2.SetELO(final[1]);
     }
 }
 
+// -------------------------------- Tools -------------------------------- 
 var Tools =
     {
         Arrayify: function (object)
