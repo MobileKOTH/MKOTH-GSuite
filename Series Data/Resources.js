@@ -3,10 +3,11 @@
  */
 var StatsType =
     {
-        SERIES: 0,
-        GAMES: 1,
         WIN: "W",
-        LOSS: "L"
+        LOSS: "L",
+        ALL: "All",
+        MAIN: "Main",
+        MINIMUMGAMESELO: 20
     }
 
 // -------------------------------- Player Listing -------------------------------- 
@@ -92,7 +93,7 @@ function GetSeriesStats(seriestype, winloss)
                             count++;
                         }
                     }
-                    else if (seriestype == "All")
+                    else if (seriestype == StatsType.ALL)
                     {
                         if (series.GetWinner().name == element && winloss == StatsType.WIN)
                         {
@@ -120,20 +121,20 @@ function GetSeriesStats(seriestype, winloss)
 function GetSeriesELO(seriestype)
 {
     var serieslist = GetSeriesList();
-    var values = ["Ranked"]
+    var values = [seriestype]
     for (var key in serieslist)
     {
         if (serieslist.hasOwnProperty(key))
         {
             var element = serieslist[key];
-            if (seriestype == SeriesType.RANKED)
+            if (seriestype == StatsType.MAIN)
             {
                 if (element.type != SeriesType.POINT)
                 {
                     CalculateSeriesEloRating(element);
                 }
             }
-            else if (seriestype == "All")
+            else if (seriestype == StatsType.ALL)
             {
                 CalculateSeriesEloRating(element);
             }
@@ -144,7 +145,7 @@ function GetSeriesELO(seriestype)
         if (PlayerList.hasOwnProperty(key))
         {
             var element = PlayerList[key];
-            values.push(element.GetELO());
+            values.push((element.GetELO().games >= StatsType.MINIMUMGAMESELO) ? element.GetELO().value : "TBD:" + Tools.NumberPadding((StatsType.MINIMUMGAMESELO - element.GetELO().games), 2));
         }
     }
     return values;
@@ -157,20 +158,20 @@ function GetSeriesELO(seriestype)
 function GetGamesELO(seriestype)
 {
     var serieslist = GetSeriesList();
-    var values = ["Ranked"]
+    var values = [seriestype]
     for (var key in serieslist)
     {
         if (serieslist.hasOwnProperty(key))
         {
             var element = serieslist[key];
-            if (seriestype == SeriesType.RANKED)
+            if (seriestype == StatsType.MAIN)
             {
                 if (element.type != SeriesType.POINT)
                 {
                     CalculateGamesEloRating(element);
                 }
             }
-            else if (seriestype == "All")
+            else if (seriestype == StatsType.ALL)
             {
                 CalculateGamesEloRating(element);
             }
@@ -181,7 +182,7 @@ function GetGamesELO(seriestype)
         if (PlayerList.hasOwnProperty(key))
         {
             var element = PlayerList[key];
-            values.push(element.GetELO());
+            values.push((element.GetELO().games >= StatsType.MINIMUMGAMESELO) ? element.GetELO().value : "TBD:" + Tools.NumberPadding((StatsType.MINIMUMGAMESELO - element.GetELO().games), 2));
         }
     }
     return values;
@@ -190,7 +191,7 @@ function GetGamesELO(seriestype)
 function GetLeaderboardRankedSeriesELO()
 {
     var serieslist = GetSeriesList();
-    var values = ["Series ELO"]
+    var values = ["Main ELO"];
     for (var key in serieslist)
     {
         if (serieslist.hasOwnProperty(key))
@@ -207,7 +208,7 @@ function GetLeaderboardRankedSeriesELO()
         if (RankList.list.hasOwnProperty(key))
         {
             var rank = RankList.list[key];
-            values.push(rank.player.GetELO());
+            values.push((rank.player.GetELO().games >= StatsType.MINIMUMGAMESELO) ? rank.player.GetELO().value : "TBD:" + Tools.NumberPadding((StatsType.MINIMUMGAMESELO - rank.player.GetELO().games), 2));
         }
     }
     return values;
@@ -215,22 +216,23 @@ function GetLeaderboardRankedSeriesELO()
 
 /**
  * 
- * @param {Series} series 
+ * @param {Series} series
+ * @returns {Number} Total games of the series
  */
 function CalculateSeriesEloRating(series)
 {
     //score1 = score of player 1, score 2 = score of player 2
     //s1 = 1 if player 1 wins, s1 = 0 if player 2 wins, s1 = 0.5 if draw
-    var score1 = series.player1.GetELO();
-    var score2 = series.player2.GetELO();
+    var score1 = series.player1.GetELO().value;
+    var score2 = series.player2.GetELO().value;
     var s1 = (series.GetWinner() == series.player1) ? 1 : 0;
     var k = 40;
     var r1 = Math.pow(10, score1 / 400)
     var r2 = Math.pow(10, score2 / 400)
     var s2 = Math.abs(s1 - 1)
     var final = [score1 + k * (s1 - (r1 / (r1 + r2))), score2 + k * (s2 - (r2 / (r1 + r2)))]
-    series.player1.SetELO(final[0]);
-    series.player2.SetELO(final[1]);
+    series.player1.SetELO(final[0], (series.player1wins + series.player2wins + series.draws));
+    series.player2.SetELO(final[1], (series.player1wins + series.player2wins + series.draws));
 }
 
 /**
@@ -241,37 +243,26 @@ function CalculateGamesEloRating(series)
 {
     //score1 = score of player 1, score 2 = score of player 2
     //s1 = 1 if player 1 wins, s1 = 0 if player 2 wins, s1 = 0.5 if draw
-    var score1 = series.player1.GetELO();
-    var score2 = series.player2.GetELO();
+    var score1 = series.player1.GetELO().value;
+    var score2 = series.player2.GetELO().value;
     for (var g = 0; g < series.player1wins; g++)
     {
         var s1 = 1;
-        var k = 40;
-        var r1 = Math.pow(10, score1 / 400)
-        var r2 = Math.pow(10, score2 / 400)
-        var s2 = Math.abs(s1 - 1)
-        var final = [score1 + k * (s1 - (r1 / (r1 + r2))), score2 + k * (s2 - (r2 / (r1 + r2)))]
-        score1 = final[0];
-        score2 = final[1];
-        series.player1.SetELO(final[0]);
-        series.player2.SetELO(final[1]);
+        proccess();
     }
     for (var g = 0; g < series.player2wins; g++)
     {
         var s1 = 0;
-        var k = 40;
-        var r1 = Math.pow(10, score1 / 400)
-        var r2 = Math.pow(10, score2 / 400)
-        var s2 = Math.abs(s1 - 1)
-        var final = [score1 + k * (s1 - (r1 / (r1 + r2))), score2 + k * (s2 - (r2 / (r1 + r2)))]
-        score1 = final[0];
-        score2 = final[1];
-        series.player1.SetELO(final[0]);
-        series.player2.SetELO(final[1]);
+        proccess();
     }
     for (var g = 0; g < series.draws; g++)
     {
         var s1 = 0.5;
+        proccess();
+    }
+
+    function proccess()
+    {
         var k = 40;
         var r1 = Math.pow(10, score1 / 400)
         var r2 = Math.pow(10, score2 / 400)
@@ -287,6 +278,11 @@ function CalculateGamesEloRating(series)
 // -------------------------------- Tools -------------------------------- 
 var Tools =
     {
+        /**
+         * Turn object properties into a set of array
+         * @param {Object} object
+         * @returns {Array}
+         */
         Arrayify: function (object)
         {
             var list = []
@@ -296,5 +292,19 @@ var Tools =
                 list.push(element);
             }
             return list;
+        },
+
+        /**
+         * Pad 0 to make a fixed length number
+         * @param {Number} number
+         * @param {Number} length
+         * @returns {String}
+         */
+        NumberPadding: function (number, length, z)
+        {
+            z = z || '0';
+            number = number + '';
+            return number.length >= length ? number : new Array(length - number.length + 1).join(z) + number;
         }
     };
+

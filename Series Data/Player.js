@@ -80,7 +80,7 @@ function Player(name)
   this.oldrank = 0;
   this.oldpoints = 0;
 
-  var elo = 1200;
+  var elo = { value: 1200, games: 0 };
 
   /** Adds the Player to MKOTH */
   this.Add = function ()
@@ -185,9 +185,10 @@ function Player(name)
     return elo;
   }
 
-  this.SetELO = function (value)
+  this.SetELO = function (value, games)
   {
-    elo = value;
+    elo.value = value;
+    elo.games = (!isNaN(games)) ? (elo.games + games) : (elo.games + 1);
   }
 }
 
