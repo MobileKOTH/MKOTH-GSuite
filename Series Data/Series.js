@@ -11,6 +11,7 @@ var SeriesType =
   }
 
 var invalidReason = "";
+
 /**
  * Represents a series
  * @param {Date} date 
@@ -267,7 +268,6 @@ function GetMatchListFromSheet(Matchsheet)
 {
   try
   {
-    try { Matchsheet.sort(1); } catch (error) { }
     var serieslist = [];
     var seriesDB = Matchsheet.getRange(2, 1, Matchsheet.getLastRow() - 1, 7).getValues();
     for (s = 0; s < seriesDB.length; s++)

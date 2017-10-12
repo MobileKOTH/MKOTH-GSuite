@@ -113,8 +113,6 @@ function Player(name)
     PlayerStatsSheet.appendRow([this.name, this.joinDate, this.class, this.wins, this.loss, this.draws, this.GetWinrate(), this.GetGamesCount(), 0, null, null]);
     RankingSheet.appendRow([this.rank, this.name, this.class, this.points]);
     PlayerCodeSheet.appendRow([this.name]);
-    PlayerStatsSheet.sort(1);
-    PlayerStatsSheet.sort(11);
 
     ManagementLogSheet.appendRow([new Date(), "Add Player", JSON.stringify(this)]);
     return true;
@@ -239,12 +237,6 @@ function GetPlayerList()
   var playerlist = [];
   try 
   {
-    try
-    {
-      PlayerStatsSheet.sort(1);
-      PlayerStatsSheet.sort(11);
-      RankingSheet.sort(1);
-    } catch (error) { }
     var playerDB = PlayerStatsSheet.getRange(2, 1, PlayerStatsSheet.getLastRow() - 1, 11).getValues();
     var playerRankDB = RankingSheet.getRange(2, 1, RankingSheet.getLastRow() - 1, 4).getValues();
     for (i = 0; i < playerDB.length; i++)
@@ -299,6 +291,4 @@ function UpdatePlayerList()
     playerlistarr.push([classStr, PlayerList[uu].wins, PlayerList[uu].loss, PlayerList[uu].draws, PlayerList[uu].GetWinrate(), PlayerList[uu].GetGamesCount()]);
   }
   PlayerStatsSheet.getRange(2, 3, PlayerStatsSheet.getLastRow() - 1, 6).setValues(playerlistarr);
-  PlayerStatsSheet.sort(1);
-  PlayerStatsSheet.sort(11);
 }

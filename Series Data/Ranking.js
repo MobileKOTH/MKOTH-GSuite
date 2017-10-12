@@ -43,9 +43,11 @@ function Ranking(player)
 
   this.GetELOText = function ()
   {
-    return " | ELO: " + ((this.player.GetELO().games >= StatsType.MINIMUMGAMESELO) ? this.player.GetELO().value.toPrecision(6) : ("TBD:" + Tools.NumberPadding((StatsType.MINIMUMGAMESELO - this.player.GetELO().games), 2)));
+    return " | ELO " + ((this.player.GetELO().games >= StatsType.MINIMUMGAMESELO) ? this.player.GetELO().value.toPrecision(6) : ("TBD:" + Tools.NumberPadding((StatsType.MINIMUMGAMESELO - this.player.GetELO().games), 2)));
   }
 }
+
+var RankList = new RankingList();
 
 function RankingList()
 {
@@ -130,6 +132,7 @@ function RankingList()
   this.PostWebhook = function ()
   {
     GetSeriesELO(StatsType.MAIN);
+
     var sheeturl = "https://docs.google.com/spreadsheets/d/1VRfWwvRSMQizzBanGNRMFVzoYFthrsNKzOgF5wKVM5I";
     var fields = [];
     fields.push({
@@ -339,8 +342,6 @@ function RankingList()
     SendWebHook(payload);
   }
 }
-
-var RankList = new RankingList();
 
 /**
  * @returns {Ranking[]}

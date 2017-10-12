@@ -4,11 +4,13 @@ var HistorySheet = DataSheetApp.getSheetByName("Series History");
 var RankingSheet = DataSheetApp.getSheetByName("Rankings");
 var PlayerStatsSheet = DataSheetApp.getSheetByName("Player Statistics");
 var ManagementLogSheet = DataSheetApp.getSheetByName("Management Logs");
+
+/** @type {GoogleAppsScript.Spreadsheet.SpreadsheetApp} */
 var ValidationSheetApp;
-/**@type {GoogleAppsScript.Spreadsheet.Spreadsheet} */
+/** @type {GoogleAppsScript.Spreadsheet.Spreadsheet} */
 var ValidationSheet, PlayerCodeSheet, FullLogSheet;
 
-function LoadValidationData()
+function LoadValidationSheets()
 {
     ValidationSheetApp = SpreadsheetApp.openById("1zQMN_t94oS55TwO5kI7p-QRkJti0dRwvGwEuGqkxMY4");
     ValidationSheet = ValidationSheetApp.getSheetByName("Series Form Submissions");
@@ -31,14 +33,15 @@ function onOpen()
     ManagementLogSheet.getRange("B1").setDataValidation(actions);
     ManagementLogSheet.getRange("B1").setValue(Action.SELECT);
     ManagementLogSheet.getRange("B5").setDataValidation(run);
-    ManagementLogSheet.getRange("B5").setValue(Comfirmation.NO);
+    ManagementLogSheet.getRange("B5").clearContent();
 }
 
 function onAdvancedEdit(e)
 {
-    LoadValidationData();
-    //debug logging for non management edits
-    if (e.source.getSheetName() == ManagementLogSheet.getName())
+    Tools.SortSheets();
+
+    //Debug logging for non management edits
+    if (e.source.getSheetName() != ManagementLogSheet.getName())
     {
         FullLogSheet.appendRow([new Date(), "onEdit", e.source.getSheetName() + JSON.stringify(e.range.getA1Notation()) + JSON.stringify(e.user) + JSON.stringify(e)]);
     }
@@ -112,6 +115,8 @@ function onAdvancedEdit(e)
             ManagementLogSheet.getRange("B5").clearContent();
         }
     }
+
+    Tools.SortSheets();
 }
 
 function GetPlayerValidationList()

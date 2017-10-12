@@ -1,6 +1,6 @@
 /**
- * @customfunction
- */
+* @customfunction
+*/
 var StatsType =
     {
         WIN: "W",
@@ -13,10 +13,10 @@ var StatsType =
 // -------------------------------- Player Listing -------------------------------- 
 
 /**
- * Get the list of player names
- * @return {String[]}
- * @customfunction
- */
+* Get the list of player names
+* @return {String[]}
+* @customfunction
+*/
 function GetPlayerNames()
 {
     var names = ["Player Name"];
@@ -32,10 +32,10 @@ function GetPlayerNames()
 }
 
 /**
- * Get the list of player status
- * @return {String[]}
- * @customfunction
- */
+* Get the list of player status
+* @return {String[]}
+* @customfunction
+*/
 function GetPlayerStatus()
 {
     var remarks = ["Remarks"];
@@ -64,9 +64,9 @@ function GetPlayerStatus()
 // -------------------------------- Advanced Stats -------------------------------- 
 
 /**
- * @return {Number[]}
- * @customfunction
- */
+* @return {Number[]}
+* @customfunction
+*/
 function GetSeriesStats(seriestype, winloss)
 {
     var serieslist = GetSeriesList();
@@ -115,9 +115,9 @@ function GetSeriesStats(seriestype, winloss)
 
 // -------------------------------- ELO -------------------------------- 
 /**
- * @return {Number[]}
- * @customfunction
- */
+* @return {Number[]}
+* @customfunction
+*/
 function GetSeriesELO(seriestype)
 {
     var serieslist = GetSeriesList();
@@ -152,9 +152,9 @@ function GetSeriesELO(seriestype)
 }
 
 /**
- * @return {Number[]}
- * @customfunction
- */
+* @return {Number[]}
+* @customfunction
+*/
 function GetGamesELO(seriestype)
 {
     var serieslist = GetSeriesList();
@@ -215,10 +215,10 @@ function GetLeaderboardRankedSeriesELO()
 }
 
 /**
- * 
- * @param {Series} series
- * @returns {Number} Total games of the series
- */
+* 
+* @param {Series} series
+* @returns {Number} Total games of the series
+*/
 function CalculateSeriesEloRating(series)
 {
     //score1 = score of player 1, score 2 = score of player 2
@@ -236,9 +236,9 @@ function CalculateSeriesEloRating(series)
 }
 
 /**
- * 
- * @param {Series} series 
- */
+* 
+* @param {Series} series 
+*/
 function CalculateGamesEloRating(series)
 {
     //score1 = score of player 1, score 2 = score of player 2
@@ -279,10 +279,10 @@ function CalculateGamesEloRating(series)
 var Tools =
     {
         /**
-         * Turn object properties into a set of array
-         * @param {Object} object
-         * @returns {Array}
-         */
+        * Turn object properties into a set of array
+        * @param {Object} object
+        * @returns {Array}
+        */
         Arrayify: function (object)
         {
             var list = []
@@ -295,16 +295,45 @@ var Tools =
         },
 
         /**
-         * Pad 0 to make a fixed length number
-         * @param {Number} number
-         * @param {Number} length
-         * @returns {String}
-         */
+        * Pad 0 to make a fixed length number
+        * @param {Number} number
+        * @param {Number} length
+        * @returns {String}
+        */
         NumberPadding: function (number, length, z)
         {
             z = z || '0';
             number = number + '';
             return number.length >= length ? number : new Array(length - number.length + 1).join(z) + number;
+        },
+
+        /**
+        * Sort all the sheets
+        */
+        SortSheets: function ()
+        {
+            try
+            {
+                LoadValidationSheets();
+                PlayerStatsSheet.sort(1);
+                PlayerStatsSheet.sort(11);
+                RankingSheet.sort(1);
+                HistorySheet.sort(1);
+                FullLogSheet.sort(1, false);
+                ManagementLogSheet.sort(1, false);
+            }
+            catch (e)
+            {
+                /** @type {Error} */
+                var error = e;
+                Logger.log(error.message);
+                Logger.log(error.stack);
+                Logger.log(Logger.getLog());
+                var payload =
+                    {
+                        content: "**Script Error Report**\n" + "```sql\n" + Logger.getLog() + "```"
+                    }
+                SendTestWebHook(payload);
+            }
         }
     };
-

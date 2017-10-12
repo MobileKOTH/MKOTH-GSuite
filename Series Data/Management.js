@@ -1,4 +1,4 @@
-//Action ENUMS
+//** Management Selections */
 var Action =
   {
     SELECT: "Select Action",
@@ -11,8 +11,8 @@ var Action =
 
 var Comfirmation =
   {
-    YES: "Run",
-    NO: "NOT Run"
+    YES: "RUN",
+    NO: "NOT RUN"
   }
 
 var runtime = new Date().getTime();
@@ -20,7 +20,8 @@ var runtime = new Date().getTime();
 //Running of Management Action
 function onClickRun()
 {
-  LoadValidationData();
+  Tools.SortSheets();
+
   RunProgress("Running Please Wait");
   var action = ManagementLogSheet.getRange("B1").getValue();
   var input1 = ManagementLogSheet.getRange("B2").getValue();
@@ -59,8 +60,8 @@ function onClickRun()
   {
     RunSuccess(action, runtime);
   }
-  FullLogSheet.sort(1, false);
-  ManagementLogSheet.sort(1, false);
+
+  Tools.SortSheets();
 }
 
 function RunError(message)
@@ -189,7 +190,6 @@ function PostSeriesInstructionWebhook()
     };
   SendWebHook(payload);
 }
-
 
 function SendWebHook(payload)
 {

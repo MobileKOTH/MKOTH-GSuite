@@ -28,28 +28,30 @@ function GeneratePlayerCode()
     codevalidation.setHelpText("Invalid Code!");
     codevalidation = codevalidation.build();
     codeitem.setValidation(codevalidation);
-}
 
-/**
- * 
- * @param {Number} code
- * @returns {Boolean}
- */
-function HasCodeRepeat(code)
-{
-    for (var i = 0; i < CodeList.length; i++)
+    /**
+     * 
+     * @param {Number} code
+     * @returns {Boolean}
+     */
+    function HasCodeRepeat(code)
     {
-        var element = CodeList[i];
-        if (typeof (element[0]) == "number") 
+        for (var i = 0; i < CodeList.length; i++)
         {
-            if (element == code) 
+            var element = CodeList[i];
+            if (typeof (element[0]) == "number") 
             {
-                return true;
+                if (element == code) 
+                {
+                    return true;
+                }
             }
         }
+        return false;
     }
-    return false;
 }
+
+
 
 function PostPlayerCodeWebHook()
 {
@@ -57,9 +59,9 @@ function PostPlayerCodeWebHook()
     for (var pc = 1; pc < playerCodeList.length; pc++)
     {
         var element = playerCodeList[pc];
-        for (var pl = 0; pl < Playerlist.length; pl++)
+        for (var pl = 0; pl < PlayerList.length; pl++)
         {
-            var player = Playerlist[pl];
+            var player = PlayerList[pl];
             if (player.name == element[0] && !player.isRemoved)
             {
                 var content = "**" + element[0] + "**\n" + element[1];
@@ -73,31 +75,5 @@ function PostPlayerCodeWebHook()
                 }
             }
         }
-    }
-}
-
-function SendWebHook(payload)
-{
-    try 
-    {
-        var options =
-            {
-                'method': 'post',
-                'contentType': 'application/json',
-                'payload': JSON.stringify(payload)
-            }
-        var response = UrlFetchApp.fetch(WebhookSubmissionCode, options);
-        var responseobj = JSON.parse(JSON.stringify(response.getHeaders()));
-        if (Number(responseobj["x-ratelimit-remaining"]) <= 1) 
-        {
-            Utilities.sleep((responseobj["x-ratelimit-reset"]) * 1000 - Date.parse(responseobj["Date"]));
-        }
-        Logger.log(Number(responseobj["x-ratelimit-remaining"]) + " " + new Date(Date.parse(responseobj["Date"])).toString());
-        return true;
-    }
-    catch (error) 
-    {
-        Utilities.sleep(10000);
-        return false;
     }
 }
