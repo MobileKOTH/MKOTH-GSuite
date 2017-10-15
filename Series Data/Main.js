@@ -23,6 +23,50 @@ function Main()
 
 }
 
+function onDayTrigger(e)
+{
+    for (var key in PlayerList)
+    {
+        if (PlayerList.hasOwnProperty(key))
+        {
+            var element = PlayerList[key];
+            element.mip++;
+
+            if (Tools.MIPWarningPeriod(element.mip) && !element.isHoliday && !element.isRemoved)
+            {
+                var reminder;
+                if (element.class == PlayerClass.NOBLEMAN || element.class == PlayerClass.KING)
+                {
+                    reminder = element.GetDiscordMention() + ", You have " + (HolidayModeMIP.HM - element.mip) + " days to WIN a Ranked/King/Knight to stay at your current class for the next month, not winning any of these of series will only delay your demotion by 2 days.";
+                }
+                else
+                {
+                    reminder = element.GetDiscordMention() + ", You have " + (HolidayModeMIP.HM - element.mip) + " days play any series or you will be placed into holiday mode. Joining back from holiday mode will cause to you to be placed at the last rank of your class."
+                }
+                var payload =
+                    {
+                        "username": "MKOTH Rankings",
+                        "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
+                        "content": reminder
+                    };
+            }
+            if (element.mip >= 30 && !element.isHoliday && !element.isRemoved)
+            {
+                if (element.class == PlayerClass.NOBLEMAN || element.class == PlayerClass.KING)
+                {
+                    element.Demote();
+                }
+                else
+                {
+                    element.EnterHoliday();
+                }
+            }
+        }
+    }
+    UpdatePlayerList();
+    UpdateRankList();
+}
+
 function onOpen()
 {
     //Create Management Control Panel
@@ -55,6 +99,8 @@ function onAdvancedEdit(e)
         {
             var payload =
                 {
+                    "username": "MKOTH Rankings",
+                    "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
                     "content": "Welcome! <@!" + range.getValue() + ">, you are now officially added to the MKOTH Ranking, you will receive a submission id and be added to the submission form soon."
                 };
             SendWebHook(payload);
@@ -99,6 +145,12 @@ function onAdvancedEdit(e)
                     GetPlayerValidationList();
                     break;
 
+                case Action.READDPLAYER:
+                    ManagementLogSheet.getRange("A2").setValue("Choose player Name: ");
+                    ManagementLogSheet.getRange("A3").setValue("Old point value: ");
+                    GetPlayerRemoved();
+                    break;
+
                 default:
                     ManagementLogSheet.getRange("A2").setValue("No Action Selected");
                     break;
@@ -125,6 +177,20 @@ function GetPlayerValidationList()
     for (i = 0; i < PlayerList.length; i++)
     {
         if (!PlayerList[i].isRemoved)
+        {
+            playernames.push(PlayerList[i].name);
+        }
+    }
+    var players = SpreadsheetApp.newDataValidation().requireValueInList(playernames);
+    ManagementLogSheet.getRange("B2").setDataValidation(players);
+}
+
+function GetPlayerRemoved()
+{
+    var playernames = [];
+    for (i = 0; i < PlayerList.length; i++)
+    {
+        if (PlayerList[i].isRemoved)
         {
             playernames.push(PlayerList[i].name);
         }

@@ -68,6 +68,9 @@ function Series(date, type, player1, player2, player1wins, player2wins, draws)
 
   this.UpdatePlayers = function ()
   {
+    this.player1.ComeBackHoliday();
+    this.player2.ComeBackHoliday();
+
     this.player1.wins = this.player1.wins + this.player1wins;
     this.player2.wins = this.player2.wins + this.player2wins;
     this.player1.draws = this.player1.draws + this.draws;
@@ -77,6 +80,38 @@ function Series(date, type, player1, player2, player1wins, player2wins, draws)
 
     this.player1.points = this.player1.points - this.GetCostPoint();
     this.GetWinner().points = this.GetWinner().points + this.GetRewardPoints();
+
+    if (this.player1.class != PlayerClass.KING && this.player1.class != PlayerClass.NOBLEMAN)
+    {
+      this.player1.mip = 0;
+    }
+    else
+    {
+      if (this.type != SeriesType.POINT && this.GetWinner() == this.player1)
+      {
+        this.player1.mip = 0;
+      }
+      else if (this.type != SeriesType.POINT)
+      {
+        this.player1.mip = (this.player1.mip - 2) < 0 ? 0 : (this.player1.mip - 2);
+      }
+    }
+
+    if (this.player2.class != PlayerClass.KING && this.player2.class != PlayerClass.NOBLEMAN)
+    {
+      this.player2.mip = 0;
+    }
+    else
+    {
+      if (this.type != SeriesType.POINT && this.GetWinner() == this.player1)
+      {
+        this.player2.mip = 0;
+      }
+      else if (this.type != SeriesType.POINT)
+      {
+        this.player2.mip = (this.player2.mip - 2) < 0 ? 0 : (this.player2.mip - 2);
+      }
+    }
   }
 
   this.isValid = function ()
@@ -186,6 +221,10 @@ function Series(date, type, player1, player2, player1wins, player2wins, draws)
       {
         return 5;
       }
+      if (this.player1.class == PlayerClass.NOBLEMAN || this.player1.KING == PlayerClass.NOBLEMAN)
+      {
+        return 7;
+      }
     }
 
     if (this.type == SeriesType.RANKED)
@@ -223,7 +262,7 @@ function Series(date, type, player1, player2, player1wins, player2wins, draws)
     }
     if (this.type == SeriesType.KNIGHT)
     {
-      if (this.player1.class == PlayerClass.NOBLEMAN)
+      if (this.player1.class == PlayerClass.NOBLEMAN || this.player1.class == PlayerClass.KING)
       {
         return 0;
       }

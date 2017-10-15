@@ -56,6 +56,11 @@ var PlayerStatus =
     REMOVED: "Removed"
   }
 
+var HolidayModeMIP =
+  {
+    HM: 30
+  }
+
 var PlayerList = GetPlayerList();
 
 /**
@@ -73,6 +78,7 @@ function Player(name)
   this.loss = 0;
   this.draws = 0;
   this.discordid = 0;
+  this.mip = 0;
   this.isKnight = false;
   this.isRemoved = false;
   this.isHoliday = false;
@@ -96,20 +102,10 @@ function Player(name)
       return false;
     }
 
-    if (RankingSheet.getLastRow() == 1)
-    {
-      this.class = PlayerClass.KING;
-    }
-    if (RankingSheet.getLastRow() > ClassRank.SQUIRE)
-    {
-      this.class = PlayerClass.VASSAL;
-    }
-    if (RankingSheet.getLastRow() > ClassRank.VASSAL)
-    {
-      this.class = PlayerClass.PEASANT;
-    }
-
-    this.rank = RankingSheet.getLastRow();
+    this.rank = RankList.GetLastPosition() + 1;
+    PlayerList.push(this);
+    RankList.list = GetRankList();
+    RankList.Refresh();
     PlayerStatsSheet.appendRow([this.name, this.joinDate, this.class, this.wins, this.loss, this.draws, this.GetWinrate(), this.GetGamesCount(), 0, null, null]);
     RankingSheet.appendRow([this.rank, this.name, this.class, this.points]);
     PlayerCodeSheet.appendRow([this.name]);
@@ -127,7 +123,6 @@ function Player(name)
     {
       if (PlayerStatsSheet.getRange(row, 1).getValue() == this.name)
       {
-        PlayerStatsSheet.getRange(row, 11).setBackground("#ff0000");
         PlayerStatsSheet.getRange(row, 11).setValue(PlayerStatus.REMOVED);
         break;
       }
@@ -187,6 +182,53 @@ function Player(name)
   {
     elo.value = value;
     elo.games = (!isNaN(games)) ? (elo.games + games) : (elo.games + 1);
+  }
+
+  this.GetDiscordMention = function ()
+  {
+    return (" <@!" + this.discordid + ">");
+  }
+
+  this.EnterHoliday = function ()
+  {
+    this.isHoliday = true;
+    RankList.HolidayModeRefresh();
+    ManagementLogSheet.appendRow([new Date(), "Enter Holiday", JSON.stringify(this)]);
+  }
+
+  this.ComeBackHoliday = function ()
+  {
+    if (!this.isHoliday)
+    {
+      return;
+    }
+    this.isHoliday = false;
+    RankList.HolidayReturn(this.name);
+    ManagementLogSheet.appendRow([new Date(), "Return from Holiday", JSON.stringify(this)]);
+  }
+
+  this.Demote = function ()
+  {
+    RankList.DemotePlayer(this);
+    ManagementLogSheet.appendRow([new Date(), "Rank Cleansing", JSON.stringify(this)]);
+  }
+
+  this.ReAdd = function (points)
+  {
+    if (this.isRemoved)
+    {
+      this.isRemoved = false;
+      this.points = points;
+      this.rank = ClassRank.ParsePlayerClass(this.class);
+      RankList.ReAddPlayer(this);
+      RankingSheet.appendRow([this.rank, this.name, this.class, points]);
+      UpdatePlayerList();
+      UpdateRankList();
+      ManagementLogSheet.appendRow([new Date(), "Re-Add Player", JSON.stringify(this)]);
+      return true;
+    }
+    RunError("Player isnt removed");
+    return false;
   }
 }
 
@@ -252,17 +294,8 @@ function GetPlayerList()
       playerlist[i].wins = playerDB[i][3];
       playerlist[i].loss = playerDB[i][4];
       playerlist[i].draws = playerDB[i][5];
+      playerlist[i].mip = playerDB[i][8]
       playerlist[i].discordid = playerDB[i][9];
-      if (playerDB[i][10] == PlayerStatus.REMOVED)
-      {
-        playerlist[i].isRemoved = true;
-        playerlist[i].rank = 0;
-      }
-      if (playerDB[i][10] == PlayerStatus.HOLIDAY)
-      {
-        playerlist[i].isHoliday = true;
-        playerlist[i].rank = ClassRank.ParsePlayerClass(playerlist[i].class);
-      }
       for (j = 0; j < playerRankDB.length; j++)
       {
         if (playerRankDB[j][1] == playerlist[i].name)
@@ -272,6 +305,17 @@ function GetPlayerList()
           playerlist[i].oldrank = playerRankDB[j][0];
           playerlist[i].oldpoints = playerRankDB[j][3];
         }
+      }
+      if (playerDB[i][10] == PlayerStatus.REMOVED)
+      {
+        playerlist[i].isRemoved = true;
+        playerlist[i].rank = 0;
+      }
+      if (playerDB[i][10] == PlayerStatus.HOLIDAY)
+      {
+        playerlist[i].isHoliday = true;
+        playerlist[i].rank = ClassRank.ParsePlayerClass(playerlist[i].class);
+        playerlist[i].oldrank = ClassRank.ParsePlayerClass(playerlist[i].class);
       }
     }
   }
@@ -288,7 +332,19 @@ function UpdatePlayerList()
   for (uu = 0; uu < PlayerList.length; uu++)
   {
     var classStr = (PlayerList[uu].isKnight) ? PlayerList[uu].class + " (Knight)" : PlayerList[uu].class;
-    playerlistarr.push([classStr, PlayerList[uu].wins, PlayerList[uu].loss, PlayerList[uu].draws, PlayerList[uu].GetWinrate(), PlayerList[uu].GetGamesCount()]);
+    var remarks = (PlayerList[uu].isRemoved) ? PlayerStatus.REMOVED : ((PlayerList[uu].isHoliday) ? PlayerStatus.HOLIDAY : PlayerStatus.ACTIVE)
+    playerlistarr.push(
+      [
+        classStr,
+        PlayerList[uu].wins,
+        PlayerList[uu].loss,
+        PlayerList[uu].draws,
+        PlayerList[uu].GetWinrate(),
+        PlayerList[uu].GetGamesCount(),
+        PlayerList[uu].mip,
+        PlayerList[uu].discordid,
+        remarks
+      ]);
   }
-  PlayerStatsSheet.getRange(2, 3, PlayerStatsSheet.getLastRow() - 1, 6).setValues(playerlistarr);
+  PlayerStatsSheet.getRange(2, 3, PlayerStatsSheet.getLastRow() - 1, 9).setValues(playerlistarr);
 }

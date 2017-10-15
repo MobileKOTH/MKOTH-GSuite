@@ -335,5 +335,22 @@ var Tools =
                     }
                 SendTestWebHook(payload);
             }
+        },
+
+        /**
+         *
+         * @param {Number} mip
+         * @returns {Boolean}
+         */
+        MIPWarningPeriod: function (mip)
+        {
+            if (mip % 2 != 0 && mip >= (HolidayModeMIP.HM - 7) && mip != (HolidayModeMIP.HM - 5))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     };

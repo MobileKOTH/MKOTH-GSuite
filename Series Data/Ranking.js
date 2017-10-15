@@ -95,6 +95,10 @@ function RankingList()
     {
       if (newseries.GetWinner() == newseries.player1)
       {
+        if (newseries.GetWinner().class == PlayerClass.NOBLEMAN || newseries.GetWinner().class == PlayerClass.KING)
+        {
+          return;
+        }
         var rankjumper = this.list.splice(newseries.player1.rank - 1, 1);
         this.list.splice(this.GetLastNoblemanPosition(), 0, rankjumper[0]);
         ManagementLogSheet.appendRow([new Date(), "Nobleman Earned", JSON.stringify({ Player: newseries.player1.name, OldPosition: newseries.player1.rank, NewPosition: (this.GetLastNoblemanPosition() + 1) })]);
@@ -108,8 +112,11 @@ function RankingList()
   {
     for (n = 0; n < this.list.length; n++)
     {
-      this.list[n].player.rank = n + 1;
-      this.list[n].player.RefreshClass();
+      if (!this.list[n].player.isHoliday)
+      {
+        this.list[n].player.rank = n + 1;
+        this.list[n].player.RefreshClass();
+      }
     }
   }
 
@@ -127,6 +134,107 @@ function RankingList()
       }
     }
     this.Refresh();
+  }
+
+
+  this.HolidayModeRefresh = function ()
+  {
+    this.list = GetRankList();
+    this.Refresh();
+  }
+
+  /**
+   * @param {String} playername
+   */
+  this.HolidayReturn = function (playername)
+  {
+    for (var rl = 0; rl < this.list.length; rl++)
+    {
+      var element = this.list[rl];
+      if (element.player.name == playername)
+      {
+        this.list.splice(rl, 1);
+        if (this.GetLastPosition() >= element.player.rank)
+        {
+          this.list.splice(element.player.rank - 1, 0, element);
+        }
+        else
+        {
+          this.list.splice(this.GetLastPosition(), 0, element);
+        }
+      }
+    }
+    this.Refresh();
+  }
+
+  /**
+   * @param {Player} player
+   */
+  this.ReAddPlayer = function (player)
+  {
+    if (this.GetLastPosition() >= player.rank)
+    {
+      this.list.splice(player.rank - 1, 0, new Ranking(player));
+    }
+    else
+    {
+      this.list.splice(this.GetLastPosition(), 0, new Ranking(player));
+    }
+    this.Refresh();
+  }
+
+  /**
+   * @param {Player} player
+   */
+  this.DemotePlayer = function (player)
+  {
+    if (player.class == PlayerClass.KING)
+    {
+      for (var rl = 0; rl < this.list.length; rl++)
+      {
+        var element = this.list[rl];
+        if (element.player.name == player.name)
+        {
+          this.list.splice(rl, 1);
+          this.list.splice(1, 0, element);
+          player.class = PlayerClass.NOBLEMAN;
+          player.mip = 0;
+          break;
+        }
+      }
+      this.Refresh();
+    }
+    if (player.class == PlayerClass.NOBLEMAN)
+    {
+      for (var rl = 0; rl < this.list.length; rl++)
+      {
+        var element = this.list[rl];
+        if (element.player.name == player.name)
+        {
+          this.list.splice(rl, 1);
+          this.list.splice(this.GetLastNoblemanPosition(), 0, element)
+          player.class = PlayerClass.SQUIRE;
+          player.mip = 0;
+          break;
+        }
+      }
+      this.Refresh();
+    }
+  }
+
+  this.GetLastPosition = function ()
+  {
+    var lastposition = 0;
+    for (var rll = 0; rll < this.list.length; rll++)
+    {
+      var element = this.list[rll];
+      if (element.player.isHoliday)
+      {
+        break;
+      }
+      lastposition++
+    }
+    return lastposition;
   }
 
   this.PostWebhook = function ()
@@ -188,7 +296,7 @@ function RankingList()
             "Knights are chosen manually.\n" +
             ":champagne_glass: **Nobleman** may challenge the King’s position by playing a best of 5 **King Series** with him and with the cost of 15 points.",
             "fields": fields,
-            "color": 16772608
+            "color": 16776960
           }
         ]
       };
@@ -240,7 +348,7 @@ function RankingList()
             "The number of players in this class may decrease as more people beat Knights to enter the Nobleman class. " +
             "This class will no longer become smaller when it has 20 players. ",
             "fields": fields,
-            "color": 34304
+            "color": 15844367
           },
           {
             "author":
@@ -252,7 +360,7 @@ function RankingList()
             "title": null,
             "description": null,
             "fields": fields2,
-            "color": 34304
+            "color": 15844367
           }
         ]
       };
@@ -289,7 +397,7 @@ function RankingList()
             "description": "The third highest class is the Vassals class. This class includes all players under rank 30 to rank 50. " +
             "If you want to move to a higher class, you need to pay an extra fee of 12 points to start a **Ranked Series with a Squire**.",
             "fields": fields,
-            "color": 16770666
+            "color": 16310919
           }
         ]
       };
@@ -335,7 +443,7 @@ function RankingList()
             {
               "text": "Updated",
             },
-            "color": 16777215
+            "color": 16577487
           }
         ]
       };
@@ -353,11 +461,35 @@ function GetRankList()
   {
     for (ll = 0; ll < PlayerList.length; ll++)
     {
-      if (PlayerList[ll].rank == l + 1)
+      if (PlayerList[ll].rank == l + 1 && !PlayerList[ll].isHoliday)
       {
         ranklist.push(new Ranking(PlayerList[ll]))
         break;
       }
+    }
+  }
+  for (ll = 0; ll < PlayerList.length; ll++)
+  {
+    if (PlayerList[ll].class == PlayerClass.SQUIRE && PlayerList[ll].isHoliday)
+    {
+      ranklist.push(new Ranking(PlayerList[ll]))
+    }
+  }
+
+  for (ll = 0; ll < PlayerList.length; ll++)
+  {
+    if (PlayerList[ll].class == PlayerClass.VASSAL && PlayerList[ll].isHoliday)
+    {
+      ranklist.push(new Ranking(PlayerList[ll]))
+    }
+  }
+
+
+  for (ll = 0; ll < PlayerList.length; ll++)
+  {
+    if (PlayerList[ll].class == PlayerClass.PEASANT && PlayerList[ll].isHoliday)
+    {
+      ranklist.push(new Ranking(PlayerList[ll]))
     }
   }
   return ranklist;
@@ -369,7 +501,8 @@ function UpdateRankList()
   for (n = 0; n < RankList.list.length; n++)
   {
     var classStr = (RankList.list[n].player.isKnight) ? RankList.list[n].player.class + " (Knight)" : RankList.list[n].player.class;
-    ranklistarr.push([n + 1, RankList.list[n].player.name, classStr, RankList.list[n].player.points]);
+    var rank = RankList.list[n].player.isHoliday ? "HM" : RankList.list[n].player.rank;
+    ranklistarr.push([rank, RankList.list[n].player.name, classStr, RankList.list[n].player.points]);
   }
   RankingSheet.getRange(2, 1, RankingSheet.getLastRow() - 1, 4).clearContent();
   RankingSheet.getRange(2, 1, ranklistarr.length, 4).setValues(ranklistarr);
