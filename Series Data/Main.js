@@ -49,17 +49,29 @@ function onDayTrigger(e)
                         "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
                         "content": reminder
                     };
+                SendWebHook(payload);
+
             }
             if (element.mip >= 30 && !element.isHoliday && !element.isRemoved)
             {
+                var message;
                 if (element.class == PlayerClass.NOBLEMAN || element.class == PlayerClass.KING)
                 {
                     element.Demote();
+                    message = element.GetDiscordMention() + ", You have been demoted."
                 }
                 else
                 {
                     element.EnterHoliday();
+                    message = element.GetDiscordMention() + ", You have been placed in to holiday mode."
                 }
+                var payload =
+                    {
+                        "username": "MKOTH Rankings",
+                        "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
+                        "content": message
+                    };
+                SendWebHook(payload);
             }
         }
     }
