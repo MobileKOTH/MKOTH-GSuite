@@ -2,7 +2,6 @@ var CodeList = PlayerCodeSheet.getRange(1, 2, PlayerCodeSheet.getLastRow(), 1).g
 
 function GeneratePlayerCode()
 {
-    var coderegex = "";
     for (var i = 0; i < CodeList.length; i++)
     {
         var element = CodeList[i];
@@ -14,9 +13,15 @@ function GeneratePlayerCode()
                 code = RandomRange(100000, 999999);
             }
             PlayerCodeSheet.getRange(i + 1, 2).setValue(code);
-            coderegex += new String(code).substring(0, 3) + "|";
         }
-        else if (typeof (element[0]) == "number")
+    }
+
+    var coderegex = "";
+    CodeList = shuffle(CodeList);
+    for (var i = 0; i < CodeList.length; i++)
+    {
+        var element = CodeList[i];
+        if (typeof (element[0]) == "number")
         {
             coderegex += new String(element[0]).substring(0, 3) + "|";
         }
@@ -28,6 +33,8 @@ function GeneratePlayerCode()
     codevalidation.setHelpText("Invalid Code!");
     codevalidation = codevalidation.build();
     codeitem.setValidation(codevalidation);
+    PlayerCodeSheet.sort(1);
+    PostPlayerCodeWebHook();
 
     /**
      * 
@@ -56,6 +63,8 @@ function GeneratePlayerCode()
 function PostPlayerCodeWebHook()
 {
     var playerCodeList = PlayerCodeSheet.getRange(1, 1, PlayerCodeSheet.getLastRow(), 2).getValues();
+    var fields = [];
+    var payload;
     for (var pc = 1; pc < playerCodeList.length; pc++)
     {
         var element = playerCodeList[pc];
@@ -64,16 +73,51 @@ function PostPlayerCodeWebHook()
             var player = PlayerList[pl];
             if (player.name == element[0] && !player.isRemoved)
             {
-                var content = "**" + element[0] + "**\n" + element[1];
-                var payload =
-                    {
-                        "content": content,
-                    }
-                if (!SendWebHook(payload)) 
+                fields.push({ name: element[0], value: element[1] })
+                if (fields.length == 25)
                 {
-                    pc--;
+                    do
+                    {
+                        payload =
+                            {
+                                content: null,
+                                embeds: [{ fields: fields }]
+                            }
+                    }
+                    while (!SendWebHook(payload));
+                    fields = [];
                 }
             }
         }
     }
+    do
+    {
+        payload =
+            {
+                content: null,
+                embeds: [{ fields: fields }]
+            }
+    }
+    while (!SendWebHook(payload));
+}
+
+function shuffle(array)
+{
+    var currentIndex = array.length, temporaryValue, randomIndex;
+
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex)
+    {
+
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+    }
+
+    return array;
 }

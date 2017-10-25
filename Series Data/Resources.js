@@ -285,6 +285,21 @@ function CalculateGamesEloRating(series)
 }
 
 // -------------------------------- Tools -------------------------------- 
+function FlushFormulas()
+{
+    var eloformula = RankingSheet.getRange(1, 5).getFormula();
+    var statsformule = PlayerIndepthStatsSheet.getRange("A2:Z2").getFormulas();
+
+    RankingSheet.getRange(1, 5).clearContent();
+    PlayerIndepthStatsSheet.getRange("A2:Z2").clearContent();
+
+    RankingSheet.getRange(1, 5).setFormula(eloformula);
+    PlayerIndepthStatsSheet.getRange("A2:Z2").setFormulas(statsformule);
+    SpreadsheetApp.flush();
+}
+
+
+
 var Tools =
     {
         /**
@@ -323,13 +338,6 @@ var Tools =
         {
             try
             {
-                var eloformula = RankingSheet.getRange(1, 5).getFormula();
-                var statsformule = PlayerIndepthStatsSheet.getRange("A2:Z2").getFormulas();
-
-                RankingSheet.getRange(1, 5).clearContent();
-                PlayerIndepthStatsSheet.getRange("A2:Z2").clearContent();
-                SpreadsheetApp.flush();
-
                 LoadValidationSheets();
                 PlayerStatsSheet.sort(1);
                 PlayerStatsSheet.sort(11);
@@ -339,10 +347,6 @@ var Tools =
                 HistorySheet.sort(1);
                 FullLogSheet.sort(1, false);
                 ManagementLogSheet.sort(1, false);
-
-                RankingSheet.getRange(1, 5).setFormula(eloformula);
-                PlayerIndepthStatsSheet.getRange("A2:Z2").setFormulas(statsformule);
-                SpreadsheetApp.flush();
             }
             catch (e)
             {

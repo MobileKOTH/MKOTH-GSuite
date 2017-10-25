@@ -38,14 +38,17 @@ function onClickRun()
 
     case Action.ADDPLAYER:
       success = AddPlayer(input1);
+      FlushFormulas();
       break;
 
     case Action.REMOVEPLAYER:
       success = RemovePlayer(input1);
+      FlushFormulas();
       break;
 
     case Action.SUBMITSERIES:
       success = SubmitSeries();
+      FlushFormulas();
       break;
 
     case Action.SWAPSERIESPLAYERS:
@@ -58,6 +61,7 @@ function onClickRun()
 
     case Action.READDPLAYER:
       success = ReAddPlayer(input1, input2);
+      FlushFormulas();
       break;
   }
 

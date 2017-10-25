@@ -21,7 +21,7 @@ function LoadValidationSheets()
 
 function Main()
 {
-    Tools.SortSheets();
+
 }
 
 function onDayTrigger(e)
@@ -78,10 +78,18 @@ function onDayTrigger(e)
     }
     UpdatePlayerList();
     UpdateRankList();
+    FlushFormulas();
+    FullLogSheet.appendRow([new Date(), "HolidayModeRun", " Time used: " + ((new Date()).getTime() - runtime) / 1000 + "secs"]);
 }
 
 function onOpen()
 {
+    //Create Manament Context Menu
+    DataSheetApp.addMenu("Management",
+        [
+            { name: "Flush Formulas", functionName: "FlushFormulas" }
+        ]);
+
     //Create Management Control Panel
     var actions = SpreadsheetApp.newDataValidation().requireValueInList(Tools.Arrayify(Action));
     var run = SpreadsheetApp.newDataValidation().requireValueInList([Comfirmation.NO, Comfirmation.YES]);

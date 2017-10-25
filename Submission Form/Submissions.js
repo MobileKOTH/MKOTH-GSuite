@@ -29,6 +29,15 @@ function Main()
 
 }
 
+function onOpen()
+{
+    //Create Manament Context Menu
+    ValidationSheetApp.addMenu("Management",
+        [
+            { name: "Update Player Code", functionName: "GeneratePlayerCode" }
+        ]);
+}
+
 function onFormSubmit(e)
 {
     var runTime = new Date().getTime();
