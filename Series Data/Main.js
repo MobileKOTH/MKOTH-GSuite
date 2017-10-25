@@ -4,6 +4,7 @@ var HistorySheet = DataSheetApp.getSheetByName("Series History");
 var RankingSheet = DataSheetApp.getSheetByName("Rankings");
 var PlayerStatsSheet = DataSheetApp.getSheetByName("Player Statistics");
 var ManagementLogSheet = DataSheetApp.getSheetByName("Management Logs");
+var PlayerIndepthStatsSheet = DataSheetApp.getSheetByName("Player Indepth Statistics");
 
 /** @type {GoogleAppsScript.Spreadsheet.SpreadsheetApp} */
 var ValidationSheetApp;
@@ -20,7 +21,7 @@ function LoadValidationSheets()
 
 function Main()
 {
-
+    Tools.SortSheets();
 }
 
 function onDayTrigger(e)

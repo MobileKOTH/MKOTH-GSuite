@@ -204,7 +204,7 @@ function PostSeriesInstructionWebhook()
             { "name": "5. No falsification", "value": "SUBMITTING A FALSE SERIES WILL RESULT IN A PERMANENT BAN FROM MKOTH.\nᅠ", "inline": false },
             { "name": "Rank and Player Stats", "value": "Google Sheets: [MKOTH Series Data](https://docs.google.com/spreadsheets/d/1VRfWwvRSMQizzBanGNRMFVzoYFthrsNKzOgF5wKVM5I)", "inline": false },
             { "name": "Series Submission Form", "value": "Google Forms: [MKOTH Series Submission Form](https://docs.google.com/forms/d/e/1FAIpQLSdGJnCOl0l5HjxuYexVV_sOKPR1iScq3eiSxGiqKULX3zG4-Q/viewform)\nᅠ", "inline": false },
-            { "name": "Attributions", "value": "Icons made by [Vectors Market](https://www.flaticon.com/authors/vectors-market) and [Freepik](http://www.freepik.com) from [Flaticon](https://www.flaticon.com) is licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/)", "inline": false }
+            { "name": "Attributions", "value": "Icons made by [Vectors Market](https://www.flaticon.com/authors/vectors-market), [Swifticons](https://www.flaticon.com/authors/swifticons) and [Freepik](http://www.freepik.com) from [Flaticon](https://www.flaticon.com) are licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/)", "inline": false }
           ],
           "color": 9803157
         }
@@ -229,6 +229,7 @@ function SendWebHook(payload)
     {
       Utilities.sleep((responseobj["x-ratelimit-reset"]) * 1000 - Date.parse(responseobj["Date"]));
     }
+    Utilities.sleep(100);
   }
   catch (error)
   {

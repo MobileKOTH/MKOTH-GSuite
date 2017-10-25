@@ -103,7 +103,7 @@ function Series(date, type, player1, player2, player1wins, player2wins, draws)
     }
     else
     {
-      if (this.type != SeriesType.POINT && this.GetWinner() == this.player1)
+      if (this.type != SeriesType.POINT && this.GetWinner() == this.player2)
       {
         this.player2.mip = 0;
       }

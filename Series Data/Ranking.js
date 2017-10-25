@@ -17,11 +17,11 @@ function Ranking(player)
     }
     if (this.rankChanges > 0) 
     {
-      return " :arrow_up:" + this.rankChanges + " ";
+      return " <:uparrow:371609754079854594>" + this.rankChanges + " ";
     }
     else
     {
-      return " :arrow_down:" + this.rankChanges + " ";
+      return " <:downarrow:371604586097803264>" + this.rankChanges + " ";
     }
   }
   this.GetPointChangesText = function ()
@@ -33,11 +33,11 @@ function Ranking(player)
     }
     if (this.pointChanges > 0) 
     {
-      return "p** `▲" + this.pointChanges + "` ";
+      return "p**<:uparrowtriangle:371611158530228226>" + this.pointChanges;
     }
     else
     {
-      return "p** `▼" + this.pointChanges + "` ";
+      return "p**<:downarrowtriangle:371611093031976961>" + this.pointChanges;
     }
   }
 
@@ -319,7 +319,7 @@ function RankingList()
     for (var si = 0; si < this.list.length; si++)
     {
       var element = this.list[si];
-      if (element.player.class == PlayerClass.SQUIRE && element.player.rank > 20) 
+      if (element.player.class == PlayerClass.SQUIRE && element.player.rank > 20 && !element.player.isHoliday) 
       {
         fields2.push({
           "name": "#" + element.player.rank + " " + element.player.name + element.GetRankChangesText() + element.GetELOText(),
@@ -370,7 +370,7 @@ function RankingList()
     for (var si = 0; si < this.list.length; si++)
     {
       var element = this.list[si];
-      if (element.player.class == PlayerClass.VASSAL) 
+      if (element.player.class == PlayerClass.VASSAL && !element.player.isHoliday) 
       {
         fields.push({
           "name": "#" + element.player.rank + " " + element.player.name + element.GetRankChangesText() + element.GetELOText(),
@@ -411,7 +411,7 @@ function RankingList()
         break;
       }
       var element = this.list[si];
-      if (element.player.class == PlayerClass.PEASANT) 
+      if (element.player.class == PlayerClass.PEASANT && !element.player.isHoliday) 
       {
         fields.push({
           "name": "#" + element.player.rank + " " + element.player.name + element.GetRankChangesText() + element.GetELOText(),
@@ -439,11 +439,53 @@ function RankingList()
             "If you want to move to a higher class, you need to pay an extra fee of 6 points to start a **Ranked Series with a Vassal**.",
             "fields": fields,
             "timestamp": new Date(),
+            "color": 16577487
+          }
+        ]
+      };
+    SendWebHook(payload);
+
+    fields = [];
+    for (var si = 0; si < this.list.length; si++)
+    {
+      if (fields.length >= 25)
+      {
+        break;
+      }
+      var element = this.list[si];
+      if (element.player.isHoliday) 
+      {
+        fields.push({
+          "name": element.player.class + ": " + element.player.name + element.GetRankChangesText() + element.GetELOText(),
+          "value": " <@!" + element.player.discordid + "> **" + element.player.points + "p**\n",
+          "inline": false
+        });
+      }
+    }
+    var payload =
+      {
+        "username": "MKOTH Rankings",
+        "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
+        "content": null,
+        "embeds":
+        [
+          {
+            "author":
+            {
+              "name": "Holiday Mode",
+              "icon_url": "https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/103/airplane_2708.png",
+              "url": sheeturl
+            },
+            "title": null,
+            "description": "Holiday is an auto inactive sweep system which temporarily removes you from the MKOTH leader board if you are squire and below and have not played a series in the last 30 days. " +
+            "You can be backed to the leader board anytime once you played a series, but you will start at the last position from your class.",
+            "fields": fields,
+            "timestamp": new Date(),
             "footer":
             {
               "text": "Updated",
-            },
-            "color": 16577487
+            }
+
           }
         ]
       };

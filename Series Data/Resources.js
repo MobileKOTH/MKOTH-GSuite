@@ -112,6 +112,15 @@ function GetSeriesStats(seriestype, winloss)
     return values;
 }
 
+/**
+ * A formula header bar generalisation helper method.
+ * @param {String} text 
+ */
+function SetHeaderPlainText(text)
+{
+    return text;
+}
+
 
 // -------------------------------- ELO -------------------------------- 
 /**
@@ -314,13 +323,26 @@ var Tools =
         {
             try
             {
+                var eloformula = RankingSheet.getRange(1, 5).getFormula();
+                var statsformule = PlayerIndepthStatsSheet.getRange("A2:Z2").getFormulas();
+
+                RankingSheet.getRange(1, 5).clearContent();
+                PlayerIndepthStatsSheet.getRange("A2:Z2").clearContent();
+                SpreadsheetApp.flush();
+
                 LoadValidationSheets();
                 PlayerStatsSheet.sort(1);
                 PlayerStatsSheet.sort(11);
+                RankingSheet.sort(2);
+                RankingSheet.sort(3);
                 RankingSheet.sort(1);
                 HistorySheet.sort(1);
                 FullLogSheet.sort(1, false);
                 ManagementLogSheet.sort(1, false);
+
+                RankingSheet.getRange(1, 5).setFormula(eloformula);
+                PlayerIndepthStatsSheet.getRange("A2:Z2").setFormulas(statsformule);
+                SpreadsheetApp.flush();
             }
             catch (e)
             {
