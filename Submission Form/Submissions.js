@@ -34,8 +34,31 @@ function onOpen()
     //Create Manament Context Menu
     ValidationSheetApp.addMenu("Management",
         [
-            { name: "Update Player Code", functionName: "GeneratePlayerCode" }
+            { name: "Update Player Code", functionName: "GeneratePlayerCode" },
+            { name: "Resubmit Series", functionName: "ResubmitSeries" }
         ]);
+}
+
+function ResubmitSeries()
+{
+    var input = Browser.inputBox("Series Resubmission", "Select Row to resubmit", Browser.Buttons.OK_CANCEL);
+    if (input == "cancel")
+    {
+        return;
+    }
+    var row = Number(input);
+    if (!isNaN(row) && input != "")
+    {
+        if (row <= ValidationSheet.getLastRow())
+        {
+            lastRow = ValidationSheet.getRange(row, 1, 1, 13);
+            onFormSubmit();
+            return;
+        }
+        Browser.msgBox("Invalid input!");
+        return;
+    }
+    Browser.msgBox("Invalid input!");
 }
 
 function onFormSubmit(e)
