@@ -12,6 +12,7 @@ function GeneratePlayerCode()
             {
                 code = RandomRange(100000, 999999);
             }
+            CodeList[i][0] = code;
             PlayerCodeSheet.getRange(i + 1, 2).setValue(code);
         }
     }
@@ -37,10 +38,10 @@ function GeneratePlayerCode()
     PostPlayerCodeWebHook();
 
     /**
-     * 
-     * @param {Number} code
-     * @returns {Boolean}
-     */
+    * 
+    * @param {Number} code
+    * @returns {Boolean}
+    */
     function HasCodeRepeat(code)
     {
         for (var i = 0; i < CodeList.length; i++)
