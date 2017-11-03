@@ -16,7 +16,7 @@ The code is however also designed to be able to revert any fake series submissio
 - ~~Pass by reference for all player objects~~ Done
 - Holiday mode (Rolled out testing)
 - Point Adjustment (In Progress)
-- Rank cleansing (In Progress)
+- Rank cleansing (Rolled out testing)
 - More validation (Rolled out testing)
 - Fake series revert overhaul
 - ~~ELO~~ Done
