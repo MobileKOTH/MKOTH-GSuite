@@ -38,11 +38,11 @@ function onDayTrigger(e)
                 var reminder;
                 if (element.class == PlayerClass.NOBLEMAN || element.class == PlayerClass.KING)
                 {
-                    reminder = element.GetDiscordMention() + ", You have " + (HolidayModeMIP.HM - element.mip) + " days to WIN a Ranked/King/Knight to stay at your current class for the next month, not winning any of these of series will only delay your demotion by 2 days.";
+                    reminder = element.GetDiscordMention() + ", You have " + (HolidayModeMIP.HM - element.mip) + " day(s) to WIN a Ranked/King/Knight to stay at your current class for the next month, not winning any of these series will only delay your demotion by 2 days.";
                 }
                 else
                 {
-                    reminder = element.GetDiscordMention() + ", You have " + (HolidayModeMIP.HM - element.mip) + " days play any series or you will be placed into holiday mode. Joining back from holiday mode will cause to you to be placed at the last rank of your class."
+                    reminder = element.GetDiscordMention() + ", You have " + (HolidayModeMIP.HM - element.mip) + " day(s) play any series or you will be placed into holiday mode. Joining back from holiday mode will cause to you to be placed at the last rank of your class."
                 }
                 var payload =
                     {
@@ -64,7 +64,7 @@ function onDayTrigger(e)
                 else
                 {
                     element.EnterHoliday();
-                    message = element.GetDiscordMention() + ", You have been placed in to holiday mode."
+                    message = element.GetDiscordMention() + ", You have been placed into holiday mode."
                 }
                 var payload =
                     {
@@ -122,7 +122,6 @@ function onAdvancedEdit(e)
                 {
                     "username": "MKOTH Rankings",
                     "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
-                    "content": "Welcome! <@!" + range.getValue() + ">, you are now officially added to the MKOTH Ranking, you will receive a submission id and be added to the submission form soon."
                 };
             SendWebHook(payload);
         }

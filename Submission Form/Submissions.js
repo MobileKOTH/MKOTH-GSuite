@@ -88,7 +88,7 @@ function onFormSubmit(e)
             {
                 haswronganswer = true;
                 lastRow.getCell(1, 10 + i).setBackground("red");
-                validationstatus = " -> failed, the series will be considered void.`\n";
+                validationstatus = " -> failed, the series will probed.`\n";
             }
             else
             {
@@ -106,7 +106,7 @@ function onFormSubmit(e)
     if (!IsValidPlayerCode(validationcode, series)) 
     {
         var content = "`Webhook delay: " + (runTime - series.date.getTime()) + " ms`\n" +
-            "A submission has been automatically rejected due to invalid identification code.\n" +
+            "A submission has been automatically rejected due to invalid identification code for the winner.\n" +
             "```json\n" + JSON.stringify(series) + "\n```";
         var payload =
             {
@@ -134,7 +134,7 @@ function onFormSubmit(e)
     var description = "`validation: " + answer + validationstatus;
     if (!series.isValid()) 
     {
-        description += "However, " + invalidReason.toLowerCase() + ", the series will be looked into and to be considered as void.\n"
+        description += "However, " + invalidReason.toLowerCase() + ", the series will be probed.\n"
         lastRow.getCell(1, 9).setValue(invalidReason);
         lastRow.getCell(1, 9).setBackground("red");
     }

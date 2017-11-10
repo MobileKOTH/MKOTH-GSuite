@@ -278,7 +278,7 @@ function RankingList()
       {
         "username": "MKOTH Rankings",
         "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
-        "content": "**May not be mobile friendly.**\nDM a manager if your discord ID missing and has no numbers.",
+        "content": "**May not be mobile friendly.**\nDM an admin if your discord ID missing and has no numbers. A rank catergory will slice off after showing a max of 25 players.",
         "embeds":
         [
           {
