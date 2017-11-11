@@ -76,6 +76,7 @@ function onDayTrigger(e)
             }
         }
     }
+    LoadValidationSheets();
     UpdatePlayerList();
     UpdateRankList();
     FlushFormulas();
@@ -122,6 +123,7 @@ function onAdvancedEdit(e)
                 {
                     "username": "MKOTH Rankings",
                     "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
+                    "content": "Welcome! <@!" + range.getValue() + ">, you are now officially added to the MKOTH Ranking, your name will appear on the series submission form very soon."
                 };
             SendWebHook(payload);
         }
