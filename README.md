@@ -19,5 +19,5 @@ The code is however also designed to be able to revert any fake series submissio
 - Rank cleansing (Rolled out testing)
 - More validation (Rolled out testing)
 - Fake series revert overhaul
-- Point S=shop foundation
+- Point shop foundation
 - ~~ELO~~ Done
