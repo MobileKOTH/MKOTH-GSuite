@@ -216,27 +216,3 @@ function PostSeriesInstructionWebhook()
     };
   SendWebHook(payload);
 }
-
-function SendWebHook(payload)
-{
-  try
-  {
-    var options =
-      {
-        'method': 'post',
-        'contentType': 'application/json',
-        'payload': JSON.stringify(payload)
-      }
-    var response = UrlFetchApp.fetch(Webhookurl, options);
-    var responseobj = JSON.parse(JSON.stringify(response.getHeaders()));
-    if (Number(responseobj["x-ratelimit-remaining"]) <= 1) 
-    {
-      Utilities.sleep((responseobj["x-ratelimit-reset"]) * 1000 - Date.parse(responseobj["Date"]));
-    }
-    Utilities.sleep(100);
-  }
-  catch (error)
-  {
-    RunError(error.message);
-  }
-}
