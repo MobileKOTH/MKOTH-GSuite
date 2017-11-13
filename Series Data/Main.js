@@ -5,12 +5,12 @@ var RankingSheet = DataSheetApp.getSheetByName("Rankings");
 var PlayerStatsSheet = DataSheetApp.getSheetByName("Player Statistics");
 var ManagementLogSheet = DataSheetApp.getSheetByName("Management Logs");
 var PlayerIndepthStatsSheet = DataSheetApp.getSheetByName("Player Indepth Statistics");
-
+//Just stand by the external validation sheet variable holder so it does'nt always load to cause permission errors 
 /** @type {GoogleAppsScript.Spreadsheet.SpreadsheetApp} */
 var ValidationSheetApp;
 /** @type {GoogleAppsScript.Spreadsheet.Spreadsheet} */
 var ValidationSheet, PlayerCodeSheet, FullLogSheet;
-
+//Load the validation sheets only if needed
 function LoadValidationSheets()
 {
     ValidationSheetApp = SpreadsheetApp.openById("1zQMN_t94oS55TwO5kI7p-QRkJti0dRwvGwEuGqkxMY4");
@@ -18,12 +18,12 @@ function LoadValidationSheets()
     PlayerCodeSheet = ValidationSheetApp.getSheetByName("Player Code");
     FullLogSheet = ValidationSheetApp.getSheetByName("Full Logs");
 }
-
+//Main method just for testing
 function Main()
 {
 
 }
-
+//Daily event run for holiday mode and demotion
 function onDayTrigger(e)
 {
     for (var key in PlayerList)
@@ -80,9 +80,9 @@ function onDayTrigger(e)
     UpdatePlayerList();
     UpdateRankList();
     FlushFormulas();
-    FullLogSheet.appendRow([new Date(), "HolidayModeRun", " Time used: " + ((new Date()).getTime() - runtime) / 1000 + "secs"]);
+    FullLogSheet.appendRow([new Date(), "HolidayModeRun", "Time used: " + ((new Date()).getTime() - runtime) / 1000 + "secs"]);
 }
-
+//Entry event when the sheet opened by an editor
 function onOpen()
 {
     //Create Manament Context Menu
@@ -93,7 +93,7 @@ function onOpen()
 
     //Create Management Control Panel
     var actions = SpreadsheetApp.newDataValidation().requireValueInList(Tools.Arrayify(Action));
-    var run = SpreadsheetApp.newDataValidation().requireValueInList([Comfirmation.NO, Comfirmation.YES]);
+    var run = SpreadsheetApp.newDataValidation().requireValueInList(Tools.Arrayify(Comfirmation));
     actions.setAllowInvalid(false);
     run.setAllowInvalid(false);
     ManagementLogSheet.getRange("B1").setDataValidation(actions);
@@ -101,7 +101,7 @@ function onOpen()
     ManagementLogSheet.getRange("B5").setDataValidation(run);
     ManagementLogSheet.getRange("B5").clearContent();
 }
-
+//Entry event when sheet is edited
 function onAdvancedEdit(e)
 {
     Tools.SortSheets();
@@ -112,7 +112,7 @@ function onAdvancedEdit(e)
         FullLogSheet.appendRow([new Date(), "onEdit", e.source.getSheetName() + JSON.stringify(e.range.getA1Notation()) + JSON.stringify(e.user) + JSON.stringify(e)]);
     }
 
-    //Discord id for player
+    //Record discord id for player
     if (e.source.getSheetName() == PlayerStatsSheet.getName())
     {
         /** @type {GoogleAppsScript.Spreadsheet.Range} */
@@ -192,7 +192,7 @@ function onAdvancedEdit(e)
 
     Tools.SortSheets();
 }
-
+//Get a non-removed player list for control panel
 function GetPlayerValidationList()
 {
     var playernames = [];
@@ -206,7 +206,7 @@ function GetPlayerValidationList()
     var players = SpreadsheetApp.newDataValidation().requireValueInList(playernames);
     ManagementLogSheet.getRange("B2").setDataValidation(players);
 }
-
+//Get a removed player list for control panel
 function GetPlayerRemoved()
 {
     var playernames = [];
