@@ -26,6 +26,7 @@ function Main()
 //Daily event run for holiday mode and demotion
 function onDayTrigger(e)
 {
+    HolidayModeMIP.ScaleMIP();
     for (var key in PlayerList)
     {
         if (PlayerList.hasOwnProperty(key))
@@ -53,7 +54,7 @@ function onDayTrigger(e)
                 SendWebHook(payload);
 
             }
-            if (element.mip >= 30 && !element.isHoliday && !element.isRemoved)
+            if (element.mip >= HolidayModeMIP.HM && !element.isHoliday && !element.isRemoved)
             {
                 var message;
                 if (element.class == PlayerClass.NOBLEMAN || element.class == PlayerClass.KING)

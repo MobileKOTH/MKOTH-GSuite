@@ -112,6 +112,11 @@ function Series(date, type, player1, player2, player1wins, player2wins, draws)
         this.player2.mip = (this.player2.mip - 2) < 0 ? 0 : (this.player2.mip - 2);
       }
     }
+
+    if (this.type == SeriesType.KING)
+    {
+      this.player2.mip = 0;
+    }
   }
 
   this.isValid = function ()

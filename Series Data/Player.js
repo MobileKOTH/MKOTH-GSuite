@@ -58,7 +58,14 @@ var PlayerStatus =
 
 var HolidayModeMIP =
   {
-    HM: 30
+    HM: 30,
+
+    ScaleMIP: function ()
+    {
+      var iterations = RankList.GetLastPosition() > 60 ? 0 : 60 - RankList.GetLastPosition();
+      var increment = Math.floor((Math.pow((((1 + Math.sqrt(5)) / 2)), iterations) - Math.pow((((1 - Math.sqrt(5)) / 2)), iterations)) / Math.sqrt(5));
+      HolidayModeMIP.HM += increment;
+    }
   }
 
 var PlayerList = GetPlayerList();
