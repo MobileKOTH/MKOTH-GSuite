@@ -115,6 +115,7 @@ function Series(date, type, player1, player2, player1wins, player2wins, draws)
 
     if (this.type == SeriesType.KING)
     {
+      this.player1.mip = 0;
       this.player2.mip = 0;
     }
   }
@@ -201,6 +202,7 @@ function Series(date, type, player1, player2, player1wins, player2wins, draws)
         invalidReason = "Player 2 is not a knight";
       }
     }
+
     ValidationSheet.getRange(2, 9).setValue(invalidReason);
     ValidationSheet.getRange(2, 9).setBackground("#ff0000");
     return (isvalidplayer1 && isvalidplayer2);

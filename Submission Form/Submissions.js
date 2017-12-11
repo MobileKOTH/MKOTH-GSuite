@@ -134,7 +134,7 @@ function onFormSubmit(e)
     var description = "`validation: " + answer + validationstatus;
     if (!series.isValid()) 
     {
-        description += "However, " + invalidReason.toLowerCase() + ", the series will be probed.\n"
+        description += "However, " + invalidReason.toLowerCase() + ", the series will be audited. Note that the series is not rejected, this message is just a warning as it does not take account for any pending series above, refer to submission rule #4\n"
         lastRow.getCell(1, 9).setValue(invalidReason);
         lastRow.getCell(1, 9).setBackground("red");
     }
@@ -145,30 +145,30 @@ function onFormSubmit(e)
         {
             "content": content,
             "embeds":
-            [
-                {
-                    "author":
+                [
                     {
-                        "name": seriestype,
-                        "icon_url": seriesicon
-                    },
-                    "url": sheeturl,
-                    "title": title,
-                    "description": description,
-                    "timestamp": lastRow.getCell(1, 1).getValue(),
-                    "footer":
-                    {
-                        "text": "Submission Time",
-                        "icon_url": "https://cdn.discordapp.com/attachments/341163606605299716/352026248773500939/schedule.png"
-                    },
-                    "fields":
-                    [
-                        { "name": lastRow.getCell(1, 3).getValue(), "value": lastRow.getCell(1, 5).getValue(), "inline": true },
-                        { "name": lastRow.getCell(1, 4).getValue(), "value": lastRow.getCell(1, 6).getValue(), "inline": true }
-                    ],
-                    "color": color
-                }
-            ]
+                        "author":
+                            {
+                                "name": seriestype,
+                                "icon_url": seriesicon
+                            },
+                        "url": sheeturl,
+                        "title": title,
+                        "description": description,
+                        "timestamp": lastRow.getCell(1, 1).getValue(),
+                        "footer":
+                            {
+                                "text": "Submission Time",
+                                "icon_url": "https://cdn.discordapp.com/attachments/341163606605299716/352026248773500939/schedule.png"
+                            },
+                        "fields":
+                            [
+                                { "name": lastRow.getCell(1, 3).getValue(), "value": lastRow.getCell(1, 5).getValue(), "inline": true },
+                                { "name": lastRow.getCell(1, 4).getValue(), "value": lastRow.getCell(1, 6).getValue(), "inline": true }
+                            ],
+                        "color": color
+                    }
+                ]
         }
     var options =
         {
