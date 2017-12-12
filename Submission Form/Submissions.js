@@ -35,7 +35,8 @@ function onOpen()
     ValidationSheetApp.addMenu("Management",
         [
             { name: "Update Player Code", functionName: "GeneratePlayerCode" },
-            { name: "Resubmit Series", functionName: "ResubmitSeries" }
+            { name: "Resubmit Series", functionName: "ResubmitSeries" },
+            { name: "Swap Players", functionName: "SwapSeriesPlayers" }
         ]);
 }
 
@@ -53,6 +54,30 @@ function ResubmitSeries()
         {
             lastRow = ValidationSheet.getRange(row, 1, 1, 13);
             onFormSubmit();
+            return;
+        }
+        Browser.msgBox("Invalid input!");
+        return;
+    }
+    Browser.msgBox("Invalid input!");
+}
+
+function SwapSeriesPlayers()
+{
+    var input = Browser.inputBox("Series Players Swap", "Select Row to swap", Browser.Buttons.OK_CANCEL);
+    if (input == "cancel")
+    {
+        return;
+    }
+    var row = Number(input);
+    if (!isNaN(row) && input != "")
+    {
+        if (row <= ValidationSheet.getLastRow())
+        {
+            var seriesData = ValidationSheet.getRange(row, 3, 1, 4).getValues()[0];
+            ValidationSheet.getRange(row, 3, 1, 4).setValues([[seriesData[1], seriesData[0], seriesData[3], seriesData[2]]]);
+            ValidationSheet.getRange(row, 9, 1, 1).getCell(1, 1).clear();
+            ManagementLogSheet.appendRow([new Date(), "Swap Series Players", JSON.stringify({ "From": seriesData, "To": [seriesData[1], seriesData[0], seriesData[3], seriesData[2]] })]);
             return;
         }
         Browser.msgBox("Invalid input!");
