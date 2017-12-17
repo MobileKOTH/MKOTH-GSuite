@@ -53,6 +53,16 @@ function ResubmitSeries()
         if (row <= ValidationSheet.getLastRow())
         {
             lastRow = ValidationSheet.getRange(row, 1, 1, 13);
+            previousInviteCodesRange = ValidationSheet.getRange(1, 13, (row <= 1) ? 1 : row - 1, 1).getValues();
+            previousInviteCodes = [];
+            for (var key in previousInviteCodesRange)
+            {
+                if (previousInviteCodesRange.hasOwnProperty(key))
+                {
+                    var element = previousInviteCodesRange[key];
+                    previousInviteCodes.push(element[0]);
+                }
+            }
             onFormSubmit();
             return;
         }
@@ -397,11 +407,11 @@ function GetBattleTVLinkString(gamecode)
 }
 
 /**
- * 
- * @param {Number} code 
- * @param {Series} series
- * @returns {Boolean}
- */
+* 
+* @param {Number} code 
+* @param {Series} series
+* @returns {Boolean}
+*/
 function IsValidPlayerCode(code, series)
 {
     var playerCodeList = PlayerCodeSheet.getRange(1, 1, PlayerCodeSheet.getLastRow(), 2).getValues();
