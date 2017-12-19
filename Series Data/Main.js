@@ -39,11 +39,11 @@ function onDayTrigger(e)
                 var reminder;
                 if (element.class == PlayerClass.NOBLEMAN || element.class == PlayerClass.KING)
                 {
-                    reminder = element.GetDiscordMention() + ", You have around" + (HolidayModeMIP.HM - element.mip) + " more or less day(s) to PLAY a King Series or WIN a Ranked/Knight to stay at your current class for the next month, not winning Ranked/Knight series will only delay your demotion by 2 days.";
+                    reminder = element.GetDiscordMention() + ", You have around " + (HolidayModeMIP.HM - element.mip) + " more or less day(s) to PLAY a King Series or WIN a Ranked/Knight to stay at your current class for the next month, not winning Ranked/Knight series will only delay your demotion by 2 days.";
                 }
                 else
                 {
-                    reminder = element.GetDiscordMention() + ", You have around" + (HolidayModeMIP.HM - element.mip) + " more or less day(s) play any series or you will be placed into holiday mode. Joining back from holiday mode will cause to you to be placed at the last rank of your class."
+                    reminder = element.GetDiscordMention() + ", You have around " + (HolidayModeMIP.HM - element.mip) + " more or less day(s) play any series or you will be placed into holiday mode. Joining back from holiday mode will cause to you to be placed at the last rank of your class."
                 }
                 var payload =
                     {
