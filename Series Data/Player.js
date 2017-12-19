@@ -62,7 +62,7 @@ var HolidayModeMIP =
 
     ScaleMIP: function ()
     {
-      var iterations = RankList.GetLastPosition() > 75 ? 0 : 75 - RankList.GetLastPosition();
+      var iterations = RankList.GetLastPosition() > 70 ? 0 : 70 - RankList.GetLastPosition();
       var increment = Math.floor((Math.pow((((1 + Math.sqrt(5)) / 2)), iterations) - Math.pow((((1 - Math.sqrt(5)) / 2)), iterations)) / Math.sqrt(5));
       HolidayModeMIP.HM += increment;
     }
