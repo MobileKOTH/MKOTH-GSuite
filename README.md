@@ -7,6 +7,8 @@ https://pastebin.com/nwkaAsQm
 https://pastebin.com/wMefPGjn
 
 ## Prerequisite
+Based on JavaScript ECMAScript 5, Google Apps Script has not yet implemented support for ECMAScript 6 syntax.
+
 For series submissions, basic validations are in place but these submissions are still recommended to be manually verified for authenticity, as anyone can use the submission form to create a malicious submission.
 
 The code is however also designed to be able to revert any fake series submissions.
