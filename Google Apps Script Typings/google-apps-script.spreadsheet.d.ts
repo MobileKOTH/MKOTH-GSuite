@@ -9,6 +9,11 @@
 /// <reference path="google-apps-script.drive.d.ts" />
 
 declare namespace GoogleAppsScript {
+  /**
+   * This service allows scripts to create, access, and modify Google Sheets files. See also the guide to storing data in spreadsheets.
+   * 
+   * https://developers.google.com/apps-script/guides/sheets
+   */
   export module Spreadsheet {
     /**
      * Styles that can be set on a range using
@@ -24,9 +29,25 @@ declare namespace GoogleAppsScript {
      *      sheet.updateChart(chart);
      */
     export interface ContainerInfo {
+      /**
+       * The chart's left side will be anchored to this column.
+       * @returns {Integer}  1-indexed column (i.e. column C will be 3)
+       */
       getAnchorColumn(): Integer;
+      /**
+       * The chart's top side will be anchored to this row.
+       * @returns {Integer}  1-indexed row (i.e. row 5 will return 5)
+       */
       getAnchorRow(): Integer;
+      /**
+       * The chart's upper left hand corner will be offset from the anchor column by this many pixels.
+       * @returns {Integer} the horizontal offset in pixels for the upper left hand corner of the chart
+       */
       getOffsetX(): Integer;
+      /**
+       * Chart's upper left hand corner will be offset from the anchor row by this many pixels.
+       * @returns {Integer} the vertical offset in pixels for the upper left hand corner of the chart
+       */
       getOffsetY(): Integer;
     }
 
@@ -92,8 +113,8 @@ declare namespace GoogleAppsScript {
       requireTextEqualTo(text: string): DataValidationBuilder;
       requireTextIsEmail(): DataValidationBuilder;
       requireTextIsUrl(): DataValidationBuilder;
-      requireValueInList(values: String[]): DataValidationBuilder;
-      requireValueInList(values: String[], showDropdown: boolean): DataValidationBuilder;
+      requireValueInList(values: string[]): DataValidationBuilder;
+      requireValueInList(values: string[], showDropdown: boolean): DataValidationBuilder;
       requireValueInRange(range: Range): DataValidationBuilder;
       requireValueInRange(range: Range, showDropdown: boolean): DataValidationBuilder;
       setAllowInvalid(allowInvalidData: boolean): DataValidationBuilder;
@@ -155,7 +176,7 @@ declare namespace GoogleAppsScript {
       reverseCategories(): EmbeddedAreaChartBuilder;
       setBackgroundColor(cssValue: string): EmbeddedAreaChartBuilder;
       setChartType(type: Charts.ChartType): EmbeddedChartBuilder;
-      setColors(cssValues: String[]): EmbeddedAreaChartBuilder;
+      setColors(cssValues: string[]): EmbeddedAreaChartBuilder;
       setLegendPosition(position: Charts.Position): EmbeddedAreaChartBuilder;
       setLegendTextStyle(textStyle: Charts.TextStyle): EmbeddedAreaChartBuilder;
       setOption(option: string, value: Object): EmbeddedChartBuilder;
@@ -198,7 +219,7 @@ declare namespace GoogleAppsScript {
       reverseDirection(): EmbeddedBarChartBuilder;
       setBackgroundColor(cssValue: string): EmbeddedBarChartBuilder;
       setChartType(type: Charts.ChartType): EmbeddedChartBuilder;
-      setColors(cssValues: String[]): EmbeddedBarChartBuilder;
+      setColors(cssValues: string[]): EmbeddedBarChartBuilder;
       setLegendPosition(position: Charts.Position): EmbeddedBarChartBuilder;
       setLegendTextStyle(textStyle: Charts.TextStyle): EmbeddedBarChartBuilder;
       setOption(option: string, value: Object): EmbeddedChartBuilder;
@@ -314,7 +335,7 @@ declare namespace GoogleAppsScript {
       reverseCategories(): EmbeddedColumnChartBuilder;
       setBackgroundColor(cssValue: string): EmbeddedColumnChartBuilder;
       setChartType(type: Charts.ChartType): EmbeddedChartBuilder;
-      setColors(cssValues: String[]): EmbeddedColumnChartBuilder;
+      setColors(cssValues: string[]): EmbeddedColumnChartBuilder;
       setLegendPosition(position: Charts.Position): EmbeddedColumnChartBuilder;
       setLegendTextStyle(textStyle: Charts.TextStyle): EmbeddedColumnChartBuilder;
       setOption(option: string, value: Object): EmbeddedChartBuilder;
@@ -355,7 +376,7 @@ declare namespace GoogleAppsScript {
       reverseCategories(): EmbeddedComboChartBuilder;
       setBackgroundColor(cssValue: string): EmbeddedComboChartBuilder;
       setChartType(type: Charts.ChartType): EmbeddedChartBuilder;
-      setColors(cssValues: String[]): EmbeddedComboChartBuilder;
+      setColors(cssValues: string[]): EmbeddedComboChartBuilder;
       setLegendPosition(position: Charts.Position): EmbeddedComboChartBuilder;
       setLegendTextStyle(textStyle: Charts.TextStyle): EmbeddedComboChartBuilder;
       setOption(option: string, value: Object): EmbeddedChartBuilder;
@@ -396,7 +417,7 @@ declare namespace GoogleAppsScript {
       reverseCategories(): EmbeddedHistogramChartBuilder;
       setBackgroundColor(cssValue: string): EmbeddedHistogramChartBuilder;
       setChartType(type: Charts.ChartType): EmbeddedChartBuilder;
-      setColors(cssValues: String[]): EmbeddedHistogramChartBuilder;
+      setColors(cssValues: string[]): EmbeddedHistogramChartBuilder;
       setLegendPosition(position: Charts.Position): EmbeddedHistogramChartBuilder;
       setLegendTextStyle(textStyle: Charts.TextStyle): EmbeddedHistogramChartBuilder;
       setOption(option: string, value: Object): EmbeddedChartBuilder;
@@ -437,7 +458,7 @@ declare namespace GoogleAppsScript {
       reverseCategories(): EmbeddedLineChartBuilder;
       setBackgroundColor(cssValue: string): EmbeddedLineChartBuilder;
       setChartType(type: Charts.ChartType): EmbeddedChartBuilder;
-      setColors(cssValues: String[]): EmbeddedLineChartBuilder;
+      setColors(cssValues: string[]): EmbeddedLineChartBuilder;
       setCurveStyle(style: Charts.CurveStyle): EmbeddedLineChartBuilder;
       setLegendPosition(position: Charts.Position): EmbeddedLineChartBuilder;
       setLegendTextStyle(textStyle: Charts.TextStyle): EmbeddedLineChartBuilder;
@@ -480,7 +501,7 @@ declare namespace GoogleAppsScript {
       set3D(): EmbeddedPieChartBuilder;
       setBackgroundColor(cssValue: string): EmbeddedPieChartBuilder;
       setChartType(type: Charts.ChartType): EmbeddedChartBuilder;
-      setColors(cssValues: String[]): EmbeddedPieChartBuilder;
+      setColors(cssValues: string[]): EmbeddedPieChartBuilder;
       setLegendPosition(position: Charts.Position): EmbeddedPieChartBuilder;
       setLegendTextStyle(textStyle: Charts.TextStyle): EmbeddedPieChartBuilder;
       setOption(option: string, value: Object): EmbeddedChartBuilder;
@@ -511,7 +532,7 @@ declare namespace GoogleAppsScript {
       removeRange(range: Range): EmbeddedChartBuilder;
       setBackgroundColor(cssValue: string): EmbeddedScatterChartBuilder;
       setChartType(type: Charts.ChartType): EmbeddedChartBuilder;
-      setColors(cssValues: String[]): EmbeddedScatterChartBuilder;
+      setColors(cssValues: string[]): EmbeddedScatterChartBuilder;
       setLegendPosition(position: Charts.Position): EmbeddedScatterChartBuilder;
       setLegendTextStyle(textStyle: Charts.TextStyle): EmbeddedScatterChartBuilder;
       setOption(option: string, value: Object): EmbeddedChartBuilder;
@@ -573,23 +594,38 @@ declare namespace GoogleAppsScript {
      *  Data > Named ranges... menu.
      */
     export interface NamedRange {
+      /**
+       * Gets the name of this named range.
+       */
       getName(): string;
+      /**
+       * Gets teh range referenced by this named range.
+       */
       getRange(): Range;
+      /**
+       * Deletes this named range.
+       */
       remove(): void;
+      /**
+       * Sets/updates the name of this named range.
+       */
       setName(name: string): NamedRange;
+      /**
+       * Sets/updates the range for this named range.
+       */
       setRange(range: Range): NamedRange;
     }
 
     /**
-     *
-     * Deprecated. For spreadsheets created in the newer version of Google Sheets, use the more powerful
+     * @deprecated
+     * For spreadsheets created in the newer version of Google Sheets, use the more powerful
      *      Protection class instead. Although this class is deprecated, it will remain
      *      available for compatibility with the older version of Sheets.
      * Access and modify protected sheets in the older version of Google Sheets.
      */
     export interface PageProtection {
       addUser(email: string): void;
-      getUsers(): String[];
+      getUsers(): string[];
       isProtected(): boolean;
       removeUser(user: string): void;
       setProtected(protection: boolean): void;
@@ -641,7 +677,7 @@ declare namespace GoogleAppsScript {
     export interface Protection {
       addEditor(emailAddress: string): Protection;
       addEditor(user: Base.User): Protection;
-      addEditors(emailAddresses: String[]): Protection;
+      addEditors(emailAddresses: string[]): Protection;
       canDomainEdit(): boolean;
       canEdit(): boolean;
       getDescription(): string;
@@ -654,7 +690,7 @@ declare namespace GoogleAppsScript {
       remove(): void;
       removeEditor(emailAddress: string): Protection;
       removeEditor(user: Base.User): Protection;
-      removeEditors(emailAddresses: String[]): Protection;
+      removeEditors(emailAddresses: string[]): Protection;
       setDescription(description: string): Protection;
       setDomainEdit(editable: boolean): Protection;
       setNamedRange(namedRange: NamedRange): Protection;
@@ -710,52 +746,53 @@ declare namespace GoogleAppsScript {
       copyValuesToRange(sheet: Sheet, column: Integer, columnEnd: Integer, row: Integer, rowEnd: Integer): void;
       getA1Notation(): string;
       getBackground(): string;
-      getBackgrounds(): String[][];
+      getBackgrounds(): string[][];
       getCell(row: Integer, column: Integer): Range;
       getColumn(): Integer;
+      getColumnIndex(): Integer;
       getDataSourceUrl(): string;
       getDataTable(): Charts.DataTable;
       getDataTable(firstRowIsHeader: boolean): Charts.DataTable;
       getDataValidation(): DataValidation;
       getDataValidations(): DataValidation[][];
       getDisplayValue(): string;
-      getDisplayValues(): String[][];
+      getDisplayValues(): string[][];
       getFontColor(): string;
-      getFontColors(): String[][];
-      getFontFamilies(): String[][];
+      getFontColors(): string[][];
+      getFontFamilies(): string[][];
       getFontFamily(): string;
       getFontLine(): string;
-      getFontLines(): String[][];
+      getFontLines(): string[][];
       getFontSize(): Integer;
       getFontSizes(): Integer[][];
       getFontStyle(): string;
-      getFontStyles(): String[][];
+      getFontStyles(): string[][];
       getFontWeight(): string;
-      getFontWeights(): String[][];
+      getFontWeights(): string[][];
       getFormula(): string;
       getFormulaR1C1(): string;
-      getFormulas(): String[][];
-      getFormulasR1C1(): String[][];
+      getFormulas(): string[][];
+      getFormulasR1C1(): string[][];
       getGridId(): Integer;
       getHeight(): Integer;
       getHorizontalAlignment(): string;
-      getHorizontalAlignments(): String[][];
+      getHorizontalAlignments(): string[][];
       getLastColumn(): Integer;
       getLastRow(): Integer;
       getMergedRanges(): Range[];
       getNote(): string;
-      getNotes(): String[][];
+      getNotes(): string[][];
       getNumColumns(): Integer;
       getNumRows(): Integer;
       getNumberFormat(): string;
-      getNumberFormats(): String[][];
+      getNumberFormats(): string[][];
       getRow(): Integer;
       getRowIndex(): Integer;
       getSheet(): Sheet;
       getValue(): Object;
       getValues(): Object[][];
       getVerticalAlignment(): string;
-      getVerticalAlignments(): String[][];
+      getVerticalAlignments(): string[][];
       getWidth(): Integer;
       getWrap(): boolean;
       getWraps(): Boolean[][];
@@ -775,7 +812,7 @@ declare namespace GoogleAppsScript {
       protect(): Protection;
       setBackground(color: string): Range;
       setBackgroundRGB(red: Integer, green: Integer, blue: Integer): Range;
-      setBackgrounds(color: String[][]): Range;
+      setBackgrounds(color: string[][]): Range;
       setBorder(top: boolean, left: boolean, bottom: boolean, right: boolean, vertical: boolean, horizontal: boolean): Range;
       setBorder(top: boolean, left: boolean, bottom: boolean, right: boolean, vertical: boolean, horizontal: boolean, color: string, style: BorderStyle): Range;
       setDataValidation(rule: DataValidation): Range;
@@ -794,8 +831,8 @@ declare namespace GoogleAppsScript {
       setFontWeights(fontWeights: Object[][]): Range;
       setFormula(formula: string): Range;
       setFormulaR1C1(formula: string): Range;
-      setFormulas(formulas: String[][]): Range;
-      setFormulasR1C1(formulas: String[][]): Range;
+      setFormulas(formulas: string[][]): Range;
+      setFormulasR1C1(formulas: string[][]): Range;
       setHorizontalAlignment(alignment: string): Range;
       setHorizontalAlignments(alignments: Object[][]): Range;
       setNote(note: string): Range;
@@ -912,11 +949,11 @@ declare namespace GoogleAppsScript {
     export interface Spreadsheet {
       addEditor(emailAddress: string): Spreadsheet;
       addEditor(user: Base.User): Spreadsheet;
-      addEditors(emailAddresses: String[]): Spreadsheet;
+      addEditors(emailAddresses: string[]): Spreadsheet;
       addMenu(name: string, subMenus: Object[]): void;
       addViewer(emailAddress: string): Spreadsheet;
       addViewer(user: Base.User): Spreadsheet;
-      addViewers(emailAddresses: String[]): Spreadsheet;
+      addViewers(emailAddresses: string[]): Spreadsheet;
       appendRow(rowContents: Object[]): Sheet;
       autoResizeColumn(columnPosition: Integer): Sheet;
       copy(name: string): Spreadsheet;
@@ -1021,27 +1058,85 @@ declare namespace GoogleAppsScript {
      *  the parent class for the Spreadsheet service.
      */
     export interface SpreadsheetApp {
+      /**
+       * An enumeration of the valid styles for setting borders on a Range.
+       */
       BorderStyle: typeof BorderStyle;
+      /**
+       * An enumeration representing the data-validation criteria that can be set on a range.
+       */
       DataValidationCriteria: typeof DataValidationCriteria;
+      /**
+       * An enumeration representing the parts of a spreadsheet that can be protected from edits.
+       */
       ProtectionType: typeof ProtectionType;
+      /**
+       * Creates a new spreadsheet with the given name.
+       */
       create(name: string): Spreadsheet;
+      /**
+       * Creates a new spreadsheet with the given name and the specified number of rows and columns.
+       */
       create(name: string, rows: Integer, columns: Integer): Spreadsheet;
+      /**
+       * Applies all pending Spreadsheet changes.
+       */
       flush(): void;
-      getActive(): Spreadsheet;
+      /**
+       * Returns the currently active spreadsheet, or null if there is none.
+       */
+      getActive(): Spreadsheet | null;
+      /**
+       * Returns the range of cells that is currently considered active.
+       */
       getActiveRange(): Range;
+      /**
+       * Gets the active sheet in a spreadsheet.
+       */
       getActiveSheet(): Sheet;
-      getActiveSpreadsheet(): Spreadsheet;
+      /**
+       * Returns the currently active spreadsheet, or null if there is none.
+       */
+      getActiveSpreadsheet(): Spreadsheet | null;
+      /**
+       * Returns an instance of the spreadsheet's user-interface environment that allows the script to add features like menus, dialogs, and sidebars.
+       */
       getUi(): Base.Ui;
+      /**
+       * Creates a builder for a data-validation rule.
+       */
       newDataValidation(): DataValidationBuilder;
+      /**
+       * Opens the spreadsheet that corresponds to the given File object.
+       */
       open(file: Drive.File): Spreadsheet;
+      /**
+       * 	Opens the spreadsheet with the given ID.
+       */
       openById(id: string): Spreadsheet;
+      /**
+       * 	Opens the spreadsheet with the given url.
+       */
       openByUrl(url: string): Spreadsheet;
+      /**
+       * 	Sets the active range for the application.
+       */
       setActiveRange(range: Range): Range;
+      /**
+       * 	Sets the active sheet in a spreadsheet.
+       */
       setActiveSheet(sheet: Sheet): Sheet;
+      /**
+       * 	Sets the active spreadsheet.
+       */
       setActiveSpreadsheet(newActiveSpreadsheet: Spreadsheet): void;
     }
 
   }
 }
 
+/**
+ * This class allows users to open Google Sheets files and to create new ones. This class is
+ *  the parent class for the Spreadsheet service.
+ */
 declare var SpreadsheetApp: GoogleAppsScript.Spreadsheet.SpreadsheetApp;

@@ -341,8 +341,6 @@ var Tools =
                 LoadValidationSheets();
                 PlayerStatsSheet.sort(1);
                 PlayerStatsSheet.sort(11);
-                RankingSheet.sort(2);
-                RankingSheet.sort(3);
                 RankingSheet.sort(1);
                 HistorySheet.sort(1);
                 FullLogSheet.sort(1, false);

@@ -1,8 +1,5 @@
 {
     "typeAcquisition": {
-        "include": [
-            "jquery",
-            "Google Apps Script Definitions",
-        ]
+        "include": []
     },
 }
