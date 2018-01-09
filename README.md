@@ -22,4 +22,6 @@ The code is however also designed to be able to revert any fake series submissio
 - More validation (Rolled out testing)
 - Fake series revert overhaul
 - Point shop foundation
+- API using Google Web App
+- Series update automation
 - ~~ELO~~ **Done**
