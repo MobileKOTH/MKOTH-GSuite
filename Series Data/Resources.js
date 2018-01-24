@@ -368,6 +368,6 @@ var Tools =
          */
         MIPWarningPeriod: function (mip)
         {
-            return ((HolidayModeMIP.HM - mip) % 2 != 0 && mip >= (HolidayModeMIP.HM - 7) && mip != (HolidayModeMIP.HM - 5));
+            return ((HolidayModeMIP.HM - mip) % 2 != 0 && mip >= (HolidayModeMIP.HM - 7) && mip != (HolidayModeMIP.HM - 5) && (HolidayModeMIP.HM - mip) > 0);
         }
     };

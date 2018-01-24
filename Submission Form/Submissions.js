@@ -296,7 +296,7 @@ function GenerateSeriesTitle(series)
         case SeriesType.KING:
             if (series.player1wins > series.player2wins) 
             {
-                return "ALL BOW DOWN TO OUR NEW KING: " + series.GetWinner().name + "!";
+                return "ALL HAIL TO OUR NEW KING: " + series.GetWinner().name + "!";
             }
             else
             {
