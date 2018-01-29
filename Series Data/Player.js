@@ -59,6 +59,7 @@ var PlayerStatus =
 var HolidayModeMIP =
   {
     HM: 30,
+    DE: 30,
 
     ScaleMIP: function ()
     {
@@ -227,6 +228,7 @@ function Player(name)
       this.isRemoved = false;
       this.points = points;
       this.rank = ClassRank.ParsePlayerClass(this.class);
+      this.mip = 0;
       RankList.ReAddPlayer(this);
       RankingSheet.appendRow([this.rank, this.name, this.class, points]);
       UpdatePlayerList();

@@ -36,44 +36,61 @@ function onDayTrigger(e)
 
             if (Tools.MIPWarningPeriod(element.mip) && !element.isHoliday && !element.isRemoved)
             {
-                var reminder;
+                if (!(element.class == PlayerClass.NOBLEMAN || element.class == PlayerClass.KING))
+                {
+                    var reminder = element.GetDiscordMention() + ", You have around " + (HolidayModeMIP.HM - element.mip) + " more or less day(s) play any series or you will be placed into holiday mode. Joining back from holiday mode will cause to you to be placed at the last rank of your class.";
+                    var payload =
+                        {
+                            "username": "MKOTH Rankings",
+                            "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
+                            "content": reminder
+                        };
+                    SendWebHook(payload);
+                }
+            }
+            if (Tools.DemotionWarningPeriod(element.mip) && !element.isHoliday && !element.isRemoved)
+            {
                 if (element.class == PlayerClass.NOBLEMAN || element.class == PlayerClass.KING)
                 {
-                    reminder = element.GetDiscordMention() + ", You have around " + (HolidayModeMIP.HM - element.mip) + " more or less day(s) to PLAY a King Series or WIN a Ranked/Knight to stay at your current class for the next month, not winning Ranked/Knight series will only delay your demotion by 2 days.";
+                    var reminder = element.GetDiscordMention() + ", You have around " + (HolidayModeMIP.DE - element.mip) + " more or less day(s) to WIN a King/Ranked/Knight series to stay at your current class for the next month, not winning King or Ranked/Knight series will only delay your demotion by 5 or 2 days respectively.";
+                    var payload =
+                        {
+                            "username": "MKOTH Rankings",
+                            "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
+                            "content": reminder
+                        };
+                    SendWebHook(payload);
                 }
-                else
-                {
-                    reminder = element.GetDiscordMention() + ", You have around " + (HolidayModeMIP.HM - element.mip) + " more or less day(s) play any series or you will be placed into holiday mode. Joining back from holiday mode will cause to you to be placed at the last rank of your class."
-                }
-                var payload =
-                    {
-                        "username": "MKOTH Rankings",
-                        "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
-                        "content": reminder
-                    };
-                SendWebHook(payload);
-
             }
             if (element.mip >= HolidayModeMIP.HM && !element.isHoliday && !element.isRemoved)
             {
-                var message;
+                if (!(element.class == PlayerClass.NOBLEMAN || element.class == PlayerClass.KING))
+                {
+                    element.EnterHoliday();
+                    var message = element.GetDiscordMention() + ", You have been placed into holiday mode."
+                    var payload =
+                        {
+                            "username": "MKOTH Rankings",
+                            "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
+                            "content": message
+                        };
+                    SendWebHook(payload);
+                }
+            }
+            if (element.mip >= HolidayModeMIP.DE && !element.isHoliday && !element.isRemoved)
+            {
                 if (element.class == PlayerClass.NOBLEMAN || element.class == PlayerClass.KING)
                 {
                     element.Demote();
-                    message = element.GetDiscordMention() + ", You have been demoted."
+                    var message = element.GetDiscordMention() + ", You have been demoted."
+                    var payload =
+                        {
+                            "username": "MKOTH Rankings",
+                            "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
+                            "content": message
+                        };
+                    SendWebHook(payload);
                 }
-                else
-                {
-                    element.EnterHoliday();
-                    message = element.GetDiscordMention() + ", You have been placed into holiday mode."
-                }
-                var payload =
-                    {
-                        "username": "MKOTH Rankings",
-                        "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
-                        "content": message
-                    };
-                SendWebHook(payload);
             }
         }
     }

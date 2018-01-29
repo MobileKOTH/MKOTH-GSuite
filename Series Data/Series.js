@@ -81,6 +81,12 @@ function Series(date, type, player1, player2, player1wins, player2wins, draws)
     this.player1.points = this.player1.points - this.GetCostPoint();
     this.GetWinner().points = this.GetWinner().points + this.GetRewardPoints();
 
+    if (this.type == SeriesType.KING)
+    {
+      this.player1.mip = this.GetWinner() == this.player1 ? 0 : (this.player1.mip - 5) < 0 ? 0 : (this.player1.mip - 5);
+      this.player2.mip = 0;
+    }
+
     if (this.player1.class != PlayerClass.KING && this.player1.class != PlayerClass.NOBLEMAN)
     {
       this.player1.mip = 0;
@@ -111,12 +117,6 @@ function Series(date, type, player1, player2, player1wins, player2wins, draws)
       {
         this.player2.mip = (this.player2.mip - 2) < 0 ? 0 : (this.player2.mip - 2);
       }
-    }
-
-    if (this.type == SeriesType.KING)
-    {
-      this.player1.mip = 0;
-      this.player2.mip = 0;
     }
   }
 

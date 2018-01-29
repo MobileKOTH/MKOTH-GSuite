@@ -369,5 +369,15 @@ var Tools =
         MIPWarningPeriod: function (mip)
         {
             return ((HolidayModeMIP.HM - mip) % 2 != 0 && mip >= (HolidayModeMIP.HM - 7) && mip != (HolidayModeMIP.HM - 5) && (HolidayModeMIP.HM - mip) > 0);
+        },
+
+        /**
+         * 
+         * @param {Number} mip
+         * @returns {Boolean}
+         */
+        DemotionWarningPeriod: function (mip)
+        {
+            return ((HolidayModeMIP.DE - mip) % 2 != 0 && mip >= (HolidayModeMIP.DE - 7) && mip != (HolidayModeMIP.DE - 5) && (HolidayModeMIP.DE - mip) > 0);
         }
     };
