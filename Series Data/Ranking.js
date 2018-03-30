@@ -53,18 +53,6 @@ function RankingList()
 {
   this.list = GetRankList();
 
-  this.GetLastNoblemanPosition = function ()
-  {
-    for (m = 0; m < this.list.length; m++)
-    {
-      if (this.list[m].player.class == PlayerClass.SQUIRE)
-      {
-        return m;
-      }
-    }
-    return 1;
-  }
-
   /**
    * Update the ranking after a series input
    * @param {Series} newseries
@@ -102,7 +90,7 @@ function RankingList()
         var rankjumper = this.list.splice(newseries.player1.rank - 1, 1);
         this.list.splice(this.GetLastNoblemanPosition(), 0, rankjumper[0]);
         ManagementLogSheet.appendRow([new Date(), "Nobleman Earned", JSON.stringify({ Player: newseries.player1.name, OldPosition: newseries.player1.rank, NewPosition: (this.GetLastNoblemanPosition() + 1) })]);
-        this.list[this.GetLastNoblemanPosition()].player.class = PlayerClass.NOBLEMAN;
+        rankjumper[0].player.class = PlayerClass.NOBLEMAN;
       }
     }
     this.Refresh();
@@ -220,6 +208,18 @@ function RankingList()
       }
       this.Refresh();
     }
+  }
+
+  this.GetLastNoblemanPosition = function ()
+  {
+    for (m = 0; m < this.list.length; m++)
+    {
+      if (this.list[m].player.class == PlayerClass.SQUIRE)
+      {
+        return m <= (ClassRank.NOBLEMAN - 1) ? m : (ClassRank.NOBLEMAN - 1);
+      }
+    }
+    return 1;
   }
 
   this.GetLastPosition = function ()

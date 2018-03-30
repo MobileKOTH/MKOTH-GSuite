@@ -7,7 +7,7 @@ var StatsType =
         LOSS: "L",
         ALL: "All",
         MAIN: "Main",
-        MINIMUMGAMESELO: 20
+        MINIMUMGAMESELO: 10
     }
 
 // -------------------------------- Player Listing -------------------------------- 
