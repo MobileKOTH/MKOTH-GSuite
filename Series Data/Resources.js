@@ -290,8 +290,10 @@ function FlushFormulas()
     var eloformula = RankingSheet.getRange(1, 5).getFormula();
     var statsformule = PlayerIndepthStatsSheet.getRange("A2:Z2").getFormulas();
 
+    Utilities.sleep(1000);
     RankingSheet.getRange(1, 5).clearContent();
     PlayerIndepthStatsSheet.getRange("A2:Z2").clearContent();
+    Utilities.sleep(1000);
 
     RankingSheet.getRange(1, 5).setFormula(eloformula);
     PlayerIndepthStatsSheet.getRange("A2:Z2").setFormulas(statsformule);
