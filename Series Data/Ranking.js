@@ -244,7 +244,7 @@ function RankingList()
     var sheeturl = "https://docs.google.com/spreadsheets/d/1VRfWwvRSMQizzBanGNRMFVzoYFthrsNKzOgF5wKVM5I";
     var fields = [];
     fields.push({
-      "name": ":crown: King: " + this.list[0].player.name + this.list[0].GetRankChangesText() + this.list[0].GetELOText(),
+      "name": ":crown: King: " + this.list[0].GetRankChangesText() + this.list[0].GetELOText(),
       "value": " <@!" + this.list[0].player.discordid + "> **" + this.list[0].player.points + this.list[0].GetPointChangesText() + "\n",
       "inline": false
     });
@@ -255,7 +255,7 @@ function RankingList()
       if (element.player.class == PlayerClass.NOBLEMAN) 
       {
         fields.push({
-          "name": ":champagne_glass: Nobleman: " + element.player.name + " #" + element.player.rank + element.GetRankChangesText() + element.GetELOText(),
+          "name": ":champagne_glass: Nobleman " + " #" + element.player.rank + element.GetRankChangesText() + element.GetELOText(),
           "value": " <@!" + element.player.discordid + "> **" + element.player.points + element.GetPointChangesText() + "\n",
           "inline": false
         });
@@ -268,7 +268,7 @@ function RankingList()
       if (element.player.isKnight) 
       {
         fields.push({
-          "name": ":shield: Knight: " + element.player.name + " #" + element.player.rank + element.GetRankChangesText() + element.GetELOText(),
+          "name": ":shield: Knight " + " #" + element.player.rank + element.GetRankChangesText() + element.GetELOText(),
           "value": " <@!" + element.player.discordid + "> **" + element.player.points + element.GetPointChangesText() + "\n",
           "inline": false
         });
@@ -289,12 +289,11 @@ function RankingList()
                   "url": sheeturl
                 },
               "title": null,
-              "description": "The ranking system consists of the :crown: **King**, who is in rank 1, and 4 different classes of players.\n" +
-                ":shield: **Knights** are the strongest players in Mobile King of the Hill and protect their King and the Noblemen. " +
-                "You can challenge one of the Knights into a best of 5 knight series but that will cost you 18 points.\n" +
-                "If you succeed beating one of the strong Knights, you are officially one of the mighty Noblemen in Mobile King of the Hill.\n" +
-                "Knights are chosen manually.\n" +
-                ":champagne_glass: **Nobleman** may challenge the King’s position by playing a best of 5 **King Series** with him and with the cost of 15 points.",
+              "description":
+                ":crown: **King**, who is in rank 1, along with 4 hierarchical classes of players and a series point system make up the core of the MKOTH ranking.\n" +
+                ":champagne_glass: **Nobleman** is the highest class of players, they are the only players who can challenge the King’s position by playing a best of 5 **King Series** at the cost of 15 points." +
+                "To become a Nobleman, a 2nd class(Squire) player have to beat a **Knight** in a best of 5 **Knight Series** which will cost 18 points.\n" +
+                ":shield: **Knights** are choosen manually(knight tourney/vote) to be the strong players in Mobile King of the Hill to protect their King and the Noblemen. ",
               "fields": fields,
               "color": 16776960
             }
@@ -309,7 +308,7 @@ function RankingList()
       if (element.player.class == PlayerClass.SQUIRE && element.player.rank <= 20) 
       {
         fields.push({
-          "name": "#" + element.player.rank + " " + element.player.name + element.GetRankChangesText() + element.GetELOText(),
+          "name": "#" + element.player.rank + " " + element.GetRankChangesText() + element.GetELOText(),
           "value": " <@!" + element.player.discordid + "> **" + element.player.points + element.GetPointChangesText() + "\n",
           "inline": false
         });
@@ -322,7 +321,7 @@ function RankingList()
       if (element.player.class == PlayerClass.SQUIRE && element.player.rank > 20 && !element.player.isHoliday) 
       {
         fields2.push({
-          "name": "#" + element.player.rank + " " + element.player.name + element.GetRankChangesText() + element.GetELOText(),
+          "name": "#" + element.player.rank + " " + element.GetRankChangesText() + element.GetELOText(),
           "value": " <@!" + element.player.discordid + "> **" + element.player.points + element.GetPointChangesText() + "\n",
           "inline": false
         });
@@ -343,7 +342,8 @@ function RankingList()
                   "url": sheeturl
                 },
               "title": null,
-              "description": "This class includes players who are on or below rank 30 but has not won at least one **Knight Series** as a challenger. " +
+              "description":
+                "This class includes players who are on or below rank 30 but has not won at least one **Knight Series** as a challenger. " +
                 "Hence, this class behaves differently from the previous 2 classes. " +
                 "The number of players in this class may decrease as more people beat Knights to enter the Nobleman class. " +
                 "This class will no longer become smaller when it has 20 players. ",
@@ -373,7 +373,7 @@ function RankingList()
       if (element.player.class == PlayerClass.VASSAL && !element.player.isHoliday) 
       {
         fields.push({
-          "name": "#" + element.player.rank + " " + element.player.name + element.GetRankChangesText() + element.GetELOText(),
+          "name": "#" + element.player.rank + " " + element.GetRankChangesText() + element.GetELOText(),
           "value": " <@!" + element.player.discordid + "> **" + element.player.points + element.GetPointChangesText() + "\n",
           "inline": false
         });
@@ -414,7 +414,7 @@ function RankingList()
       if (element.player.class == PlayerClass.PEASANT && !element.player.isHoliday) 
       {
         fields.push({
-          "name": "#" + element.player.rank + " " + element.player.name + element.GetRankChangesText() + element.GetELOText(),
+          "name": "#" + element.player.rank + " " + element.GetRankChangesText() + element.GetELOText(),
           "value": " <@!" + element.player.discordid + "> **" + element.player.points + element.GetPointChangesText() + "\n",
           "inline": false
         });
@@ -456,7 +456,7 @@ function RankingList()
       if (element.player.isHoliday) 
       {
         fields.push({
-          "name": element.player.class + ": " + element.player.name + element.GetRankChangesText() + element.GetELOText(),
+          "name": element.player.class + " " + element.GetRankChangesText() + element.GetELOText(),
           "value": " <@!" + element.player.discordid + "> **" + element.player.points + "p**\n",
           "inline": false
         });
