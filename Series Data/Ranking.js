@@ -244,7 +244,7 @@ function RankingList()
     var sheeturl = "https://docs.google.com/spreadsheets/d/1VRfWwvRSMQizzBanGNRMFVzoYFthrsNKzOgF5wKVM5I";
     var fields = [];
     fields.push({
-      "name": ":crown: King: " + this.list[0].GetRankChangesText() + this.list[0].GetELOText(),
+      "name": ":crown: King " + this.list[0].GetRankChangesText() + this.list[0].GetELOText(),
       "value": " <@!" + this.list[0].player.discordid + "> **" + this.list[0].player.points + this.list[0].GetPointChangesText() + "\n",
       "inline": false
     });
