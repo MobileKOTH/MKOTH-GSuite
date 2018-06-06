@@ -1,4 +1,4 @@
-node_modules/
-Test/
+exporter/node_modules/
+src/Test/
 
-Credentials.json
+exporter/credentials.json

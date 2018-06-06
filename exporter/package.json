@@ -1,14 +1,14 @@
 {
-  "name": "mkoth-gsuite-sync",
+  "name": "mkoth-gsuite-appscript-exporter",
   "version": "1.0.0",
-  "description": "A small code synchronization companion utility for MKOTH G Suite to sync local code files to the Google App Script online editor using node.js.",
-  "main": "sync.js",
+  "description": "A small App Script exportation companion utility for MKOTH G Suite to export local script files to the Google App Script online editor using node.js.",
+  "main": "exporter.js",
   "dependencies": {
     "googleapis": "^31.0.2"
   },
   "devDependencies": {},
   "scripts": {
-    "start": "sync.js"
+    "start": "exporter.js"
   },
   "repository": {
     "type": "git",
