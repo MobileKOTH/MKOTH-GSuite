@@ -1,9 +1,9 @@
 <h1>
-<img style="border-radius:4px" src="https://media.discordapp.net/icons/271109067261476866/24f121de60193300e17e61c7914e7cdf.jpg" width="32"/>
+<img style="border-radius:4px" src="https://raw.githubusercontent.com/MobileKOTH/MKOTH-GSuite/master/Misc/MKOTH%20Icon.png" width="32"/>
 	Mobile King of the Hill Series Processor
 </h1>
 <div align="center">
-<a href="https://mobilekoth.github.io/"><img style="border-radius:8px" src="https://cdn.discordapp.com/attachments/271109067261476866/330727796647395330/Untitled12111.jpg" width="640" alt="MKOTH Banner" /></a>
+<a href="https://mobilekoth.github.io/"><img style="border-radius:8px" src="https://raw.githubusercontent.com/MobileKOTH/MKOTH-GSuite/master/Misc/MKOTH%20Banner.jpg" width="640" alt="MKOTH Banner" /></a>
 
 [![Guild](https://discordapp.com/api/guilds/271109067261476866/embed.png)](https://discord.me/mkoth)
 [![Youtube](https://img.shields.io/badge/subscribe-YouTube-red.svg)](http://www.youtube.com/channel/UCkI59BmyEeXUWv8-BhPSU6g?sub_confirmation=1)
