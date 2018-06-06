@@ -1,8 +1,8 @@
 {
-  "name": "mkoth-gsuite",
+  "name": "mkoth-gsuite-sync",
   "version": "1.0.0",
-  "description": "This is a Google Apps Script project for Mobile KOTH series processing and automation.  \r This is loosely based on the old MKOTH code posted by Gim Leng aka saynotobloons aka icewarm2 on Pastebin:  \r https://pastebin.com/4x2nQfhm  \r https://pastebin.com/nwkaAsQm  \r https://pastebin.com/wMefPGjn",
-  "main": "Sync.js",
+  "description": "A small code synchronization companion utility for MKOTH G Suite to sync local code files to the Google App Script online editor using node.js.",
+  "main": "sync.js",
   "dependencies": {
     "googleapis": "^31.0.2"
   },
