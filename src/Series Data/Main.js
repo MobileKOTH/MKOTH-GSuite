@@ -18,8 +18,8 @@ function LoadValidationSheets()
     PlayerCodeSheet = ValidationSheetApp.getSheetByName("Player Code");
     FullLogSheet = ValidationSheetApp.getSheetByName("Full Logs");
 }
-// Main method just for testing
-function Main()
+
+function test()
 {
 
 }
