@@ -1,11 +1,109 @@
-var http = require('http');
+const fs = require('fs');
+const readline = require('readline');
+const { google } = require('googleapis');
 
-http.createServer(function (req, res)
+// If modifying these scopes, delete credentials.json.
+const SCOPES = ['https://www.googleapis.com/auth/script.projects'];
+const TOKEN_PATH = 'credentials.json';
+
+// Load client secrets from a local file.
+fs.readFile('client_secret.json', (err, content) =>
 {
-    res.writeHead(200, { 'Content-Type': 'text/html' });
-    res.write('<form action="fileupload" method="post" enctype="multipart/form-data">');
-    res.write('<input type="file" name="filetoupload"><br>');
-    res.write('<input type="submit">');
-    res.write('</form>');
-    return res.end();
-}).listen(8080); 
+    if (err) return console.log('Error loading client secret file:', err);
+    // Authorize a client with credentials, then call the Google Drive API.
+    authorize(JSON.parse(content), callAppsScript);
+});
+
+/**
+ * Create an OAuth2 client with the given credentials, and then execute the
+ * given callback function.
+ * @param {Object} credentials The authorization client credentials.
+ * @param {function} callback The callback to call with the authorized client.
+ */
+function authorize(credentials, callback)
+{
+    const { client_secret, client_id, redirect_uris } = credentials.installed;
+    const oAuth2Client = new google.auth.OAuth2(
+        client_id, client_secret, redirect_uris[0]);
+
+    // Check if we have previously stored a token.
+    fs.readFile(TOKEN_PATH, (err, token) =>
+    {
+        if (err) return getAccessToken(oAuth2Client, callback);
+        oAuth2Client.setCredentials(JSON.parse(token));
+        callback(oAuth2Client);
+    });
+}
+
+/**
+ * Get and store new token after prompting for user authorization, and then
+ * execute the given callback with the authorized OAuth2 client.
+ * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
+ * @param {getEventsCallback} callback The callback for the authorized client.
+ */
+function getAccessToken(oAuth2Client, callback)
+{
+    const authUrl = oAuth2Client.generateAuthUrl({
+        access_type: 'offline',
+        scope: SCOPES,
+    });
+    console.log('Authorize this app by visiting this url:', authUrl);
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+    });
+    rl.question('Enter the code from that page here: ', (code) =>
+    {
+        rl.close();
+        oAuth2Client.getToken(code, (err, token) =>
+        {
+            if (err) return callback(err);
+            oAuth2Client.setCredentials(token);
+            // Store the token to disk for later program executions
+            fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) =>
+            {
+                if (err) console.error(err);
+                console.log('Token stored to', TOKEN_PATH);
+            });
+            callback(oAuth2Client);
+        });
+    });
+}
+
+const OAuth2 = google.auth.OAuth2;
+/**
+ * Creates a new script project, upload a file, and log the script's URL.
+ * @param {OAuth2} auth An authorized OAuth2 client.
+ */
+function callAppsScript(auth)
+{
+    const script = google.script({ version: 'v1', auth });
+    script.projects.create({
+        resource: {
+            title: 'My Script',
+        },
+    }, (err, { data }) =>
+        {
+            if (err) return console.log(`The API create method returned an error: ${err}`);
+            script.projects.updateContent({
+                scriptId: data.scriptId,
+                auth,
+                resource: {
+                    files: [{
+                        name: 'hello',
+                        type: 'SERVER_JS',
+                        source: 'function helloWorld() {\n  console.log("Hello, world!");\n}',
+                    }, {
+                        name: 'appsscript',
+                        type: 'JSON',
+                        source: '{\"timeZone\":\"America/New_York\",\"exceptionLogging\":' +
+                            '\"CLOUD\"}',
+                    }],
+                },
+            }, {}, (err, { data }) =>
+                {
+                    if (err) return console.log(`The API updateContent method returned an error: ${err}`);
+                    console.log(`https://script.google.com/d/${data.scriptId}/edit`);
+                });
+        });
+}

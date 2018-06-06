@@ -1,0 +1,24 @@
+{
+  "name": "mkoth-gsuite",
+  "version": "1.0.0",
+  "description": "This is a Google Apps Script project for Mobile KOTH series processing and automation.  \r This is loosely based on the old MKOTH code posted by Gim Leng aka saynotobloons aka icewarm2 on Pastebin:  \r https://pastebin.com/4x2nQfhm  \r https://pastebin.com/nwkaAsQm  \r https://pastebin.com/wMefPGjn",
+  "main": "Sync.js",
+  "dependencies": {
+    "googleapis": "^31.0.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "sync.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cerlancism/MKOTH-GSuite.git"
+  },
+  "keywords": [],
+  "author": "Cerlancism",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Cerlancism/MKOTH-GSuite/issues"
+  },
+  "homepage": "https://github.com/Cerlancism/MKOTH-GSuite#readme"
+}
