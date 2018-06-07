@@ -4,7 +4,7 @@
   "description": "A small App Script exportation companion utility for MKOTH G Suite to export local script files to the Google App Script online editor using node.js.",
   "main": "exporter.js",
   "dependencies": {
-    "googleapis": "^30.0.0"
+    "googleapis": "^32.0.0"
   },
   "devDependencies": {},
   "scripts": {
