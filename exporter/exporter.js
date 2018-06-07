@@ -70,6 +70,9 @@ function getAccessToken(oAuth2Client, callback)
     });
 }
 
+const SeriesDataScriptId = "1A3GupJKPAYTDbQ7iE9MnVzrYT9LACBz1dIYw1hMbWFxC-6B5CWoFAmhU";
+const InternalDataScriptId = "1Gei8xbj_w0XSqOJxZjodZ3kRT1BU2BRQHSdtN4L3wyr1zv6vJUw1egmE";
+
 const OAuth2 = google.auth.OAuth2;
 /**
  * Creates a new script project, upload a file, and log the script's URL.
@@ -78,7 +81,18 @@ const OAuth2 = google.auth.OAuth2;
 async function callAppsScript(auth)
 {
     const script = google.script({ version: 'v1', auth });
-    var projects = await script.projects.get();
-    console.log(JSON.stringify(projects.data));
 
+    const getResponse = await script.projects.getContent({ scriptId: SeriesDataScriptId });
+    var files = getResponse.data.files;
+    var apiFile = files.find(x => x.name == "API");
+    apiFile.source = await fs.readFileSync('../src/Series Data/API.js').toString();
+
+    const updateResponse = await script.projects.updateContent({
+        scriptId: SeriesDataScriptId,
+        requestBody:
+            {
+                files: files
+            }
+    });
+    console.log(updateResponse);
 }
