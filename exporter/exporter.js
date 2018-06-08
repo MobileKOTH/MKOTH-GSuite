@@ -1,17 +1,18 @@
 const fs = require('fs');
 const readline = require('readline');
+const path = require('path')
 const { google } = require('googleapis');
 
 // If modifying these scopes, delete credentials.json.
 const SCOPES = ['https://www.googleapis.com/auth/script.projects'];
-const TOKEN_PATH = 'credentials.json';
+const TOKEN_PATH = __dirname + '/credentials.json';
 
 // Load client secrets from a local file.
-fs.readFile('client_secret.json', (err, content) =>
+fs.readFile(__dirname + '/client_secret.json', (err, content) =>
 {
     if (err) return console.log('Error loading client secret file:', err);
     // Authorize a client with credentials, then call the Google Drive API.
-    authorize(JSON.parse(content), callAppsScript);
+    authorize(JSON.parse(content), callAppsScriptAsync);
 });
 
 /**
@@ -73,26 +74,63 @@ function getAccessToken(oAuth2Client, callback)
 const SeriesDataScriptId = "1A3GupJKPAYTDbQ7iE9MnVzrYT9LACBz1dIYw1hMbWFxC-6B5CWoFAmhU";
 const InternalDataScriptId = "1Gei8xbj_w0XSqOJxZjodZ3kRT1BU2BRQHSdtN4L3wyr1zv6vJUw1egmE";
 
+const sourceFolder = path.resolve(__dirname, '..') + '/src/'
+
+const scriptSets =
+{
+    SeriesData:
+    {
+        scriptId: SeriesDataScriptId,
+        folder: sourceFolder + 'Series Data/'
+    },
+    InternalData:
+    {
+        scriptId: InternalDataScriptId,
+        folder: sourceFolder + 'Internal Data/'
+    }
+}
+
 const OAuth2 = google.auth.OAuth2;
 /**
- * Creates a new script project, upload a file, and log the script's URL.
+ * Update script projects.
  * @param {OAuth2} auth An authorized OAuth2 client.
  */
-async function callAppsScript(auth)
+async function callAppsScriptAsync(auth)
 {
     const script = google.script({ version: 'v1', auth });
 
-    const getResponse = await script.projects.getContent({ scriptId: SeriesDataScriptId });
-    var files = getResponse.data.files;
-    var apiFile = files.find(x => x.name == "API");
-    apiFile.source = await fs.readFileSync('../src/Series Data/API.js').toString();
+    await syncScriptsAsync(scriptSets.SeriesData);
 
-    const updateResponse = await script.projects.updateContent({
-        scriptId: SeriesDataScriptId,
-        requestBody:
+    const ScriptSet = scriptSets.SeriesData;
+    /**
+     * 
+     * @param {ScriptSet} scriptSet 
+     */
+    async function syncScriptsAsync(scriptSet)
+    {
+        const getFilesResponse = await script.projects.getContent({ scriptId: scriptSet.scriptId });
+        var files = getFilesResponse.data.files;
+        var localFiles = fs.readdirSync(scriptSet.folder);
+        for (var key in files)
+        {
+            if (files.hasOwnProperty(key))
             {
-                files: files
+                var exportFile = files[key];
+                var localFile = localFiles.find(x => x.startsWith(exportFile.name));
+                if (localFile)
+                {
+                    var fileSource = fs.readFileSync(scriptSet.folder + localFile, 'utf-8');
+                    exportFile.source = fileSource
+                }
             }
-    });
-    console.log(updateResponse);
+        }
+
+        const updateFilesResponse = await script.projects.updateContent
+            ({
+                scriptId: scriptSet.scriptId,
+                requestBody: { files: files }
+            });
+
+        console.log(updateFilesResponse);
+    }
 }
