@@ -31,7 +31,7 @@ The code is however also designed to be able to revert any fake series submissio
 ## Roadmap
 - [x] Holiday mode
 - [x] Demotion for King and Nobleman
-- [ ] Script files exportation to App Script
+- [x] Script files exportation to App Script
 - [ ] Complete backend revamp
     - [ ] Use functional programming paradigm?
     - [ ] Better database abstraction on spreadsheets
