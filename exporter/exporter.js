@@ -71,24 +71,46 @@ function getAccessToken(oAuth2Client, callback)
     });
 }
 
-const SeriesDataScriptId = "1A3GupJKPAYTDbQ7iE9MnVzrYT9LACBz1dIYw1hMbWFxC-6B5CWoFAmhU";
-const InternalDataScriptId = "1Gei8xbj_w0XSqOJxZjodZ3kRT1BU2BRQHSdtN4L3wyr1zv6vJUw1egmE";
+class ScriptSets
+{
+    constructor()
+    {
+        /**
+         * @type {ScriptSet}
+         */
+        this.SeriesData;
+        /**
+         * @type {ScriptSet}
+         */
+        this.InternalData;
+        /**
+         * @type {ScriptSet}
+         */
+        this.SubmissionForm;
+    }
+}
+
+class ScriptSet
+{
+    constructor()
+    {
+        /**
+         * @type {String}
+         */
+        this.scriptId;
+        /**
+         * @type {String}
+         */
+        this.folderName;
+    }
+}
 
 const sourceFolder = path.resolve(__dirname, '..') + '/src/'
 
-const scriptSets =
-{
-    SeriesData:
-    {
-        scriptId: SeriesDataScriptId,
-        folder: sourceFolder + 'Series Data/'
-    },
-    InternalData:
-    {
-        scriptId: InternalDataScriptId,
-        folder: sourceFolder + 'Internal Data/'
-    }
-}
+/**
+ * @type {ScriptSets}
+ */
+const scriptSets = require("./config.json").ScriptSets;
 
 const OAuth2 = google.auth.OAuth2;
 /**
@@ -97,33 +119,39 @@ const OAuth2 = google.auth.OAuth2;
  */
 async function callAppsScriptAsync(auth)
 {
+    console.log("Calling App Script.");
+
     const script = google.script({ version: 'v1', auth });
 
-    await syncScriptsAsync(scriptSets.SeriesData);
+    await syncScriptAsync(scriptSets.SeriesData);
+    await syncScriptAsync(scriptSets.InternalData);
+    await syncScriptAsync(scriptSets.SubmissionForm);
 
-    const ScriptSet = scriptSets.SeriesData;
     /**
-     * 
+     * Update one script project.
      * @param {ScriptSet} scriptSet 
      */
-    async function syncScriptsAsync(scriptSet)
+    async function syncScriptAsync(scriptSet)
     {
         const getFilesResponse = await script.projects.getContent({ scriptId: scriptSet.scriptId });
         var files = getFilesResponse.data.files;
-        var localFiles = fs.readdirSync(scriptSet.folder);
+        const path = sourceFolder + scriptSet.folderName + "/";
+        const localFiles = fs.readdirSync(path);
         for (var key in files)
         {
             if (files.hasOwnProperty(key))
             {
                 var exportFile = files[key];
-                var localFile = localFiles.find(x => x.startsWith(exportFile.name));
+                const localFile = localFiles.find(x => x.replace(".js", "") == exportFile.name)
                 if (localFile)
                 {
-                    var fileSource = fs.readFileSync(scriptSet.folder + localFile, 'utf-8');
-                    exportFile.source = fileSource
+                    const fileSource = fs.readFileSync(path + localFile, 'utf-8');
+                    exportFile.source = `// Synced from Google API Node.js client on： ${new Date().toLocaleString()}\n\n` + fileSource
                 }
             }
         }
+
+        console.log("Requested: " + path);
 
         const updateFilesResponse = await script.projects.updateContent
             ({
