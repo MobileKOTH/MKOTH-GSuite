@@ -124,8 +124,8 @@ async function callAppsScriptAsync(auth)
     const script = google.script({ version: 'v1', auth });
 
     await syncScriptAsync(scriptSets.SeriesData);
-    await syncScriptAsync(scriptSets.InternalData);
-    await syncScriptAsync(scriptSets.SubmissionForm);
+    //await syncScriptAsync(scriptSets.InternalData);
+    //await syncScriptAsync(scriptSets.SubmissionForm);
 
     /**
      * Update one script project.

@@ -23,6 +23,7 @@ function test()
 {
 
 }
+
 // Daily event run for holiday mode and demotion
 function onDayTrigger(e)
 {
@@ -40,11 +41,11 @@ function onDayTrigger(e)
                 {
                     var reminder = element.GetDiscordMention() + ", You have around " + (HolidayModeMIP.HM - element.mip) + " more or less day(s) play any series or you will be placed into holiday mode. Joining back from holiday mode will cause to you to be placed at the last rank of your class.";
                     var payload =
-                        {
-                            "username": "MKOTH Rankings",
-                            "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
-                            "content": reminder
-                        };
+                    {
+                        "username": "MKOTH Rankings",
+                        "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
+                        "content": reminder
+                    };
                     SendWebHook(payload);
                 }
             }
@@ -54,11 +55,11 @@ function onDayTrigger(e)
                 {
                     var reminder = element.GetDiscordMention() + ", You have around " + (HolidayModeMIP.DE - element.mip) + " more or less day(s) to WIN a King/Ranked/Knight series to stay at your current class for the next month, not winning King or Ranked/Knight series will only delay your demotion by 5 or 2 days respectively.";
                     var payload =
-                        {
-                            "username": "MKOTH Rankings",
-                            "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
-                            "content": reminder
-                        };
+                    {
+                        "username": "MKOTH Rankings",
+                        "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
+                        "content": reminder
+                    };
                     SendWebHook(payload);
                 }
             }
@@ -69,11 +70,11 @@ function onDayTrigger(e)
                     element.EnterHoliday();
                     var message = element.GetDiscordMention() + ", You have been placed into holiday mode."
                     var payload =
-                        {
-                            "username": "MKOTH Rankings",
-                            "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
-                            "content": message
-                        };
+                    {
+                        "username": "MKOTH Rankings",
+                        "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
+                        "content": message
+                    };
                     SendWebHook(payload);
                 }
             }
@@ -84,11 +85,11 @@ function onDayTrigger(e)
                     element.Demote();
                     var message = element.GetDiscordMention() + ", You have been demoted."
                     var payload =
-                        {
-                            "username": "MKOTH Rankings",
-                            "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
-                            "content": message
-                        };
+                    {
+                        "username": "MKOTH Rankings",
+                        "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
+                        "content": message
+                    };
                     SendWebHook(payload);
                 }
             }
@@ -138,11 +139,11 @@ function onAdvancedEdit(e)
         if (range.getColumn() == 10)
         {
             var payload =
-                {
-                    "username": "MKOTH Rankings",
-                    "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
-                    "content": "Welcome! <@!" + range.getValue() + ">, you are now officially added to the MKOTH Ranking, your name will appear on the series submission form very soon."
-                };
+            {
+                "username": "MKOTH Rankings",
+                "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
+                "content": "Welcome! <@!" + range.getValue() + ">, you are now officially added to the MKOTH Ranking, your name will appear on the series submission form very soon."
+            };
             SendWebHook(payload);
         }
     }
