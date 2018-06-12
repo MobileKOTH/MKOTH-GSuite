@@ -6,9 +6,9 @@ var PlayerStatsSheet = DataSheetApp.getSheetByName("Player Statistics");
 var ManagementLogSheet = DataSheetApp.getSheetByName("Management Logs");
 var PlayerIndepthStatsSheet = DataSheetApp.getSheetByName("Player Indepth Statistics");
 // Just stand by the external validation sheet variable holder so it does'nt always load to cause permission errors 
-/** @type {GoogleAppsScript.Spreadsheet.SpreadsheetApp} */
-var ValidationSheetApp;
 /** @type {GoogleAppsScript.Spreadsheet.Spreadsheet} */
+var ValidationSheetApp;
+/** @type {GoogleAppsScript.Spreadsheet.Sheet} */
 var ValidationSheet, PlayerCodeSheet, FullLogSheet;
 // Load the validation sheets only if needed
 function LoadValidationSheets()

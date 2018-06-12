@@ -1,73 +1,73 @@
 /** Player class constants */
 var PlayerClass =
-    {
-        KING: "King",
-        NOBLEMAN: "Nobleman",
-        SQUIRE: "Squire",
-        VASSAL: "Vassal",
-        PEASANT: "Peasant",
-        KNIGHT: " (Knight)"
-    }
+{
+    KING: "King",
+    NOBLEMAN: "Nobleman",
+    SQUIRE: "Squire",
+    VASSAL: "Vassal",
+    PEASANT: "Peasant",
+    KNIGHT: " (Knight)"
+}
 
 /** The max cap rank possition of a class */
 var ClassRank =
+{
+    KING: 1,
+    NOBLEMAN: 10,
+    SQUIRE: 30,
+    VASSAL: 50,
+
+    /**
+     * Parse a player class name to return its rank cap
+     * @param {String} playerclass
+     * @returns {Number}
+     */
+    ParsePlayerClass: function (playerclass)
     {
-        KING: 1,
-        NOBLEMAN: 10,
-        SQUIRE: 30,
-        VASSAL: 50,
-
-        /**
-         * Parse a player class name to return its rank cap
-         * @param {String} playerclass
-         * @returns {Number}
-         */
-        ParsePlayerClass: function (playerclass)
+        switch (playerclass)
         {
-            switch (playerclass)
-            {
-                case PlayerClass.KING:
-                    return ClassRank.KING;
-                    break;
+            case PlayerClass.KING:
+                return ClassRank.KING;
+                break;
 
-                case PlayerClass.NOBLEMAN:
-                    return ClassRank.NOBLEMAN;
-                    break;
+            case PlayerClass.NOBLEMAN:
+                return ClassRank.NOBLEMAN;
+                break;
 
-                case PlayerClass.SQUIRE:
-                    return ClassRank.SQUIRE;
-                    break;
+            case PlayerClass.SQUIRE:
+                return ClassRank.SQUIRE;
+                break;
 
-                case PlayerClass.VASSAL:
-                    return ClassRank.VASSAL;
-                    break;
+            case PlayerClass.VASSAL:
+                return ClassRank.VASSAL;
+                break;
 
-                case PlayerClass.PEASANT:
-                    return ClassRank.PEASANT;
-                    break;
-            }
+            case PlayerClass.PEASANT:
+                return ClassRank.PEASANT;
+                break;
         }
     }
+}
 
 var PlayerStatus =
-    {
-        ACTIVE: "Active",
-        HOLIDAY: "Holiday",
-        REMOVED: "Removed"
-    }
+{
+    ACTIVE: "Active",
+    HOLIDAY: "Holiday",
+    REMOVED: "Removed"
+}
 
 var HolidayModeMIP =
-    {
-        HM: 30,
-        DE: 30,
+{
+    HM: 30,
+    DE: 30,
 
-        ScaleMIP: function ()
-        {
-            var iterations = RankList.GetLastPosition() > 70 ? 0 : 70 - RankList.GetLastPosition();
-            var increment = Math.floor((Math.pow((((1 + Math.sqrt(5)) / 2)), iterations) - Math.pow((((1 - Math.sqrt(5)) / 2)), iterations)) / Math.sqrt(5));
-            HolidayModeMIP.HM += increment;
-        }
+    ScaleMIP: function ()
+    {
+        var iterations = RankList.GetLastPosition() > 70 ? 0 : 70 - RankList.GetLastPosition();
+        var increment = Math.floor((Math.pow((((1 + Math.sqrt(5)) / 2)), iterations) - Math.pow((((1 - Math.sqrt(5)) / 2)), iterations)) / Math.sqrt(5));
+        HolidayModeMIP.HM += increment;
     }
+}
 
 var PlayerList = GetPlayerList();
 
@@ -288,7 +288,6 @@ function checkPlayerRepeat(name)
 */
 function GetPlayerList()
 {
-    var playerlist = [];
     try 
     {
         var playerDB = PlayerStatsSheet.getRange(2, 1, PlayerStatsSheet.getLastRow() - 1, 11).getValues();

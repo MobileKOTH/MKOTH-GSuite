@@ -2,4 +2,7 @@
     "typeAcquisition": {
         "include": []
     },
+    "compilerOptions": {
+        "target": "es5"
+    }
 }
