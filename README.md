@@ -27,7 +27,7 @@ Mainly based on JavaScript 1.6 and ECMAScript 5, [Google Apps Script](https://de
 
 ### Deployment
 Each folder in src is a script project to be embedded to a google spreadsheet or form. 
-- `Series Data` contains the main and public data for MKOTH. 
+- `Series Data` contains the [main and public data](https://docs.google.com/spreadsheets/d/1VRfWwvRSMQizzBanGNRMFVzoYFthrsNKzOgF5wKVM5I) for MKOTH. 
 - `Internal Data` contains private data, such as immediate series submissions pending for approval and player series submission ids. 
 - `Submission Form` is the series submission [google form](https://docs.google.com/forms/d/1Ccym-20keX_AbFlELm1s0nYNsST71GJMzUcIusz7bIU) which is bound to the `Internal Data` to store and process series submissions. 
 
