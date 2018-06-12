@@ -22,11 +22,14 @@ It is powered by G Suite (Google Spreadsheet, Google Forms) and automated by [Go
 - https://pastebin.com/wMefPGjn
 
 ## Prerequisite
+### Syntax
 Mainly based on JavaScript 1.6 and ECMAScript 5, [Google Apps Script](https://developers.google.com/apps-script/) has not yet implemented support for ECMAScript 6 syntax and above (no `let` `const` `class` etc).
 
-For series submissions, basic validations are in place but these submissions are still recommended to be manually verified for authenticity, as any member can use the [submission form](https://docs.google.com/forms/d/1Ccym-20keX_AbFlELm1s0nYNsST71GJMzUcIusz7bIU) to create a malicious submission.
-
-The code is however also designed to be able to revert any fake series submissions.
+### Deployment
+Each folder in src is a script project to be embedded to a google spreadsheet or form. 
+- `Series Data` contains the main and public data for MKOTH. 
+- `Internal Data` contains private data, such as immediate series submissions pending for approval and player series submission ids. 
+- `Submission Form` is the series submission [google form](https://docs.google.com/forms/d/1Ccym-20keX_AbFlELm1s0nYNsST71GJMzUcIusz7bIU) which is bound to the `Internal Data` to store and process series submissions. 
 
 ## Roadmap
 - [x] Holiday mode
