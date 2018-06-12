@@ -26,7 +26,7 @@ It is powered by G Suite (Google Spreadsheet, Google Forms) and automated by [Go
 Mainly based on JavaScript 1.6 and ECMAScript 5, [Google Apps Script](https://developers.google.com/apps-script/) has not yet implemented support for ECMAScript 6 syntax and above (no `let` `const` `class` etc).
 
 ### Deployment
-Each folder in src is a script project to be embedded to a google spreadsheet or form. 
+Each main folder in src is a script project to be embedded to a G Suite application. 
 - `Series Data` contains the [main and public data](https://docs.google.com/spreadsheets/d/1VRfWwvRSMQizzBanGNRMFVzoYFthrsNKzOgF5wKVM5I) for MKOTH. 
 - `Internal Data` contains private data, such as immediate series submissions pending for approval and player series submission ids. 
 - `Submission Form` is the series submission [google form](https://docs.google.com/forms/d/1Ccym-20keX_AbFlELm1s0nYNsST71GJMzUcIusz7bIU) which is bound to the `Internal Data` to store and process series submissions. 
