@@ -21,9 +21,16 @@ var EntityModels =
         this.status = "";
     },
 
+    PlayerKeyEntity: function ()
+    {
+        this.playerId = "";
+        this.key = 0;
+    },
+
     SeriesEntity: function ()
     {
         this.date = new Date();
+        this.type = "";
         this.player1Id = "";
         this.player2Id = "";
         this.player1Wins = 0;
@@ -31,6 +38,22 @@ var EntityModels =
         this.draws = 0;
         this.gameInviteCode = "";
     },
+
+    RawSeriesEntity: function ()
+    {
+        this.date = new Date();
+        this.type = "";
+        this.player1Name = "";
+        this.player2Name = "";
+        this.player1Wins = 0;
+        this.player2Wins = 0;
+        this.draws = 0;
+        this.submissionKey = 0;
+        this.maths1 = "";
+        this.maths2 = "";
+        this.maths3 = "";
+        this.gameInviteCode = "";
+    }
 }
 
 var EntitySets =
@@ -54,7 +77,7 @@ var EntitySets =
          */
         this.update = function (entities)
         {
-            return EntitySystem.Updater.updateEntities(SpreadsheetApp.getActive(), tableName, entities);
+            return EntitySystem.Updater.updateEntities(sheetApp, tableName, entities);
         }
     },
 
@@ -77,7 +100,7 @@ var EntitySets =
          */
         this.update = function (entities)
         {
-            return EntitySystem.Updater.updateEntities(SpreadsheetApp.getActive(), tableName, entities);
+            return EntitySystem.Updater.updateEntities(sheetApp, tableName, entities);
         }
     }
 }
