@@ -54,7 +54,7 @@ var EntitySets =
          */
         this.update = function (entities)
         {
-            EntitySystem.Updater.updateEntities(SpreadsheetApp.getActive(), tableName, entities);
+            return EntitySystem.Updater.updateEntities(SpreadsheetApp.getActive(), tableName, entities);
         }
     },
 
@@ -77,7 +77,7 @@ var EntitySets =
          */
         this.update = function (entities)
         {
-            EntitySystem.Updater.updateEntities(SpreadsheetApp.getActive(), tableName, entities);
+            return EntitySystem.Updater.updateEntities(SpreadsheetApp.getActive(), tableName, entities);
         }
     }
 }
@@ -159,7 +159,7 @@ var EntitySystem =
             }
 
             tableSheet.clearContents();
-            range.setValues(values);
+            return range.setValues(values);
         },
 
         /**
