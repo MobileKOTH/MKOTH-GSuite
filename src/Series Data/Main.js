@@ -53,7 +53,7 @@ function onDayTrigger(e)
             {
                 if (element.class == PlayerClass.NOBLEMAN || element.class == PlayerClass.KING)
                 {
-                    var reminder = element.GetDiscordMention() + ", You have around " + (HolidayModeMIP.DE - element.mip) + " more or less day(s) to WIN a King/Ranked/Knight series to stay at your current class for the next month, not winning King or Ranked/Knight series will only delay your demotion by 5 or 2 days respectively.";
+                    var reminder = element.GetDiscordMention() + ", You have " + (HolidayModeMIP.DE - element.mip) + " day(s) to WIN a King/Ranked/Knight series to stay at your current class for the next month, attempted but lost a King or Ranked/Knight series will only delay your demotion by 5 or 2 days respectively.";
                     var payload =
                     {
                         "username": "MKOTH Rankings",
