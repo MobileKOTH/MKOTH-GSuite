@@ -27,15 +27,16 @@ Mainly based on JavaScript 1.6 and ECMAScript 5, [Google Apps Script](https://de
 
 ### Deployment
 Each main folder in src is a script project to be embedded to a G Suite application. 
-- `Series Data` contains the [main and public data](https://docs.google.com/spreadsheets/d/1VRfWwvRSMQizzBanGNRMFVzoYFthrsNKzOgF5wKVM5I) for MKOTH. 
-- `Internal Data` contains private data, such as immediate series submissions pending for approval and player series submission ids. 
-- `Submission Form` is the series submission [google form](https://docs.google.com/forms/d/1Ccym-20keX_AbFlELm1s0nYNsST71GJMzUcIusz7bIU) which is bound to the `Internal Data` to store and process series submissions. 
+- `Series Data` is attached to the [main and public data](https://docs.google.com/spreadsheets/d/1VRfWwvRSMQizzBanGNRMFVzoYFthrsNKzOgF5wKVM5I) for MKOTH. 
+- `Internal Data` is attached to the internal data, which stores unexposed data such as raw series submissions pending for approval and player series submission ids. 
+- `Submission Form` is attached to the series submission [google form](https://docs.google.com/forms/d/1Ccym-20keX_AbFlELm1s0nYNsST71GJMzUcIusz7bIU) which is bound to the `Internal Data` to process series submissions. 
 
 ## Roadmap
 - [x] Holiday mode
 - [x] Demotion for King and Nobleman
 - [x] Script files exportation to App Script
 - [ ] Complete backend revamp
+    - [ ] TypeScript
     - [ ] Use functional programming paradigm?
     - [ ] Better database abstraction on spreadsheets
 - [ ] Google Web App API
