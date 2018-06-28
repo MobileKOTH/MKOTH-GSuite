@@ -288,6 +288,7 @@ function checkPlayerRepeat(name)
 */
 function GetPlayerList()
 {
+    var playerlist = [];
     try 
     {
         var playerDB = PlayerStatsSheet.getRange(2, 1, PlayerStatsSheet.getLastRow() - 1, 11).getValues();
