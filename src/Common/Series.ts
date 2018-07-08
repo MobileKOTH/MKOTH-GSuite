@@ -2,13 +2,13 @@
  * Series ENUMS
  * @customfunction
  */
-var SeriesType =
-  {
-    RANKED: "Ranked",
-    KNIGHT: "Knight",
-    KING: "King",
-    POINT: "Point"
-  }
+enum SeriesType
+{
+  RANKED = "Ranked",
+  KNIGHT = "Knight",
+  KING = "King",
+  POINT = "Point"
+}
 
 var invalidReason = "";
 

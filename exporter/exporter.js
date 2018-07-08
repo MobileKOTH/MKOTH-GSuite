@@ -105,7 +105,7 @@ class ScriptSet
     }
 }
 
-const sourceFolder = path.resolve(__dirname, '..') + '/src/'
+const buildFolder = path.resolve(__dirname, '..') + '/build/'
 
 /**
  * @type {ScriptSets}
@@ -135,7 +135,9 @@ async function callAppsScriptAsync(auth)
     {
         const getFilesResponse = await script.projects.getContent({ scriptId: scriptSet.scriptId });
         var files = getFilesResponse.data.files;
-        const path = sourceFolder + scriptSet.folderName + "/";
+        const commonPath = buildFolder + "Common" + "/";
+        const commonFiles = fs.readdirSync(commonPath);
+        const path = buildFolder + scriptSet.folderName + "/";
         const localFiles = fs.readdirSync(path);
         for (var key in files)
         {
@@ -143,9 +145,15 @@ async function callAppsScriptAsync(auth)
             {
                 var exportFile = files[key];
                 const localFile = localFiles.find(x => x.replace(".js", "") == exportFile.name)
+                const commonFile = commonFiles.find(x => x.replace(".js", "") == exportFile.name)
                 if (localFile)
                 {
                     const fileSource = fs.readFileSync(path + localFile, 'utf-8');
+                    exportFile.source = `// Synced from Google API Node.js client on： ${new Date().toLocaleString()}\n\n` + fileSource
+                }
+                else if (commonFile)
+                {
+                    const fileSource = fs.readFileSync(commonPath + commonFile, 'utf-8');
                     exportFile.source = `// Synced from Google API Node.js client on： ${new Date().toLocaleString()}\n\n` + fileSource
                 }
             }
