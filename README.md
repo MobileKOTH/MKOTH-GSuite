@@ -22,13 +22,10 @@ It is powered by G Suite (Google Spreadsheet, Google Forms) and automated by [Go
 - https://pastebin.com/wMefPGjn
 
 ## Prerequisite
-### Syntax
-Mainly based on JavaScript 1.6 and ECMAScript 5, [Google Apps Script](https://developers.google.com/apps-script/) has not yet implemented support for ECMAScript 6 syntax and above (no `let` `const` `class` etc).
-
 ### Deployment
-Each main folder in src is a script project to be embedded to a G Suite application. 
+Each folder in build (after transpiling from TypeScript in src) is a script project to be embedded to a G Suite application. 
 - `Series Data` is attached to the [main and public data](https://docs.google.com/spreadsheets/d/1VRfWwvRSMQizzBanGNRMFVzoYFthrsNKzOgF5wKVM5I) for MKOTH. 
-- `Internal Data` is attached to the internal data, which stores unexposed data such as raw series submissions pending for approval and player series submission ids. 
+- `Internal Data` is attached to the internal data, which stores unexposed data such as raw series submissions, which are series pending for approval, and player series submission ids. 
 - `Submission Form` is attached to the series submission [google form](https://docs.google.com/forms/d/1Ccym-20keX_AbFlELm1s0nYNsST71GJMzUcIusz7bIU) which is bound to the `Internal Data` to process series submissions. 
 
 ## Roadmap
@@ -36,9 +33,9 @@ Each main folder in src is a script project to be embedded to a G Suite applicat
 - [x] Demotion for King and Nobleman
 - [x] Script files exportation to App Script
 - [ ] Complete backend revamp
-    - [ ] TypeScript
+    - [X] TypeScript
     - [ ] Use functional programming paradigm?
-    - [ ] Better database abstraction on spreadsheets
-- [ ] Google Web App API
+    - [X] Better database abstraction on spreadsheets
+- [X] Google Web App API
 - [ ] Auto series approval
 - [ ] ELO player class up requirement
