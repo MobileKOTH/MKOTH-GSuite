@@ -1,6 +1,6 @@
 var EntitySet = EntitySystem.EntitySet;
-var PlayerSet = new EntitySet({
+var PlayerEntitySet = new EntitySet({
     spreadSheet: SpreadsheetApp.getActive(),
     tableName: "_PlayerTable"
 });
-var PlayerEntities = PlayerSet.load();
+var PlayerEntities = PlayerEntitySet.load();
