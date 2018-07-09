@@ -39,20 +39,20 @@ var MKOTHGSuite;
             };
             return ActionBase;
         }());
-        var AddPlayer = /** @class */ (function (_super) {
-            __extends(AddPlayer, _super);
-            function AddPlayer() {
+        var AddPlayerAction = /** @class */ (function (_super) {
+            __extends(AddPlayerAction, _super);
+            function AddPlayerAction() {
                 var _this = _super !== null && _super.apply(this, arguments) || this;
                 _this.date = new Date();
                 _this.type = ActionsType.AddPlayer;
                 return _this;
             }
-            AddPlayer.prototype.invoke = function () {
+            AddPlayerAction.prototype.invoke = function () {
                 return MKOTHGSuite.Players.add(this.playerName, this.discordId);
             };
-            return AddPlayer;
+            return AddPlayerAction;
         }(ActionBase));
-        Actions.AddPlayer = AddPlayer;
+        Actions.AddPlayerAction = AddPlayerAction;
         function RunActions(actions) {
             actions.forEach(function (x) {
                 var result = x.invoke();

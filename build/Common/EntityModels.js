@@ -16,7 +16,14 @@ var MKOTHGSuite;
             function PlayerEntity() {
                 this.class = MKOTHGSuite.PlayerClassName.Peasant;
                 this.isKnight = false;
+                this.points = 0;
                 this.joinDate = new Date();
+                this.winsAll = 0;
+                this.lossAll = 0;
+                this.drawsAll = 0;
+                this.winsMain = 0;
+                this.lossMain = 0;
+                this.drawsMain = 0;
                 this.elo = 1200;
                 this.status = MKOTHGSuite.PlayerStatus.Active;
             }

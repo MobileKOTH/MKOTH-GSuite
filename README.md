@@ -22,8 +22,11 @@ It is powered by G Suite (Google Spreadsheet, Google Forms) and automated by [Go
 - https://pastebin.com/wMefPGjn
 
 ## Prerequisite
+### Syntax
+Written in TypeScript, to be transpiled into ES 5 and exported as .gs files to be deployed in the Google App Script Runtime.
+
 ### Deployment
-Each folder in build (after transpiling from TypeScript in src) is a script project to be embedded to a G Suite application. 
+Each folder the in the `build/` folder (after transpiling from TypeScript in `src/` folder) is a script project to be embedded to a G Suite application, with exception to the "Common" folder in which the files are to be shared across the script projects.
 - `Series Data` is attached to the [main and public data](https://docs.google.com/spreadsheets/d/1VRfWwvRSMQizzBanGNRMFVzoYFthrsNKzOgF5wKVM5I) for MKOTH. 
 - `Internal Data` is attached to the internal data, which stores unexposed data such as raw series submissions, which are series pending for approval, and player series submission ids. 
 - `Submission Form` is attached to the series submission [google form](https://docs.google.com/forms/d/1Ccym-20keX_AbFlELm1s0nYNsST71GJMzUcIusz7bIU) which is bound to the `Internal Data` to process series submissions. 
@@ -36,6 +39,6 @@ Each folder in build (after transpiling from TypeScript in src) is a script proj
     - [X] TypeScript
     - [ ] Use functional programming paradigm?
     - [X] Better database abstraction on spreadsheets
-- [X] Google Web App API
+- [ ] Google Web App API
 - [ ] Auto series approval
 - [ ] ELO player class up requirement

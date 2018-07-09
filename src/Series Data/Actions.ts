@@ -14,10 +14,9 @@ namespace MKOTHGSuite.Actions
 
   export class ActionResult
   {
-    constructor(public success: boolean = true, public message: string = "Success!")
-    {
-
-    }
+    constructor(
+      public success: boolean = true,
+      public message: string = "Success!") { }
   }
 
   abstract class ActionBase implements IAction
@@ -39,7 +38,7 @@ namespace MKOTHGSuite.Actions
     abstract invoke(): ActionResult;
   }
 
-  export class AddPlayer extends ActionBase
+  export class AddPlayerAction extends ActionBase
   {
     date = new Date();
     type = ActionsType.AddPlayer;
