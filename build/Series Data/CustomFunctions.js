@@ -32,13 +32,13 @@ function GetPlayerStatus() {
         if (PlayerList.hasOwnProperty(key)) {
             var element = PlayerList[key];
             if (element.isRemoved) {
-                remarks.push(PlayerStatus.REMOVED);
+                remarks.push(PlayerStatus.Removed);
             }
             else if (element.isHoliday) {
-                remarks.push(PlayerStatus.HOLIDAY);
+                remarks.push(PlayerStatus.Holiday);
             }
             else {
-                remarks.push(PlayerStatus.ACTIVE);
+                remarks.push(PlayerStatus.Active);
             }
         }
     }

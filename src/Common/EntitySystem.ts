@@ -1,5 +1,7 @@
 namespace EntitySystem
 {
+    import Spreadsheet = GoogleAppsScript.Spreadsheet.Spreadsheet;
+
     export interface IEntity
     {
         id: string;
@@ -7,13 +9,13 @@ namespace EntitySystem
 
     interface entitySetOptions
     {
-        spreadSheet: GoogleAppsScript.Spreadsheet.Spreadsheet
+        spreadSheet: Spreadsheet
         tableName: string
     }
 
     export class EntitySet<T extends IEntity>
     {
-        public readonly spreadSheet: GoogleAppsScript.Spreadsheet.Spreadsheet;
+        public readonly spreadSheet: Spreadsheet
         public readonly tableName: string;
 
         constructor(options: entitySetOptions)
@@ -29,13 +31,13 @@ namespace EntitySystem
 
         update(entities: T[])
         {
-            Updater.updateEntities(this.spreadSheet, this.tableName, entities)
+            return Updater.updateEntities(this.spreadSheet, this.tableName, entities)
         }
     }
 
     class Loader
     {
-        public static loadEntities<T extends IEntity>(spreadSheet: GoogleAppsScript.Spreadsheet.Spreadsheet, tableName: string): T[]
+        public static loadEntities<T extends IEntity>(spreadSheet: Spreadsheet, tableName: string): T[]
         {
             var tableSheet = spreadSheet.getSheetByName(tableName);
             var rows = tableSheet.getLastRow();
@@ -74,7 +76,7 @@ namespace EntitySystem
 
     class Updater
     {
-        public static updateEntities<T extends IEntity>(spreadSheet: GoogleAppsScript.Spreadsheet.Spreadsheet, tableName: string, entities: T[])
+        public static updateEntities<T extends IEntity>(spreadSheet: Spreadsheet, tableName: string, entities: T[])
         {
             var tableSheet = spreadSheet.getSheetByName(tableName);
             var keys = Object.keys(entities[0]);
@@ -116,27 +118,18 @@ namespace EntitySystem
     }
 }
 
-function EntitySystemTest()
+function test_entitySystemTest()
 {
-    var newPlayerSet = Array<PlayerEntity>();
+    var newPlayerSet = Array<MKOTHGSuite.Models.PlayerEntity>();
     PlayerList.forEach(x =>
     {
-        var playerEntity = new PlayerEntity();
-        playerEntity.id = getHash(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, x.name + x.joinDate, Utilities.Charset.UTF_8));
+        var playerEntity = new MKOTHGSuite.Models.PlayerEntity();
+        playerEntity.id = Tools.ComputeMD5Hash(x.name + x.joinDate);
         playerEntity.name = x.name;
         playerEntity.joinDate = x.joinDate;
+        playerEntity.class = x.class;
         newPlayerSet.push(playerEntity);
     });
 
-    function getHash(numbers: number[]): string
-    {
-        var output = "";
-        numbers.forEach(element =>
-        {
-            output += (element < 0 ? element + 256 : element).toString(16);
-        });
-        return output;
-    }
-
-    PlayerEntitySet.update(newPlayerSet)
+    MKOTHGSuite.EntitySets.GetPlayerEntitySet().update(newPlayerSet);
 }

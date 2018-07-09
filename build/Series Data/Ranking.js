@@ -55,18 +55,18 @@ function RankingList() {
                 var rankjumper = this.list.splice(newseries.player1.rank - 1, 1);
                 this.list.splice(0, 0, rankjumper[0]);
                 ManagementLogSheet.appendRow([new Date(), "King Change", JSON.stringify({ NewKing: newseries.player1.name, OldPosition: newseries.player1.rank })]);
-                this.list[1].player.class = PlayerClass.NOBLEMAN;
+                this.list[1].player.class = PlayerClass.Nobleman;
             }
         }
         if (newseries.type == SeriesType.KNIGHT) {
             if (newseries.GetWinner() == newseries.player1) {
-                if (newseries.GetWinner().class == PlayerClass.NOBLEMAN || newseries.GetWinner().class == PlayerClass.KING) {
+                if (newseries.GetWinner().class == PlayerClass.Nobleman || newseries.GetWinner().class == PlayerClass.King) {
                     return;
                 }
                 var rankjumper = this.list.splice(newseries.player1.rank - 1, 1);
                 this.list.splice(this.GetLastNoblemanPosition(), 0, rankjumper[0]);
                 ManagementLogSheet.appendRow([new Date(), "Nobleman Earned", JSON.stringify({ Player: newseries.player1.name, OldPosition: newseries.player1.rank, NewPosition: (this.GetLastNoblemanPosition() + 1) })]);
-                rankjumper[0].player.class = PlayerClass.NOBLEMAN;
+                rankjumper[0].player.class = PlayerClass.Nobleman;
             }
         }
         this.Refresh();
@@ -129,26 +129,26 @@ function RankingList() {
      * @param {Player} player
      */
     this.DemotePlayer = function (player) {
-        if (player.class == PlayerClass.KING) {
+        if (player.class == PlayerClass.King) {
             for (var rl = 0; rl < this.list.length; rl++) {
                 var element = this.list[rl];
                 if (element.player.name == player.name) {
                     this.list.splice(rl, 1);
                     this.list.splice(1, 0, element);
-                    player.class = PlayerClass.NOBLEMAN;
+                    player.class = PlayerClass.Nobleman;
                     player.mip = 0;
                     break;
                 }
             }
             this.Refresh();
         }
-        if (player.class == PlayerClass.NOBLEMAN) {
+        if (player.class == PlayerClass.Nobleman) {
             for (var rl = 0; rl < this.list.length; rl++) {
                 var element = this.list[rl];
                 if (element.player.name == player.name) {
                     this.list.splice(rl, 1);
                     this.list.splice(this.GetLastNoblemanPosition(), 0, element);
-                    player.class = PlayerClass.SQUIRE;
+                    player.class = PlayerClass.Squire;
                     player.mip = 0;
                     break;
                 }
@@ -158,8 +158,8 @@ function RankingList() {
     };
     this.GetLastNoblemanPosition = function () {
         for (m = 0; m < this.list.length; m++) {
-            if (this.list[m].player.class == PlayerClass.SQUIRE) {
-                return m <= (ClassRank.NOBLEMAN - 1) ? m : (ClassRank.NOBLEMAN - 1);
+            if (this.list[m].player.class == PlayerClass.Squire) {
+                return m <= (ClassRank.Nobleman - 1) ? m : (ClassRank.Nobleman - 1);
             }
         }
         return 1;
@@ -186,7 +186,7 @@ function RankingList() {
         });
         for (var ni = 1; ni < this.list.length; ni++) {
             var element = this.list[ni];
-            if (element.player.class == PlayerClass.NOBLEMAN) {
+            if (element.player.class == PlayerClass.Nobleman) {
                 fields.push({
                     "name": ":champagne_glass: Nobleman " + " #" + element.player.rank + element.GetRankChangesText() + element.GetELOText(),
                     "value": " <@!" + element.player.discordid + "> **" + element.player.points + element.GetPointChangesText() + "\n",
@@ -229,7 +229,7 @@ function RankingList() {
         fields = [];
         for (var si = 0; si < this.list.length; si++) {
             var element = this.list[si];
-            if (element.player.class == PlayerClass.SQUIRE && element.player.rank <= 20) {
+            if (element.player.class == PlayerClass.Squire && element.player.rank <= 20) {
                 fields.push({
                     "name": "#" + element.player.rank + " " + element.GetRankChangesText() + element.GetELOText(),
                     "value": " <@!" + element.player.discordid + "> **" + element.player.points + element.GetPointChangesText() + "\n",
@@ -240,7 +240,7 @@ function RankingList() {
         var fields2 = [];
         for (var si = 0; si < this.list.length; si++) {
             var element = this.list[si];
-            if (element.player.class == PlayerClass.SQUIRE && element.player.rank > 20 && !element.player.isHoliday) {
+            if (element.player.class == PlayerClass.Squire && element.player.rank > 20 && !element.player.isHoliday) {
                 fields2.push({
                     "name": "#" + element.player.rank + " " + element.GetRankChangesText() + element.GetELOText(),
                     "value": " <@!" + element.player.discordid + "> **" + element.player.points + element.GetPointChangesText() + "\n",
@@ -285,7 +285,7 @@ function RankingList() {
         fields = [];
         for (var si = 0; si < this.list.length; si++) {
             var element = this.list[si];
-            if (element.player.class == PlayerClass.VASSAL && !element.player.isHoliday) {
+            if (element.player.class == PlayerClass.Vassal && !element.player.isHoliday) {
                 fields.push({
                     "name": "#" + element.player.rank + " " + element.GetRankChangesText() + element.GetELOText(),
                     "value": " <@!" + element.player.discordid + "> **" + element.player.points + element.GetPointChangesText() + "\n",
@@ -319,7 +319,7 @@ function RankingList() {
                 break;
             }
             var element = this.list[si];
-            if (element.player.class == PlayerClass.PEASANT && !element.player.isHoliday) {
+            if (element.player.class == PlayerClass.Peasant && !element.player.isHoliday) {
                 fields.push({
                     "name": "#" + element.player.rank + " " + element.GetRankChangesText() + element.GetELOText(),
                     "value": " <@!" + element.player.discordid + "> **" + element.player.points + element.GetPointChangesText() + "\n",
@@ -402,17 +402,17 @@ function GetRankList() {
         }
     }
     for (ll = 0; ll < PlayerList.length; ll++) {
-        if (PlayerList[ll].class == PlayerClass.SQUIRE && PlayerList[ll].isHoliday) {
+        if (PlayerList[ll].class == PlayerClass.Squire && PlayerList[ll].isHoliday) {
             ranklist.push(new Ranking(PlayerList[ll]));
         }
     }
     for (ll = 0; ll < PlayerList.length; ll++) {
-        if (PlayerList[ll].class == PlayerClass.VASSAL && PlayerList[ll].isHoliday) {
+        if (PlayerList[ll].class == PlayerClass.Vassal && PlayerList[ll].isHoliday) {
             ranklist.push(new Ranking(PlayerList[ll]));
         }
     }
     for (ll = 0; ll < PlayerList.length; ll++) {
-        if (PlayerList[ll].class == PlayerClass.PEASANT && PlayerList[ll].isHoliday) {
+        if (PlayerList[ll].class == PlayerClass.Peasant && PlayerList[ll].isHoliday) {
             ranklist.push(new Ranking(PlayerList[ll]));
         }
     }

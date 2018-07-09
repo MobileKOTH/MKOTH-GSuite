@@ -76,21 +76,21 @@ function RankingList()
         var rankjumper = this.list.splice(newseries.player1.rank - 1, 1);
         this.list.splice(0, 0, rankjumper[0]);
         ManagementLogSheet.appendRow([new Date(), "King Change", JSON.stringify({ NewKing: newseries.player1.name, OldPosition: newseries.player1.rank })]);
-        this.list[1].player.class = PlayerClass.NOBLEMAN;
+        this.list[1].player.class = PlayerClass.Nobleman;
       }
     }
     if (newseries.type == SeriesType.KNIGHT)
     {
       if (newseries.GetWinner() == newseries.player1)
       {
-        if (newseries.GetWinner().class == PlayerClass.NOBLEMAN || newseries.GetWinner().class == PlayerClass.KING)
+        if (newseries.GetWinner().class == PlayerClass.Nobleman || newseries.GetWinner().class == PlayerClass.King)
         {
           return;
         }
         var rankjumper = this.list.splice(newseries.player1.rank - 1, 1);
         this.list.splice(this.GetLastNoblemanPosition(), 0, rankjumper[0]);
         ManagementLogSheet.appendRow([new Date(), "Nobleman Earned", JSON.stringify({ Player: newseries.player1.name, OldPosition: newseries.player1.rank, NewPosition: (this.GetLastNoblemanPosition() + 1) })]);
-        rankjumper[0].player.class = PlayerClass.NOBLEMAN;
+        rankjumper[0].player.class = PlayerClass.Nobleman;
       }
     }
     this.Refresh();
@@ -176,7 +176,7 @@ function RankingList()
    */
   this.DemotePlayer = function (player)
   {
-    if (player.class == PlayerClass.KING)
+    if (player.class == PlayerClass.King)
     {
       for (var rl = 0; rl < this.list.length; rl++)
       {
@@ -185,14 +185,14 @@ function RankingList()
         {
           this.list.splice(rl, 1);
           this.list.splice(1, 0, element);
-          player.class = PlayerClass.NOBLEMAN;
+          player.class = PlayerClass.Nobleman;
           player.mip = 0;
           break;
         }
       }
       this.Refresh();
     }
-    if (player.class == PlayerClass.NOBLEMAN)
+    if (player.class == PlayerClass.Nobleman)
     {
       for (var rl = 0; rl < this.list.length; rl++)
       {
@@ -201,7 +201,7 @@ function RankingList()
         {
           this.list.splice(rl, 1);
           this.list.splice(this.GetLastNoblemanPosition(), 0, element)
-          player.class = PlayerClass.SQUIRE;
+          player.class = PlayerClass.Squire;
           player.mip = 0;
           break;
         }
@@ -214,9 +214,9 @@ function RankingList()
   {
     for (m = 0; m < this.list.length; m++)
     {
-      if (this.list[m].player.class == PlayerClass.SQUIRE)
+      if (this.list[m].player.class == PlayerClass.Squire)
       {
-        return m <= (ClassRank.NOBLEMAN - 1) ? m : (ClassRank.NOBLEMAN - 1);
+        return m <= (ClassRank.Nobleman - 1) ? m : (ClassRank.Nobleman - 1);
       }
     }
     return 1;
@@ -252,7 +252,7 @@ function RankingList()
     for (var ni = 1; ni < this.list.length; ni++)
     {
       var element = this.list[ni];
-      if (element.player.class == PlayerClass.NOBLEMAN) 
+      if (element.player.class == PlayerClass.Nobleman) 
       {
         fields.push({
           "name": ":champagne_glass: Nobleman " + " #" + element.player.rank + element.GetRankChangesText() + element.GetELOText(),
@@ -275,37 +275,37 @@ function RankingList()
       }
     }
     var payload =
-      {
-        "username": "MKOTH Rankings",
-        "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
-        "content": "**May not be mobile friendly.**\nDM an admin if your discord ID missing and has no numbers. A rank catergory will slice off after showing a max of 25 players.",
-        "embeds":
-          [
+    {
+      "username": "MKOTH Rankings",
+      "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
+      "content": "**May not be mobile friendly.**\nDM an admin if your discord ID missing and has no numbers. A rank catergory will slice off after showing a max of 25 players.",
+      "embeds":
+        [
+          {
+            "author":
             {
-              "author":
-                {
-                  "name": "MKOTH Elites",
-                  "icon_url": "https://cdn.discordapp.com/attachments/341163606605299716/352026213306335234/crown.png",
-                  "url": sheeturl
-                },
-              "title": null,
-              "description":
-                ":crown: **King**, who is in rank 1, along with 4 hierarchical classes of players and a series point system make up the core of the MKOTH ranking.\n" +
-                ":champagne_glass: **Nobleman** is the highest class of players, they are the only players who can challenge the King’s position by playing a best of 5 **King Series** at the cost of 15 points." +
-                "To become a Nobleman, a 2nd class(Squire) player have to beat a **Knight** in a best of 5 **Knight Series** which will cost 18 points.\n" +
-                ":shield: **Knights** are choosen manually(knight tourney/vote) to be the strong players in Mobile King of the Hill to protect their King and the Noblemen. ",
-              "fields": fields,
-              "color": 16776960
-            }
-          ]
-      };
+              "name": "MKOTH Elites",
+              "icon_url": "https://cdn.discordapp.com/attachments/341163606605299716/352026213306335234/crown.png",
+              "url": sheeturl
+            },
+            "title": null,
+            "description":
+              ":crown: **King**, who is in rank 1, along with 4 hierarchical classes of players and a series point system make up the core of the MKOTH ranking.\n" +
+              ":champagne_glass: **Nobleman** is the highest class of players, they are the only players who can challenge the King’s position by playing a best of 5 **King Series** at the cost of 15 points." +
+              "To become a Nobleman, a 2nd class(Squire) player have to beat a **Knight** in a best of 5 **Knight Series** which will cost 18 points.\n" +
+              ":shield: **Knights** are choosen manually(knight tourney/vote) to be the strong players in Mobile King of the Hill to protect their King and the Noblemen. ",
+            "fields": fields,
+            "color": 16776960
+          }
+        ]
+    };
     SendWebHook(payload);
 
     fields = [];
     for (var si = 0; si < this.list.length; si++)
     {
       var element = this.list[si];
-      if (element.player.class == PlayerClass.SQUIRE && element.player.rank <= 20) 
+      if (element.player.class == PlayerClass.Squire && element.player.rank <= 20) 
       {
         fields.push({
           "name": "#" + element.player.rank + " " + element.GetRankChangesText() + element.GetELOText(),
@@ -318,7 +318,7 @@ function RankingList()
     for (var si = 0; si < this.list.length; si++)
     {
       var element = this.list[si];
-      if (element.player.class == PlayerClass.SQUIRE && element.player.rank > 20 && !element.player.isHoliday) 
+      if (element.player.class == PlayerClass.Squire && element.player.rank > 20 && !element.player.isHoliday) 
       {
         fields2.push({
           "name": "#" + element.player.rank + " " + element.GetRankChangesText() + element.GetELOText(),
@@ -328,49 +328,49 @@ function RankingList()
       }
     };
     var payload =
-      {
-        "username": "MKOTH Rankings",
-        "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
-        "content": null,
-        "embeds":
-          [
+    {
+      "username": "MKOTH Rankings",
+      "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
+      "content": null,
+      "embeds":
+        [
+          {
+            "author":
             {
-              "author":
-                {
-                  "name": "Squires",
-                  "icon_url": "https://cdn.discordapp.com/attachments/341163606605299716/352093192918663171/swords.png",
-                  "url": sheeturl
-                },
-              "title": null,
-              "description":
-                "This class includes players who are on or below rank 30 but has not won at least one **Knight Series** as a challenger. " +
-                "Hence, this class behaves differently from the previous 2 classes. " +
-                "The number of players in this class may decrease as more people beat Knights to enter the Nobleman class. " +
-                "This class will no longer become smaller when it has 20 players. ",
-              "fields": fields,
-              "color": 15844367
+              "name": "Squires",
+              "icon_url": "https://cdn.discordapp.com/attachments/341163606605299716/352093192918663171/swords.png",
+              "url": sheeturl
             },
+            "title": null,
+            "description":
+              "This class includes players who are on or below rank 30 but has not won at least one **Knight Series** as a challenger. " +
+              "Hence, this class behaves differently from the previous 2 classes. " +
+              "The number of players in this class may decrease as more people beat Knights to enter the Nobleman class. " +
+              "This class will no longer become smaller when it has 20 players. ",
+            "fields": fields,
+            "color": 15844367
+          },
+          {
+            "author":
             {
-              "author":
-                {
-                  "name": "Squires",
-                  "icon_url": "https://cdn.discordapp.com/attachments/341163606605299716/352093192918663171/swords.png",
-                  "url": sheeturl
-                },
-              "title": null,
-              "description": null,
-              "fields": fields2,
-              "color": 15844367
-            }
-          ]
-      };
+              "name": "Squires",
+              "icon_url": "https://cdn.discordapp.com/attachments/341163606605299716/352093192918663171/swords.png",
+              "url": sheeturl
+            },
+            "title": null,
+            "description": null,
+            "fields": fields2,
+            "color": 15844367
+          }
+        ]
+    };
     SendWebHook(payload);
 
     fields = [];
     for (var si = 0; si < this.list.length; si++)
     {
       var element = this.list[si];
-      if (element.player.class == PlayerClass.VASSAL && !element.player.isHoliday) 
+      if (element.player.class == PlayerClass.Vassal && !element.player.isHoliday) 
       {
         fields.push({
           "name": "#" + element.player.rank + " " + element.GetRankChangesText() + element.GetELOText(),
@@ -380,27 +380,27 @@ function RankingList()
       }
     }
     var payload =
-      {
-        "username": "MKOTH Rankings",
-        "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
-        "content": null,
-        "embeds":
-          [
+    {
+      "username": "MKOTH Rankings",
+      "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
+      "content": null,
+      "embeds":
+        [
+          {
+            "author":
             {
-              "author":
-                {
-                  "name": "Vassals",
-                  "icon_url": "https://cdn.discordapp.com/attachments/341163606605299716/352093197335265296/sword.png",
-                  "url": sheeturl
-                },
-              "title": null,
-              "description": "The third highest class is the Vassals class. This class includes all players under rank 30 to rank 50. " +
-                "If you want to move to a higher class, you need to pay an extra fee of 12 points to start a **Ranked Series with a Squire**.",
-              "fields": fields,
-              "color": 16310919
-            }
-          ]
-      };
+              "name": "Vassals",
+              "icon_url": "https://cdn.discordapp.com/attachments/341163606605299716/352093197335265296/sword.png",
+              "url": sheeturl
+            },
+            "title": null,
+            "description": "The third highest class is the Vassals class. This class includes all players under rank 30 to rank 50. " +
+              "If you want to move to a higher class, you need to pay an extra fee of 12 points to start a **Ranked Series with a Squire**.",
+            "fields": fields,
+            "color": 16310919
+          }
+        ]
+    };
     SendWebHook(payload);
 
     fields = [];
@@ -411,7 +411,7 @@ function RankingList()
         break;
       }
       var element = this.list[si];
-      if (element.player.class == PlayerClass.PEASANT && !element.player.isHoliday) 
+      if (element.player.class == PlayerClass.Peasant && !element.player.isHoliday) 
       {
         fields.push({
           "name": "#" + element.player.rank + " " + element.GetRankChangesText() + element.GetELOText(),
@@ -421,28 +421,28 @@ function RankingList()
       }
     }
     var payload =
-      {
-        "username": "MKOTH Rankings",
-        "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
-        "content": null,
-        "embeds":
-          [
+    {
+      "username": "MKOTH Rankings",
+      "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
+      "content": null,
+      "embeds":
+        [
+          {
+            "author":
             {
-              "author":
-                {
-                  "name": "Peasants",
-                  "icon_url": "https://cdn.discordapp.com/attachments/341163606605299716/352093195087380482/axe.png",
-                  "url": sheeturl
-                },
-              "title": null,
-              "description": "The lowest class in the ranking is the Peasant class. This class includes all players under rank 50. " +
-                "If you want to move to a higher class, you need to pay an extra fee of 6 points to start a **Ranked Series with a Vassal**.",
-              "fields": fields,
-              "timestamp": new Date(),
-              "color": 16577487
-            }
-          ]
-      };
+              "name": "Peasants",
+              "icon_url": "https://cdn.discordapp.com/attachments/341163606605299716/352093195087380482/axe.png",
+              "url": sheeturl
+            },
+            "title": null,
+            "description": "The lowest class in the ranking is the Peasant class. This class includes all players under rank 50. " +
+              "If you want to move to a higher class, you need to pay an extra fee of 6 points to start a **Ranked Series with a Vassal**.",
+            "fields": fields,
+            "timestamp": new Date(),
+            "color": 16577487
+          }
+        ]
+    };
     SendWebHook(payload);
 
     fields = [];
@@ -464,32 +464,32 @@ function RankingList()
     }
     HolidayModeMIP.ScaleMIP();
     var payload =
-      {
-        "username": "MKOTH Rankings",
-        "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
-        "content": null,
-        "embeds":
-          [
+    {
+      "username": "MKOTH Rankings",
+      "avatar_url": "https://cdn.discordapp.com/attachments/341163606605299716/352269545030942720/mkoth_thumb.jpg",
+      "content": null,
+      "embeds":
+        [
+          {
+            "author":
             {
-              "author":
-                {
-                  "name": "Holiday Mode",
-                  "icon_url": "https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/103/airplane_2708.png",
-                  "url": sheeturl
-                },
-              "title": null,
-              "description": "Holiday is an auto inactive sweep system which temporarily removes you from the MKOTH leader board if you are squire and below and have not played a series in the around last " + HolidayModeMIP.HM + " days. " +
-                "You can be backed to the leader board anytime once you played a series, but you will start at the last position from your class.",
-              "fields": fields,
-              "timestamp": new Date(),
-              "footer":
-                {
-                  "text": "Updated",
-                }
-
+              "name": "Holiday Mode",
+              "icon_url": "https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/103/airplane_2708.png",
+              "url": sheeturl
+            },
+            "title": null,
+            "description": "Holiday is an auto inactive sweep system which temporarily removes you from the MKOTH leader board if you are squire and below and have not played a series in the around last " + HolidayModeMIP.HM + " days. " +
+              "You can be backed to the leader board anytime once you played a series, but you will start at the last position from your class.",
+            "fields": fields,
+            "timestamp": new Date(),
+            "footer":
+            {
+              "text": "Updated",
             }
-          ]
-      };
+
+          }
+        ]
+    };
     SendWebHook(payload);
   }
 }
@@ -513,7 +513,7 @@ function GetRankList()
   }
   for (ll = 0; ll < PlayerList.length; ll++)
   {
-    if (PlayerList[ll].class == PlayerClass.SQUIRE && PlayerList[ll].isHoliday)
+    if (PlayerList[ll].class == PlayerClass.Squire && PlayerList[ll].isHoliday)
     {
       ranklist.push(new Ranking(PlayerList[ll]))
     }
@@ -521,7 +521,7 @@ function GetRankList()
 
   for (ll = 0; ll < PlayerList.length; ll++)
   {
-    if (PlayerList[ll].class == PlayerClass.VASSAL && PlayerList[ll].isHoliday)
+    if (PlayerList[ll].class == PlayerClass.Vassal && PlayerList[ll].isHoliday)
     {
       ranklist.push(new Ranking(PlayerList[ll]))
     }
@@ -530,7 +530,7 @@ function GetRankList()
 
   for (ll = 0; ll < PlayerList.length; ll++)
   {
-    if (PlayerList[ll].class == PlayerClass.PEASANT && PlayerList[ll].isHoliday)
+    if (PlayerList[ll].class == PlayerClass.Peasant && PlayerList[ll].isHoliday)
     {
       ranklist.push(new Ranking(PlayerList[ll]))
     }

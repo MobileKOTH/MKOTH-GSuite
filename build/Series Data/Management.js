@@ -1,145 +1,70 @@
-//** Management Selections */
-var Action = {
-    SELECT: "Select Action",
-    ADDPLAYER: "Add Player",
-    REMOVEPLAYER: "Remove Player",
-    SUBMITSERIES: "Submit Series",
-    SWAPSERIESPLAYERS: "Swap Series Players",
-    PROMOTEKNIGHT: "Promote Knight",
-    READDPLAYER: "Re-Add Player"
-};
-var Comfirmation = {
-    YES: "RUN",
-    NO: "NOT RUN"
-};
-var runtime = new Date().getTime();
-// Running of Management Action
-function onClickRun() {
-    Tools.SortSheets();
-    RunProgress("Running Please Wait");
-    var action = ManagementLogSheet.getRange("B1").getValue();
-    var input1 = ManagementLogSheet.getRange("B2").getValue();
-    var input2 = ManagementLogSheet.getRange("B3").getValue();
-    var success = false;
-    // Parsing actions
-    switch (action) {
-        case Action.SELECT:
-            RunError("No Action Selected!");
-            break;
-        case Action.ADDPLAYER:
-            success = AddPlayer(input1);
-            FlushFormulas();
-            break;
-        case Action.REMOVEPLAYER:
-            success = RemovePlayer(input1);
-            FlushFormulas();
-            break;
-        case Action.SUBMITSERIES:
-            success = SubmitSeries();
-            FlushFormulas();
-            break;
-        case Action.SWAPSERIESPLAYERS:
-            success = SwapSeriesPlayers();
-            break;
-        case Action.PROMOTEKNIGHT:
-            success = PromoteKnight(input1);
-            break;
-        case Action.READDPLAYER:
-            success = ReAddPlayer(input1, input2);
-            FlushFormulas();
-            break;
-    }
-    if (success) {
-        RunSuccess(action, runtime);
-    }
-    Tools.SortSheets();
-}
-function RunError(message) {
-    ManagementLogSheet.getRange("B4").setValue(message);
-    ManagementLogSheet.getRange("B4").setFontColor("#ff0000");
-}
-function RunProgress(message) {
-    ManagementLogSheet.getRange("B4").setValue(message);
-    ManagementLogSheet.getRange("B4").setFontColor("#ffff00");
-}
-function RunSuccess(action, runtime) {
-    ManagementLogSheet.getRange("B1").setValue("Select Action");
-    ManagementLogSheet.getRange("B4").setValue("Execution Successful!");
-    ManagementLogSheet.getRange("B4").setFontColor("#00ff00");
-    ManagementLogSheet.getRange("A2:B3").clearContent();
-    FullLogSheet.appendRow([new Date(), "onClickRun", action + " Time used: " + ((new Date()).getTime() - runtime) / 1000 + "secs"]);
-}
-function AddPlayer(input) {
-    var newplayer = new Player(input);
-    return newplayer.Add();
-}
-function RemovePlayer(input) {
-    var removeplayer = Player.Fetch(input);
-    if (removeplayer == undefined) {
-        RunError("Player not selected");
-        return false;
-    }
-    return removeplayer.Remove();
-}
-function ReAddPlayer(input, input2) {
-    var player = Player.Fetch(input);
-    if (player == undefined) {
-        RunError("Player not selected");
-        return false;
-    }
-    if (isNaN(input2)) {
-        RunError("Null point value");
-        return false;
-    }
-    input2 = Number(input2);
-    return player.ReAdd(input2);
-}
-function SubmitSeries() {
-    var success = true;
-    var serieslist = GetValidateList();
-    var processed = 0;
-    for (k = 0; k < serieslist.length; k++) {
-        if (serieslist[k].isValid()) {
-            serieslist[k].Submit();
-            RankList.Update(serieslist[k]);
-            RunProgress("Series Processed: " + (k + 1) + "/" + serieslist.length);
-            processed++;
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var MKOTHGSuite;
+(function (MKOTHGSuite) {
+    var Actions;
+    (function (Actions) {
+        var ActionsType;
+        (function (ActionsType) {
+            ActionsType[ActionsType["AddPlayer"] = 0] = "AddPlayer";
+        })(ActionsType = Actions.ActionsType || (Actions.ActionsType = {}));
+        var ActionResult = /** @class */ (function () {
+            function ActionResult(success, message) {
+                if (success === void 0) { success = true; }
+                if (message === void 0) { message = "Success!"; }
+                this.success = success;
+                this.message = message;
+            }
+            return ActionResult;
+        }());
+        Actions.ActionResult = ActionResult;
+        var ActionBase = /** @class */ (function () {
+            function ActionBase() {
+                this.date = new Date();
+            }
+            ActionBase.prototype.parse = function (json) {
+                var action = JSON.parse(json);
+                return action;
+            };
+            ActionBase.prototype.stringify = function () {
+                return JSON.stringify(this);
+            };
+            return ActionBase;
+        }());
+        var AddPlayer = /** @class */ (function (_super) {
+            __extends(AddPlayer, _super);
+            function AddPlayer() {
+                var _this = _super !== null && _super.apply(this, arguments) || this;
+                _this.date = new Date();
+                _this.type = ActionsType.AddPlayer;
+                return _this;
+            }
+            AddPlayer.prototype.invoke = function () {
+                return MKOTHGSuite.Players.add(this.playerName, this.discordId);
+            };
+            return AddPlayer;
+        }(ActionBase));
+        Actions.AddPlayer = AddPlayer;
+        function RunActions(actions) {
+            actions.forEach(function (x) {
+                var result = x.invoke();
+                if (!result.success) {
+                    throw new Error("Failed executing: " + x.stringify());
+                }
+            });
+            MKOTHGSuite.Players.update();
         }
-        else {
-            RunError("Invalid Series Detected!");
-            success = false;
-            break;
-        }
-    }
-    if (success && processed > 0) {
-        RunProgress("Posting Webhooks");
-        PostSeriesInstructionWebhook();
-        RankList.PostWebhook();
-        RunProgress("Updating Player Stats");
-    }
-    if (processed > 0) {
-        UpdateRankList();
-        UpdatePlayerList();
-        ManagementLogSheet.appendRow([new Date(), "Series Submission", JSON.stringify({ SeriesProcessed: processed, TimeUsed: (((new Date()).getTime() - runtime) / 1000) })]);
-        return success;
-    }
-}
-function SwapSeriesPlayers() {
-    var seriesData = ValidationSheet.getRange(2, 3, 1, 4).getValues()[0];
-    ValidationSheet.getRange(2, 3, 1, 4).setValues([[seriesData[1], seriesData[0], seriesData[3], seriesData[2]]]);
-    ManagementLogSheet.appendRow([new Date(), "Swap Series Players", JSON.stringify({ "From": seriesData, "To": [seriesData[1], seriesData[0], seriesData[3], seriesData[2]] })]);
-    return true;
-}
-function PromoteKnight(input) {
-    var player = Player.Fetch(input);
-    if (player == undefined) {
-        RunError("Player not selected");
-        return false;
-    }
-    player.PromoteKnight();
-    ManagementLogSheet.appendRow([new Date(), "Knight Promotion", JSON.stringify(player)]);
-    return true;
-}
+        Actions.RunActions = RunActions;
+    })(Actions = MKOTHGSuite.Actions || (MKOTHGSuite.Actions = {}));
+})(MKOTHGSuite || (MKOTHGSuite = {}));
 function PostSeriesInstructionWebhook() {
     var payload = {
         "content": "For MKOTH related commands: `.mkothhelp` (Beta)",

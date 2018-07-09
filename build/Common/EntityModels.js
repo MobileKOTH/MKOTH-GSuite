@@ -8,25 +8,40 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var PlayerEntity = /** @class */ (function () {
-    function PlayerEntity() {
-    }
-    return PlayerEntity;
-}());
-var PlayerKeyEntity = /** @class */ (function () {
-    function PlayerKeyEntity() {
-    }
-    return PlayerKeyEntity;
-}());
-var SeriesEntity = /** @class */ (function () {
-    function SeriesEntity() {
-    }
-    return SeriesEntity;
-}());
-var RawSeriesEntity = /** @class */ (function (_super) {
-    __extends(RawSeriesEntity, _super);
-    function RawSeriesEntity() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    return RawSeriesEntity;
-}(SeriesEntity));
+var MKOTHGSuite;
+(function (MKOTHGSuite) {
+    var Models;
+    (function (Models) {
+        var PlayerEntity = /** @class */ (function () {
+            function PlayerEntity() {
+                this.class = MKOTHGSuite.PlayerClassName.Peasant;
+                this.isKnight = false;
+                this.joinDate = new Date();
+                this.elo = 1200;
+                this.status = MKOTHGSuite.PlayerStatus.Active;
+            }
+            return PlayerEntity;
+        }());
+        Models.PlayerEntity = PlayerEntity;
+        var PlayerKeyEntity = /** @class */ (function () {
+            function PlayerKeyEntity() {
+            }
+            return PlayerKeyEntity;
+        }());
+        Models.PlayerKeyEntity = PlayerKeyEntity;
+        var SeriesEntity = /** @class */ (function () {
+            function SeriesEntity() {
+            }
+            return SeriesEntity;
+        }());
+        Models.SeriesEntity = SeriesEntity;
+        var RawSeriesEntity = /** @class */ (function (_super) {
+            __extends(RawSeriesEntity, _super);
+            function RawSeriesEntity() {
+                return _super !== null && _super.apply(this, arguments) || this;
+            }
+            return RawSeriesEntity;
+        }(SeriesEntity));
+        Models.RawSeriesEntity = RawSeriesEntity;
+    })(Models = MKOTHGSuite.Models || (MKOTHGSuite.Models = {}));
+})(MKOTHGSuite || (MKOTHGSuite = {}));

@@ -1,99 +1,112 @@
-// -------------------------------- Tools -------------------------------- 
-function FlushFormulas()
+namespace MKOTHGSuite
 {
-    var eloformula = RankingSheet.getRange(1, 5).getFormula();
-    var statsformule = PlayerIndepthStatsSheet.getRange("A2:Z2").getFormulas();
+    class tools
+    {
+        /**
+        * Turn object properties into a set of array
+        */
+        arrayify(object: object): Array<any>
+        {
+            var list = []
+            for (var key in object)
+            {
+                var element = object[key];
+                list.push(element);
+            }
+            return list;
+        }
 
-    RankingSheet.getRange(1, 5).clearContent();
-    PlayerIndepthStatsSheet.getRange("A2:Z2").clearContent();
-    SpreadsheetApp.flush();
+        /**
+        * Pad 0 to make a fixed length number
+        */
+        numberPadding(number: number, length: number, z): string
+        {
+            z = z || '0';
+            var numberStr = number + '';
+            return numberStr.length >= length ? numberStr : new Array(length - numberStr.length + 1).join(z) + numberStr;
+        }
 
-    RankingSheet.getRange(1, 5).setFormula(eloformula);
-    PlayerIndepthStatsSheet.getRange("A2:Z2").setFormulas(statsformule);
+        isMIPWarningPeriod(baseDays: number, mip: number): boolean
+        {
+            var isOdd = (baseDays - mip) % 2 != 0;
+            var lessThan7days = mip >= (baseDays - 7);
+            var not5days = mip != (baseDays - 5);
+            var moreThan0days = (baseDays - mip) > 0;
+            return (isOdd && lessThan7days && not5days && moreThan0days);
+        }
 
-    SpreadsheetApp.flush();
+        computeMD5Hash(content: string): string
+        {
+            var digest = Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, content, Utilities.Charset.UTF_8)
+
+            return getHash(digest);
+
+            function getHash(numbers: number[]): string
+            {
+                var output = "";
+                numbers.forEach(element =>
+                {
+                    output += (element < 0 ? element + 256 : element).toString(16);
+                });
+                return output;
+            }
+        }
+    }
+
+    export var Tools = new tools();
 }
 
-
-
-var Tools =
+// PolyFills --------------------------------------------------------------------------------------
+interface Array<T>
 {
-    /**
-    * Turn object properties into a set of array
-    * @param {Object} object
-    * @returns {Array}
-    */
-    Arrayify: function (object)
-    {
-        var list = []
-        for (var key in object)
-        {
-            var element = object[key];
-            list.push(element);
-        }
-        return list;
-    },
+    find(predicate: () => boolean): T;
+}
 
-    /**
-    * Pad 0 to make a fixed length number
-    * @param {Number} number
-    * @param {Number} length
-    * @returns {String}
-    */
-    NumberPadding: function (number, length, z)
+Object.defineProperty(Array.prototype, 'find', {
+    value: function (predicate)
     {
-        z = z || '0';
-        number = number + '';
-        return number.length >= length ? number : new Array(length - number.length + 1).join(z) + number;
-    },
-
-    /**
-    * Sort all the sheets
-    */
-    SortSheets: function ()
-    {
-        try
+        // 1. Let O be ? ToObject(this value).
+        if (this == null)
         {
-            LoadValidationSheets();
-            PlayerStatsSheet.sort(1);
-            PlayerStatsSheet.sort(11);
-            RankingSheet.sort(1);
-            HistorySheet.sort(1);
-            FullLogSheet.sort(1, false);
-            ManagementLogSheet.sort(1, false);
+            throw new TypeError('"this" is null or not defined');
         }
-        catch (e)
+
+        var o = Object(this);
+
+        // 2. Let len be ? ToLength(? Get(O, "length")).
+        var len = o.length >>> 0;
+
+        // 3. If IsCallable(predicate) is false, throw a TypeError exception.
+        if (typeof predicate !== 'function')
         {
-            /** @type {Error} */
-            var error = e;
-            Logger.log(error.message);
-            Logger.log(error.stack);
-            Logger.log(Logger.getLog());
-            var payload =
+            throw new TypeError('predicate must be a function');
+        }
+
+        // 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
+        var thisArg = arguments[1];
+
+        // 5. Let k be 0.
+        var k = 0;
+
+        // 6. Repeat, while k < len
+        while (k < len)
+        {
+            // a. Let Pk be ! ToString(k).
+            // b. Let kValue be ? Get(O, Pk).
+            // c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
+            // d. If testResult is true, return kValue.
+            var kValue = o[k];
+            if (predicate.call(thisArg, kValue, k, o))
             {
-                content: "**Script Error Report**\n" + "```sql\n" + Logger.getLog() + "```"
+                return kValue;
             }
-            SendTestWebHook(payload);
+            // e. Increase k by 1.
+            k++;
         }
-    },
 
-    /**
-     *
-     * @param {Number} mip
-     * @returns {Boolean}
-     */
-    MIPWarningPeriod: function (mip)
-    {
-        return ((HolidayModeMIP.HM - mip) % 2 != 0 && mip >= (HolidayModeMIP.HM - 7) && mip != (HolidayModeMIP.HM - 5) && (HolidayModeMIP.HM - mip) > 0);
+        // 7. Return undefined.
+        return undefined;
     },
-
-    /**
-     * 
-     * @param {Number} mip
-     * @returns {Boolean}
-     */
-    DemotionWarningPeriod: function (mip)
-    {
-        return ((HolidayModeMIP.DE - mip) % 2 != 0 && mip >= (HolidayModeMIP.DE - 7) && mip != (HolidayModeMIP.DE - 5) && (HolidayModeMIP.DE - mip) > 0);
-    }
-};
+    configurable: true,
+    writable: true
+});

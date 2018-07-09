@@ -67,7 +67,7 @@ function Series(date, type, player1, player2, player1wins, player2wins, draws) {
             this.player1.mip = this.GetWinner() == this.player1 ? 0 : (this.player1.mip - 5) < 0 ? 0 : (this.player1.mip - 5);
             this.player2.mip = 0;
         }
-        if (this.player1.class != PlayerClass.KING && this.player1.class != PlayerClass.NOBLEMAN) {
+        if (this.player1.class != PlayerClass.King && this.player1.class != PlayerClass.Nobleman) {
             this.player1.mip = 0;
         }
         else {
@@ -78,7 +78,7 @@ function Series(date, type, player1, player2, player1wins, player2wins, draws) {
                 this.player1.mip = (this.player1.mip - 2) < 0 ? 0 : (this.player1.mip - 2);
             }
         }
-        if (this.player2.class != PlayerClass.KING && this.player2.class != PlayerClass.NOBLEMAN) {
+        if (this.player2.class != PlayerClass.King && this.player2.class != PlayerClass.Nobleman) {
             this.player2.mip = 0;
         }
         else {
@@ -119,11 +119,11 @@ function Series(date, type, player1, player2, player1wins, player2wins, draws) {
         }
         invalidReason = "Unregistered Players";
         if (this.type == SeriesType.KING) {
-            if (player1.class != PlayerClass.NOBLEMAN) {
+            if (player1.class != PlayerClass.Nobleman) {
                 isvalidplayer1 = false;
                 invalidReason = "Player 1 is not a Nobleman";
             }
-            if (player2.class != PlayerClass.KING) {
+            if (player2.class != PlayerClass.King) {
                 isvalidplayer2 = false;
                 invalidReason = "Player 2 is not a King";
             }
@@ -137,12 +137,12 @@ function Series(date, type, player1, player2, player1wins, player2wins, draws) {
                 isvalidplayer1 = false;
                 invalidReason = "Player 1 rank is higher than player 2";
             }
-            if (player1.class == PlayerClass.PEASANT && player2.class == PlayerClass.SQUIRE) {
+            if (player1.class == PlayerClass.Peasant && player2.class == PlayerClass.Squire) {
                 isvalidplayer1 = false;
                 invalidReason = "Player 1 cannot jump more than 1 class";
             }
-            if (player2.class == PlayerClass.NOBLEMAN) {
-                if (player1.class != PlayerClass.NOBLEMAN) {
+            if (player2.class == PlayerClass.Nobleman) {
+                if (player1.class != PlayerClass.Nobleman) {
                     isvalidplayer1 = false;
                     invalidReason = "Player 1 isnt Nobleman for Nobleman Ranked";
                 }
@@ -160,7 +160,7 @@ function Series(date, type, player1, player2, player1wins, player2wins, draws) {
     };
     this.GetRewardPoints = function () {
         if (this.type == SeriesType.KING) {
-            if (this.GetWinner().class == PlayerClass.KING) {
+            if (this.GetWinner().class == PlayerClass.King) {
                 return 7;
             }
             else {
@@ -171,21 +171,21 @@ function Series(date, type, player1, player2, player1wins, player2wins, draws) {
             if (this.player2.isKnight == true && this.GetWinner() == this.player2) {
                 return 5;
             }
-            if (this.player1.class == PlayerClass.NOBLEMAN || this.player1.KING == PlayerClass.NOBLEMAN) {
+            if (this.player1.class == PlayerClass.Nobleman || this.player1.KING == PlayerClass.Nobleman) {
                 return 7;
             }
         }
         if (this.type == SeriesType.RANKED) {
-            if (this.GetLoser().class == PlayerClass.NOBLEMAN) {
+            if (this.GetLoser().class == PlayerClass.Nobleman) {
                 return 7;
             }
-            if (this.GetLoser().class == PlayerClass.SQUIRE) {
+            if (this.GetLoser().class == PlayerClass.Squire) {
                 return 5;
             }
-            if (this.GetLoser().class == PlayerClass.VASSAL) {
+            if (this.GetLoser().class == PlayerClass.Vassal) {
                 return 3;
             }
-            if (this.GetLoser().class == PlayerClass.PEASANT) {
+            if (this.GetLoser().class == PlayerClass.Peasant) {
                 return 2;
             }
         }
@@ -199,7 +199,7 @@ function Series(date, type, player1, player2, player1wins, player2wins, draws) {
             return 15;
         }
         if (this.type == SeriesType.KNIGHT) {
-            if (this.player1.class == PlayerClass.NOBLEMAN || this.player1.class == PlayerClass.KING) {
+            if (this.player1.class == PlayerClass.Nobleman || this.player1.class == PlayerClass.King) {
                 return 0;
             }
             else {
@@ -207,10 +207,10 @@ function Series(date, type, player1, player2, player1wins, player2wins, draws) {
             }
         }
         if (this.type == SeriesType.RANKED) {
-            if (this.player1.class == PlayerClass.VASSAL && this.player2.class == PlayerClass.SQUIRE) {
+            if (this.player1.class == PlayerClass.Vassal && this.player2.class == PlayerClass.Squire) {
                 return 12;
             }
-            if (this.player1.class == PlayerClass.PEASANT && this.player2.class == PlayerClass.VASSAL) {
+            if (this.player1.class == PlayerClass.Peasant && this.player2.class == PlayerClass.Vassal) {
                 return 6;
             }
         }

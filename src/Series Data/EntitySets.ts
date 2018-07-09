@@ -1,9 +1,24 @@
-import EntitySet = EntitySystem.EntitySet;
+namespace MKOTHGSuite.EntitySets
+{
+    import EntitySet = EntitySystem.EntitySet;
+    import PlayerEntity = MKOTHGSuite.Models.PlayerEntity;
+    import SeriesEnitity = MKOTHGSuite.Models.SeriesEntity;
 
-var PlayerEntitySet = new EntitySet<PlayerEntity>(
+    export function GetPlayerEntitySet() 
     {
-        spreadSheet: SpreadsheetApp.getActive(),
-        tableName: "_PlayerTable"
-    });
+        return new EntitySet<PlayerEntity>(
+            {
+                spreadSheet: SpreadsheetApp.getActive(),
+                tableName: "_PlayerTable"
+            });
+    }
 
-var PlayerEntities = PlayerEntitySet.load();
+    export function GetSeriesEntitySet()
+    {
+        return new EntitySet<SeriesEnitity>(
+            {
+                spreadSheet: SpreadsheetApp.getActive(),
+                tableName: "_SeriesTable"
+            })
+    }
+}

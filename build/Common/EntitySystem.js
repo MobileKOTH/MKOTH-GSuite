@@ -9,7 +9,7 @@ var EntitySystem;
             return Loader.loadEntities(this.spreadSheet, this.tableName);
         };
         EntitySet.prototype.update = function (entities) {
-            Updater.updateEntities(this.spreadSheet, this.tableName, entities);
+            return Updater.updateEntities(this.spreadSheet, this.tableName, entities);
         };
         return EntitySet;
     }());
@@ -76,21 +76,15 @@ var EntitySystem;
         return Updater;
     }());
 })(EntitySystem || (EntitySystem = {}));
-function EntitySystemTest() {
+function test_entitySystemTest() {
     var newPlayerSet = Array();
     PlayerList.forEach(function (x) {
-        var playerEntity = new PlayerEntity();
-        playerEntity.id = getHash(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, x.name + x.joinDate, Utilities.Charset.UTF_8));
+        var playerEntity = new MKOTHGSuite.Models.PlayerEntity();
+        playerEntity.id = Tools.ComputeMD5Hash(x.name + x.joinDate);
         playerEntity.name = x.name;
         playerEntity.joinDate = x.joinDate;
+        playerEntity.class = x.class;
         newPlayerSet.push(playerEntity);
     });
-    function getHash(numbers) {
-        var output = "";
-        numbers.forEach(function (element) {
-            output += (element < 0 ? element + 256 : element).toString(16);
-        });
-        return output;
-    }
-    PlayerEntitySet.update(newPlayerSet);
+    MKOTHGSuite.EntitySets.GetPlayerEntitySet().update(newPlayerSet);
 }
