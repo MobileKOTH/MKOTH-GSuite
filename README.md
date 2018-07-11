@@ -23,7 +23,7 @@ It is powered by G Suite (Google Spreadsheet, Google Forms) and automated by [Go
 
 ## Prerequisite
 ### Syntax and Structure
-Written in TypeScript, to be transpiled into ES 5 and exported as .gs files to be deployed in the Google App Script Runtime. In files in the `src/Common` folder are to be shared across the script projects.
+Written in TypeScript, to be transpiled into ES 5 and exported as .gs files to be deployed in the Google App Script Runtime. The files in the `src/Common` folder are to be shared across the script projects.
 
 ### Deployment
 Each folder the in the `build/` folder (after transpiling from TypeScript in `src/` folder) is a script project to be embedded to a G Suite application.
