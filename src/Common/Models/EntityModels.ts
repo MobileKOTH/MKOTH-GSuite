@@ -4,14 +4,14 @@ namespace MKOTHGSuite.Models
 
     export class PlayerEntity implements IEntity
     {
-        id: string;
-        name: string;
-        class: string = PlayerClassName.Peasant;
+        id: string; // supply
+        name: string; // supply
+        class: PlayerClassName = PlayerClassName.Peasant;
         isKnight: boolean = false;
-        rank: number;
+        rank: number; // supply
         points: number = 0;
-        joinDate: Date = new Date();
-        discordId: number;
+        joinDate: Date; // supply
+        discordId: number; // supply
         winsAll: number = 0;
         lossAll: number = 0;
         drawsAll: number = 0;
@@ -21,6 +21,21 @@ namespace MKOTHGSuite.Models
         elo: number = 1200;
         missingInProgressDays: number;
         status: PlayerStatus = PlayerStatus.Active;
+
+        constructor(options:
+            {
+                name: string,
+                rank: number,
+                joinDate: Date,
+                discordId: number
+            })
+        {
+            this.id = Tools.computeMD5Hash(options.name + options.joinDate);
+            this.name = options.name;
+            this.rank = options.rank;
+            this.joinDate = options.joinDate;
+            this.discordId = options.discordId;
+        }
     }
 
     export class PlayerKeyEntity implements IEntity

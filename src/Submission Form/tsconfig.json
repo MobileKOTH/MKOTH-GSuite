@@ -1,0 +1,11 @@
+{
+  "extends": "../tsconfig",
+  "compilerOptions": {
+    "outFile": "../../build/Submission Form/Code.gs"
+  },
+  "include": [
+    "../Common/**/*.ts",
+    "../Common/*.ts",
+    ".",
+  ]
+}

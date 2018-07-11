@@ -59,12 +59,4 @@ namespace Discord
             return this;
         }
     }
-
-    export class WebHook
-    {
-        static get MKOTHServerWebHookURL()
-        {
-            return PropertiesService.getScriptProperties().getProperty("MKOTHServerWebHookURL");
-        }
-    }
 }

@@ -1,0 +1,11 @@
+{
+  "extends": "../tsconfig",
+  "compilerOptions": {
+    "outFile": "../../build/Internal Data/Code.gs"
+  },
+  "include": [
+    "../Common/**/*.ts",
+    "../Common/*.ts",
+    ".",
+  ]
+}

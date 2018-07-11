@@ -2,23 +2,12 @@ namespace EntitySystem
 {
     import Spreadsheet = GoogleAppsScript.Spreadsheet.Spreadsheet;
 
-    export interface IEntity
-    {
-        id: string;
-    }
-
-    interface entitySetOptions
-    {
-        spreadSheet: Spreadsheet
-        tableName: string
-    }
-
     export class EntitySet<T extends IEntity>
     {
         public readonly spreadSheet: Spreadsheet
         public readonly tableName: string;
 
-        constructor(options: entitySetOptions)
+        constructor(options: { spreadSheet: Spreadsheet, tableName: string })
         {
             this.spreadSheet = options.spreadSheet;
             this.tableName = options.tableName;
@@ -116,20 +105,4 @@ namespace EntitySystem
             return row;
         }
     }
-}
-
-function test_entitySystemTest()
-{
-    var newPlayerSet = Array<MKOTHGSuite.Models.PlayerEntity>();
-    PlayerList.forEach(x =>
-    {
-        var playerEntity = new MKOTHGSuite.Models.PlayerEntity();
-        playerEntity.id = Tools.ComputeMD5Hash(x.name + x.joinDate);
-        playerEntity.name = x.name;
-        playerEntity.joinDate = x.joinDate;
-        playerEntity.class = x.class;
-        newPlayerSet.push(playerEntity);
-    });
-
-    MKOTHGSuite.EntitySets.GetPlayerEntitySet().update(newPlayerSet);
 }
