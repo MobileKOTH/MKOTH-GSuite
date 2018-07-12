@@ -1,9 +1,7 @@
-var getInternalSpreadSheet = function ()
-{
-    return SpreadsheetApp.openById("1zQMN_t94oS55TwO5kI7p-QRkJti0dRwvGwEuGqkxMY4")
-}
+const getInternalSpreadSheet = () => SpreadsheetApp.openById("1zQMN_t94oS55TwO5kI7p-QRkJti0dRwvGwEuGqkxMY4");
+const getExternalSpreadSheet = () => SpreadsheetApp.getActive();
 
-var getExternalSpreadSheet = function ()
+function onOpen()
 {
-    return SpreadsheetApp.getActive();
+
 }

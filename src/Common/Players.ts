@@ -1,3 +1,5 @@
+/// <reference path="Models/EntityModels.ts" />
+
 namespace MKOTHGSuite
 {
     import ActionResult = MKOTHGSuite.Actions.ActionResult;

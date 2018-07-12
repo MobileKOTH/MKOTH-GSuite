@@ -1,8 +1,13 @@
+/// <reference path="../EntitySystem/EntitySet.ts" />
+
 namespace MKOTHGSuite.EntitySets
 {
     import EntitySet = EntitySystem.EntitySet;
     import PlayerEntity = MKOTHGSuite.Models.PlayerEntity;
     import SeriesEnitity = MKOTHGSuite.Models.SeriesEntity;
+
+    declare function getInternalSpreadSheet(): GoogleAppsScript.Spreadsheet.Spreadsheet;
+    declare function getExternalSpreadSheet(): GoogleAppsScript.Spreadsheet.Spreadsheet;
 
     export function GetInternalPlayerEntitySet() 
     {
