@@ -2,6 +2,6 @@ namespace EntitySystem
 {
     export interface IEntity
     {
-        id: string;
+        [key: string]: number | string | boolean | Date
     }
 }
