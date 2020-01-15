@@ -1,4 +1,0 @@
-function doGet(e)
-{
-    
-}
