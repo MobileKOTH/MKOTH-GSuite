@@ -5,10 +5,10 @@ RootQuery.ping =
 {
     get(request: RequestGetBase<any>)
     {
-        return Helpers.returnJSON({ ...request, status: "ok" })
+        return Helpers.returnJSON({ ...request, status: "ok", runTime: Date.now() - InstanceTime })
     },
     post(request: RequestPostBase<any>)
     {
-        return Helpers.returnJSON({ ...request, status: "ok" })
+        return Helpers.returnJSON({ ...request, status: "ok", runTime: Date.now() - InstanceTime })
     }
 }

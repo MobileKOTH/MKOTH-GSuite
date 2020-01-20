@@ -117,7 +117,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"FurB":[function(require,module,exports) {
+})({"D7UP":[function(require,module,exports) {
 "use strict";
 
 exports.__esModule = true; // App Script is unable to raise a HTTP error code, any errors will return a error page (default or a preset below) with code 200.
@@ -143,7 +143,7 @@ function () {
 }();
 
 exports.Helpers = Helpers;
-},{}],"UAuT":[function(require,module,exports) {
+},{}],"mMit":[function(require,module,exports) {
 "use strict";
 
 exports.__esModule = true;
@@ -220,11 +220,11 @@ function () {
 }();
 
 exports.Handler = Handler;
-},{"./Helpers":"FurB"}],"MJGD":[function(require,module,exports) {
+},{"./Helpers":"D7UP"}],"YT07":[function(require,module,exports) {
 "use strict";
 
 exports.__esModule = true;
-},{}],"im2B":[function(require,module,exports) {
+},{}],"WlwI":[function(require,module,exports) {
 "use strict";
 
 function __export(m) {
@@ -240,7 +240,7 @@ __export(require("./Handler"));
 __export(require("./Helpers"));
 
 __export(require("./types"));
-},{"./Handler":"UAuT","./Helpers":"FurB","./types":"MJGD"}],"TbLB":[function(require,module,exports) {
+},{"./Handler":"mMit","./Helpers":"D7UP","./types":"YT07"}],"XoxW":[function(require,module,exports) {
 "use strict";
 
 exports.__esModule = true;
@@ -272,7 +272,7 @@ exports.RoutingRoot = {
   }
 };
 exports.RootQuery = {};
-},{"../app-script-router":"im2B"}],"XYhl":[function(require,module,exports) {
+},{"../app-script-router":"WlwI"}],"jafE":[function(require,module,exports) {
 "use strict";
 
 var __assign = this && this.__assign || function () {
@@ -300,25 +300,27 @@ var app_script_router_1 = require("../app-script-router");
 root_1.RootQuery.ping = {
   get: function get(request) {
     return app_script_router_1.Helpers.returnJSON(__assign(__assign({}, request), {
-      status: "ok"
+      status: "ok",
+      runTime: Date.now() - InstanceTime
     }));
   },
   post: function post(request) {
     return app_script_router_1.Helpers.returnJSON(__assign(__assign({}, request), {
-      status: "ok"
+      status: "ok",
+      runTime: Date.now() - InstanceTime
     }));
   }
 };
-},{"./root":"TbLB","../app-script-router":"im2B"}],"EVxB":[function(require,module,exports) {
+},{"./root":"XoxW","../app-script-router":"WlwI"}],"G9Js":[function(require,module,exports) {
 "use strict";
 
 exports.__esModule = true;
 
-var app_script_router_1 = require("../app-script-router");
+require("./web-app/ping");
 
-var root_1 = require("./root");
+var app_script_router_1 = require("./app-script-router");
 
-require("./ping");
+var root_1 = require("./web-app/root");
 
 function doGet(request) {
   return new app_script_router_1.Handler(root_1.RoutingRoot).handleGet(request);
@@ -331,4 +333,4 @@ function doPost(request) {
 }
 
 exports.doPost = doPost;
-},{"../app-script-router":"im2B","./root":"TbLB","./ping":"XYhl"}]},{},["EVxB"], "MKOTH")
+},{"./web-app/ping":"jafE","./app-script-router":"WlwI","./web-app/root":"XoxW"}]},{},["G9Js"], "MKOTH")

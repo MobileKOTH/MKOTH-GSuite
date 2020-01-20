@@ -1,7 +1,7 @@
-import './ping'
+import './web-app/ping'
 
-import { RequestGetBase, Handler, Router, Helpers, RequestPostBase } from "../app-script-router"
-import { RoutingRoot } from "./root"
+import { RequestGetBase, Handler } from "./app-script-router"
+import { RoutingRoot } from "./web-app/root"
 
 export function doGet(request: RequestGetBase<any>)
 {
