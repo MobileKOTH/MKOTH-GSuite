@@ -311,16 +311,28 @@ root_1.RootQuery.ping = {
     }));
   }
 };
-},{"./root":"XoxW","../app-script-router":"WlwI"}],"G9Js":[function(require,module,exports) {
+},{"./root":"XoxW","../app-script-router":"WlwI"}],"Tnxw":[function(require,module,exports) {
+"use strict";
+
+function __export(m) {
+  for (var p in m) {
+    if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+  }
+}
+
+exports.__esModule = true;
+
+__export(require("./ping"));
+},{"./ping":"jafE"}],"G9Js":[function(require,module,exports) {
 "use strict";
 
 exports.__esModule = true;
 
-require("./web-app/ping");
-
 var app_script_router_1 = require("./app-script-router");
 
 var root_1 = require("./web-app/root");
+
+require("./web-app");
 
 function doGet(request) {
   return new app_script_router_1.Handler(root_1.RoutingRoot).handleGet(request);
@@ -333,4 +345,4 @@ function doPost(request) {
 }
 
 exports.doPost = doPost;
-},{"./web-app/ping":"jafE","./app-script-router":"WlwI","./web-app/root":"XoxW"}]},{},["G9Js"], "MKOTH")
+},{"./app-script-router":"WlwI","./web-app/root":"XoxW","./web-app":"Tnxw"}]},{},["G9Js"], "MKOTH")
