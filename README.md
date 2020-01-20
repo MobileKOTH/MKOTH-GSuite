@@ -12,33 +12,20 @@
 </div>
 
 ## Introduction
-The backend [player data and ranking management system](https://docs.google.com/spreadsheets/d/1VRfWwvRSMQizzBanGNRMFVzoYFthrsNKzOgF5wKVM5I) for [Mobile King of the Hill (**MKOTH**)](https://mobilekoth.github.io/), a competitive community for [Bloons TD Battles](https://store.steampowered.com/app/444640/Bloons_TD_Battles/). 
+The spreadsheet system for [Mobile King of the Hill (**MKOTH**)](https://mobilekoth.github.io/), a competitive community for [Bloons TD Battles](https://store.steampowered.com/app/444640/Bloons_TD_Battles/). 
 
-It is powered by G Suite (Google Spreadsheet, Google Forms) and automated by [Google Apps Script](https://developers.google.com/apps-script/) for player data, series and ranking processing.
+It is powered by G Suite (Google Spreadsheet) and extended by [Google Apps Script](https://developers.google.com/apps-script/)
 
-**MKOTH** was originally started by by Gim Leng aka saynotobloons aka icewarm2 from 2015, but was handed over to Darrell aka The Last Dart since 2017. This is loosely based on the original MKOTH code posted on Pastebin:  
+### History
+
+**MKOTH** was originally started by by Gim Leng aka saynotobloons aka icewarm2 from 2015, but was handed over to Darrell aka The Last Dart since 2017. The legacy MKOTH ranking processing code was posted on Pastebin:  
 - https://pastebin.com/4x2nQfhm
 - https://pastebin.com/nwkaAsQm
 - https://pastebin.com/wMefPGjn
 
-## Prerequisite
-### Syntax and Structure
-Written in TypeScript, to be transpiled into ES 3 and exported as .gs files to be deployed in the Google App Script Runtime. The files in the `src/Common` folder are to be shared across the script projects.
 
-### Deployment
-Each folder the in the `build/` folder (after transpiling from TypeScript in `src/` folder) is a script project to be embedded to a G Suite application.
-- `Series Data` is attached to the [main and public data](https://docs.google.com/spreadsheets/d/1VRfWwvRSMQizzBanGNRMFVzoYFthrsNKzOgF5wKVM5I) for MKOTH. 
-- `Internal Data` is attached to the internal data, which stores unexposed data such as raw series submissions, which are series pending for approval, and player series submission ids. 
-- `Submission Form` is attached to the series submission [google form](https://docs.google.com/forms/d/1Ccym-20keX_AbFlELm1s0nYNsST71GJMzUcIusz7bIU) which is bound to the `Internal Data` to process series submissions. 
-
-## Roadmap
-- [x] Holiday mode
-- [x] Demotion for King and Nobleman
-- [x] Script files exportation to App Script
-- [ ] Complete backend revamp
-    - [X] TypeScript
-    - [ ] Use functional programming paradigm?
-    - [X] Better database abstraction on spreadsheets
-- [ ] Google Web App API
-- [ ] Auto series approval
-- [ ] ELO player class up requirement
+## Requirements
+- NodeJS
+- TypeScript
+- ParcelJS
+- Clasp

@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "target": "es3",
+        "lib": [
+            "es5"
+        ],
+        "module": "none",
+    },
+}
