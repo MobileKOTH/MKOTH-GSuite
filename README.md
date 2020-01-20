@@ -22,3 +22,10 @@ It is powered by G Suite (Google Spreadsheet) and extended by [Google Apps Scrip
 - https://pastebin.com/4x2nQfhm
 - https://pastebin.com/nwkaAsQm
 - https://pastebin.com/wMefPGjn
+
+
+## Requirements
+- NodeJS
+- TypeScript
+- ParcelJS
+- Clasp
