@@ -1,5 +1,5 @@
-import { RootQuery } from './root'
-import { RequestGetBase, Helpers, RequestPostBase } from '../app-script-router'
+import { RootQuery } from './Root'
+import { RequestGetBase, Helpers, RequestPostBase } from '../../lib/app-script-router'
 
 RootQuery.ping =
 {

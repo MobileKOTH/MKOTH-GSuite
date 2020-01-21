@@ -12,7 +12,7 @@ export type RequestGetBase<T> = {
 
 export type RequestPostBase<T> = RequestGetBase<T> & {
     postData: {
-        contents: string,
+        contents: string
         type: string
     }
 }
