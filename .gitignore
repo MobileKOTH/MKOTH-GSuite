@@ -1,5 +1,4 @@
-exporter/node_modules/
-src/Test/
+.cache/
 
-exporter/credentials.json
-exporter/client_secret.json
+node_modules/
+credentials.json
