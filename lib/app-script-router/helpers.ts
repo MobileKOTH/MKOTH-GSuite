@@ -15,4 +15,9 @@ export class Helpers
     {
         return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON)
     }
+
+    static returnUnauthorised()
+    {
+        return ContentService.createTextOutput("Unauthorised").setMimeType(ContentService.MimeType.TEXT)
+    }
 }
