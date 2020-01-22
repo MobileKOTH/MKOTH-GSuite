@@ -1,5 +1,5 @@
 import { Routable, RequestGetBase, WebAppOutput, RequestPostBase, Router } from "./types"
-import { Helpers } from "./Helpers"
+import { Helpers } from "./helpers"
 
 export class Handler
 {
