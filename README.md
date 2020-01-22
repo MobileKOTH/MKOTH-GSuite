@@ -18,7 +18,8 @@ It is powered by G Suite (Google Spreadsheet) and extended by [Google Apps Scrip
 
 ### History
 
-**MKOTH** was originally started by by Gim Leng aka saynotobloons aka icewarm2 from 2015, but was handed over to Darrell aka The Last Dart since 2017. The legacy MKOTH ranking processing code was posted on Pastebin:  
+**MKOTH** was originally started by by Gim Leng aka saynotobloons aka icewarm2 from 2015, and was handed over to Darrell aka The Last Dart since 2017. The legacy MKOTH ranking processing code was posted on Pastebin:  
+
 - https://pastebin.com/4x2nQfhm
 - https://pastebin.com/nwkaAsQm
 - https://pastebin.com/wMefPGjn

@@ -3,15 +3,8 @@
   "version": "0.0.2",
   "description": "Spreadsheet and API end points for Mobile KOTH",
   "main": "app/main.js",
-  "dependencies": {
-    "@types/google-apps-script": "^1.0.9"
-  },
-  "devDependencies": {
-    "typescript": "^3.7.4"
-  },
   "scripts": {
-    "buildRouter": "tsc --project ./src/app-script-router",
-    "build": "node timestamper ./app/code.js & parcel build ./src/web-app/app.ts --out-dir ./app --global MKOTH --no-source-maps --no-minify",
+    "build": "node timestamper ./app/code.js & parcel build ./src/MKOTH.ts --out-dir ./app --global MKOTH --no-source-maps --no-minify",
     "push": "npm run build & cd ./app & clasp push"
   },
   "repository": {
@@ -23,5 +16,13 @@
   "bugs": {
     "url": "https://github.com/MobileKOTH/MKOTH-GSuite/issues"
   },
-  "homepage": "https://github.com/MobileKOTH/MKOTH-GSuite#readme"
+  "homepage": "https://github.com/MobileKOTH/MKOTH-GSuite#readme",
+  "dependencies": {
+    "@types/google-apps-script": "^1.0.9",
+    "core-js": "^3.6.4"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.3",
+    "typescript": "^3.7.4"
+  }
 }
