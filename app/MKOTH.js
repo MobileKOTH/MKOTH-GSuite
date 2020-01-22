@@ -1732,7 +1732,64 @@ var parent = require('../../es/string/includes');
 
 module.exports = parent;
 
-},{"../../es/string/includes":"nwJD"}],"gAnM":[function(require,module,exports) {
+},{"../../es/string/includes":"nwJD"}],"v9Vj":[function(require,module,exports) {
+var DESCRIPTORS = require('../internals/descriptors');
+var objectKeys = require('../internals/object-keys');
+var toIndexedObject = require('../internals/to-indexed-object');
+var propertyIsEnumerable = require('../internals/object-property-is-enumerable').f;
+
+// `Object.{ entries, values }` methods implementation
+var createMethod = function (TO_ENTRIES) {
+  return function (it) {
+    var O = toIndexedObject(it);
+    var keys = objectKeys(O);
+    var length = keys.length;
+    var i = 0;
+    var result = [];
+    var key;
+    while (length > i) {
+      key = keys[i++];
+      if (!DESCRIPTORS || propertyIsEnumerable.call(O, key)) {
+        result.push(TO_ENTRIES ? [key, O[key]] : O[key]);
+      }
+    }
+    return result;
+  };
+};
+
+module.exports = {
+  // `Object.entries` method
+  // https://tc39.github.io/ecma262/#sec-object.entries
+  entries: createMethod(true),
+  // `Object.values` method
+  // https://tc39.github.io/ecma262/#sec-object.values
+  values: createMethod(false)
+};
+
+},{"../internals/descriptors":"A8Ob","../internals/object-keys":"rmL3","../internals/to-indexed-object":"ebRX","../internals/object-property-is-enumerable":"sC3y"}],"HUM5":[function(require,module,exports) {
+var $ = require('../internals/export');
+var $values = require('../internals/object-to-array').values;
+
+// `Object.values` method
+// https://tc39.github.io/ecma262/#sec-object.values
+$({ target: 'Object', stat: true }, {
+  values: function values(O) {
+    return $values(O);
+  }
+});
+
+},{"../internals/export":"rhEq","../internals/object-to-array":"v9Vj"}],"fmYM":[function(require,module,exports) {
+require('../../modules/es.object.values');
+var path = require('../../internals/path');
+
+module.exports = path.Object.values;
+
+},{"../../modules/es.object.values":"HUM5","../../internals/path":"hMfB"}],"EmCD":[function(require,module,exports) {
+var parent = require('../../es/object/values');
+
+module.exports = parent;
+
+},{"../../es/object/values":"fmYM"}],"Uhbr":[function(require,module,exports) {
 "use strict";
 
 exports.__esModule = true; // App Script is unable to raise a HTTP error code, any errors will return a error page (default or a preset below) with code 200.
@@ -1762,12 +1819,12 @@ function () {
 }();
 
 exports.Helpers = Helpers;
-},{}],"jVL6":[function(require,module,exports) {
+},{}],"kt80":[function(require,module,exports) {
 "use strict";
 
 exports.__esModule = true;
 
-var Helpers_1 = require("./Helpers");
+var helpers_1 = require("./helpers");
 
 var Handler =
 /** @class */
@@ -1798,12 +1855,12 @@ function () {
         try {
           return selected(request);
         } catch (error) {
-          return Helpers_1.Helpers.returnError(error, request);
+          return helpers_1.Helpers.returnError(error, request);
         }
       }
     }
 
-    return Helpers_1.Helpers.returnEmpty(request);
+    return helpers_1.Helpers.returnEmpty(request);
   };
 
   Handler.prototype.traversePath = function (path) {
@@ -1839,7 +1896,7 @@ function () {
 }();
 
 exports.Handler = Handler;
-},{"./Helpers":"gAnM"}],"uWSP":[function(require,module,exports) {
+},{"./helpers":"Uhbr"}],"uWSP":[function(require,module,exports) {
 "use strict";
 
 exports.__esModule = true;
@@ -1854,15 +1911,17 @@ function __export(m) {
 
 exports.__esModule = true;
 
-__export(require("./Handler"));
+__export(require("./handler"));
 
-__export(require("./Helpers"));
+__export(require("./helpers"));
 
 __export(require("./types"));
-},{"./Handler":"jVL6","./Helpers":"gAnM","./types":"uWSP"}],"u8hW":[function(require,module,exports) {
+},{"./handler":"kt80","./helpers":"Uhbr","./types":"uWSP"}],"XoxW":[function(require,module,exports) {
 "use strict";
 
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
 var app_script_router_1 = require("../../lib/app-script-router");
 
@@ -1891,33 +1950,34 @@ exports.RoutingRoot = {
  */
 
 exports.RootQuery = {};
-},{"../../lib/app-script-router":"imHk"}],"AQH6":[function(require,module,exports) {
+},{"../../lib/app-script-router":"imHk"}],"Mx92":[function(require,module,exports) {
 "use strict";
 
-exports.__esModule = true;
-var ScriptHelpers;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-(function (ScriptHelpers) {
-  function getAndCache(key, loader) {
-    var _a;
+function getAndCache(key, loader) {
+  var _a;
 
-    var value = loader();
-    (_a = CacheService.getScriptCache()) === null || _a === void 0 ? void 0 : _a.put(key, value);
-    return value;
-  }
+  var value = loader();
+  (_a = CacheService.getScriptCache()) === null || _a === void 0 ? void 0 : _a.put(key, value);
+  return value;
+}
 
-  ScriptHelpers.getAndCache = getAndCache;
-})(ScriptHelpers = exports.ScriptHelpers || (exports.ScriptHelpers = {}));
-},{}],"AsN6":[function(require,module,exports) {
+exports.getAndCache = getAndCache;
+},{}],"C4mA":[function(require,module,exports) {
 "use strict";
 
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
 var app_script_router_1 = require("../../lib/app-script-router");
 
-var ScriptHelpers_1 = require("../common/ScriptHelpers");
+var appsScript_1 = require("../common/appsScript");
 
-var Root_1 = require("./Root");
+var root_1 = require("./root");
 
 function administer(request) {
   var _a, _b;
@@ -1925,7 +1985,7 @@ function administer(request) {
   var adminKey = "adminKey";
 
   if (request.parameter.admin) {
-    var adminKeyValue = (_b = (_a = CacheService.getScriptCache()) === null || _a === void 0 ? void 0 : _a.get(adminKey), _b !== null && _b !== void 0 ? _b : ScriptHelpers_1.ScriptHelpers.getAndCache(adminKey, function () {
+    var adminKeyValue = (_b = (_a = CacheService.getScriptCache()) === null || _a === void 0 ? void 0 : _a.get(adminKey), _b !== null && _b !== void 0 ? _b : appsScript_1.getAndCache(adminKey, function () {
       return PropertiesService.getScriptProperties().getProperty(adminKey);
     }));
     request.isAdmin = request.parameter.admin === adminKeyValue;
@@ -1935,7 +1995,7 @@ function administer(request) {
 }
 
 exports.administer = administer;
-Root_1.RootQuery.token = {
+root_1.RootQuery.token = {
   get: function get(request) {
     if (!request.isAdmin) {
       return app_script_router_1.Helpers.returnUnauthorised();
@@ -1946,7 +2006,7 @@ Root_1.RootQuery.token = {
     });
   }
 };
-},{"../../lib/app-script-router":"imHk","../common/ScriptHelpers":"AQH6","./Root":"u8hW"}],"VJRv":[function(require,module,exports) {
+},{"../../lib/app-script-router":"imHk","../common/appsScript":"Mx92","./root":"XoxW"}],"jafE":[function(require,module,exports) {
 "use strict";
 
 var __assign = this && this.__assign || function () {
@@ -1965,13 +2025,15 @@ var __assign = this && this.__assign || function () {
   return __assign.apply(this, arguments);
 };
 
-exports.__esModule = true;
-
-var Root_1 = require("./Root");
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
 var app_script_router_1 = require("../../lib/app-script-router");
 
-Root_1.RootQuery.ping = {
+var root_1 = require("./root");
+
+root_1.RootQuery.ping = {
   get: function get(request) {
     return app_script_router_1.Helpers.returnJSON(__assign(__assign({}, request), {
       status: "ok",
@@ -1985,29 +2047,366 @@ Root_1.RootQuery.ping = {
     }));
   }
 };
-},{"./Root":"u8hW","../../lib/app-script-router":"imHk"}],"Jl1m":[function(require,module,exports) {
+},{"../../lib/app-script-router":"imHk","./root":"XoxW"}],"uCwy":[function(require,module,exports) {
 "use strict";
 
-exports.__esModule = true;
-
-var Root_1 = require("./Root");
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
 var app_script_router_1 = require("../../lib/app-script-router");
 
-Root_1.RoutingRoot.reflect = {
+var root_1 = require("./root");
+
+root_1.RoutingRoot.reflect = {
   get: function get(request) {
     if (!request.isAdmin) {
       return app_script_router_1.Helpers.returnUnauthorised();
     }
 
     return app_script_router_1.Helpers.returnJSON({
-      routerRoot: Root_1.RoutingRoot,
-      queryRoot: Root_1.RootQuery,
+      routerRoot: root_1.RoutingRoot,
+      queryRoot: root_1.RootQuery,
       request: request
     });
   }
 };
-},{"./Root":"u8hW","../../lib/app-script-router":"imHk"}],"Tnxw":[function(require,module,exports) {
+},{"../../lib/app-script-router":"imHk","./root":"XoxW"}],"XONy":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function loadEntities(spreadSheet, tableName) {
+  var _a;
+
+  var tableSheet = spreadSheet.getSheetByName(tableName);
+
+  if (!tableSheet) {
+    return [];
+  }
+
+  var rows = tableSheet.getLastRow();
+  var columns = tableSheet.getLastColumn();
+  var range = tableSheet.getRange(1, 1, rows, columns);
+  var values = range.getValues();
+  var propertyNames = (_a = values.shift(), _a !== null && _a !== void 0 ? _a : []);
+  return values.map(function (x) {
+    return loadEntity(propertyNames, x);
+  });
+}
+
+exports.loadEntities = loadEntities;
+
+function loadEntity(propertyNames, row) {
+  var entity = {};
+
+  for (var propertyNameIndex = 0; propertyNameIndex < propertyNames.length; propertyNameIndex++) {
+    entity[propertyNames[propertyNameIndex]] = row[propertyNameIndex];
+  }
+
+  return entity;
+}
+},{}],"M0tu":[function(require,module,exports) {
+"use strict";
+
+var __spreadArrays = this && this.__spreadArrays || function () {
+  for (var s = 0, i = 0, il = arguments.length; i < il; i++) {
+    s += arguments[i].length;
+  }
+
+  for (var r = Array(s), k = 0, i = 0; i < il; i++) {
+    for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++) {
+      r[k] = a[j];
+    }
+  }
+
+  return r;
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function updateEntities(spreadSheet, tableName, entities) {
+  var tableSheet = spreadSheet.getSheetByName(tableName);
+
+  if (!tableSheet) {
+    tableSheet = spreadSheet.insertSheet(tableName);
+  }
+
+  var keys = Object.keys(entities[0]);
+  var rows = entities.length + 1;
+  var columns = keys.length;
+  var range = tableSheet.getRange(1, 1, rows, columns);
+  tableSheet.clearContents();
+  return range.setValues(__spreadArrays([keys], entities.map(function (x) {
+    return generateEntityRow(x);
+  })));
+}
+
+exports.updateEntities = updateEntities;
+
+function generateEntityRow(entity) {
+  return Object.values(entity);
+}
+},{}],"x5a9":[function(require,module,exports) {
+"use strict";
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License.
+ *  MIT License
+
+    Copyright (c) 2015 - present Microsoft Corporation
+
+    All rights reserved.
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+ *--------------------------------------------------------------------------------------------*/
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var Lazy =
+/** @class */
+function () {
+  function Lazy(executor) {
+    this.executor = executor;
+    this._didRun = false;
+  }
+  /**
+   * True if the lazy value has been resolved.
+   */
+
+
+  Lazy.prototype.hasValue = function () {
+    return this._didRun;
+  };
+  /**
+   * Get the wrapped value.
+   *
+   * This will force evaluation of the lazy value if it has not been resolved yet. Lazy values are only
+   * resolved once. `getValue` will re-throw exceptions that are hit while resolving the value
+   */
+
+
+  Lazy.prototype.getValue = function () {
+    if (!this._didRun) {
+      try {
+        this._value = this.executor();
+      } catch (err) {
+        this._error = err;
+      } finally {
+        this._didRun = true;
+      }
+    }
+
+    if (this._error) {
+      throw this._error;
+    }
+
+    return this._value;
+  };
+
+  Object.defineProperty(Lazy.prototype, "rawValue", {
+    /**
+     * Get the wrapped value without forcing evaluation.
+     */
+    get: function get() {
+      return this._value;
+    },
+    enumerable: true,
+    configurable: true
+  });
+  /**
+   * Create a new lazy value that is the result of applying `f` to the wrapped value.
+   *
+   * This does not force the evaluation of the current lazy value.
+   */
+
+  Lazy.prototype.map = function (f) {
+    var _this = this;
+
+    return new Lazy(function () {
+      return f(_this.getValue());
+    });
+  };
+
+  return Lazy;
+}();
+
+exports.Lazy = Lazy;
+},{}],"Xa8j":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var loader_1 = require("./loader");
+
+var updater_1 = require("./updater");
+
+var lazy_1 = require("./lazy");
+
+var EntitySet =
+/** @class */
+function () {
+  function EntitySet(options) {
+    var _this = this;
+
+    this.spreadSheet = options.spreadSheet;
+    this.tableName = options.tableName;
+    this.loaded = new lazy_1.Lazy(function () {
+      return loader_1.loadEntities(_this.spreadSheet, _this.tableName);
+    });
+  }
+
+  EntitySet.prototype.loadAll = function () {
+    return this.loaded.getValue();
+  };
+
+  EntitySet.prototype.updateAll = function (entities) {
+    var _this = this;
+
+    this.loaded = new lazy_1.Lazy(function () {
+      return loader_1.loadEntities(_this.spreadSheet, _this.tableName);
+    });
+    updater_1.updateEntities(this.spreadSheet, this.tableName, entities);
+  };
+
+  return EntitySet;
+}();
+
+exports.EntitySet = EntitySet;
+},{"./loader":"XONy","./updater":"M0tu","./lazy":"x5a9"}],"Z2HK":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var entitySystem_1 = require("./entitySystem");
+
+function getCacheKey(name) {
+  return "entity_cache-" + name;
+}
+
+function handleGet(operation, spreadSheet, sheetName) {
+  var cache = CacheService.getScriptCache();
+  var cacheKey = getCacheKey(sheetName);
+
+  switch (operation.type) {
+    case "all":
+      {
+        var data = cache.get(cacheKey);
+
+        if (data) {
+          return data;
+        }
+
+        data = JSON.stringify(new entitySystem_1.EntitySet({
+          spreadSheet: spreadSheet,
+          tableName: sheetName
+        }).loadAll());
+        cache.put(cacheKey, data);
+        return data;
+      }
+
+    default:
+      return JSON.stringify(null);
+  }
+}
+
+exports.handleGet = handleGet;
+
+function handlePost(operation, postData, spreadSheet, sheetName) {
+  var _a;
+
+  (_a = CacheService.getScriptCache()) === null || _a === void 0 ? void 0 : _a.remove(getCacheKey(sheetName));
+
+  switch (operation.type) {
+    case "all":
+      {
+        var data = JSON.parse(postData);
+        var entitySet = new entitySystem_1.EntitySet({
+          spreadSheet: spreadSheet,
+          tableName: sheetName
+        });
+        entitySet.updateAll(data);
+        return JSON.stringify({
+          status: "ok"
+        });
+      }
+
+    default:
+      return JSON.stringify(null);
+  }
+}
+
+exports.handlePost = handlePost;
+},{"./entitySystem":"Xa8j"}],"WPUf":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var app_script_router_1 = require("../../lib/app-script-router");
+
+var jsonWebAPI_1 = require("../../lib/spreadsheet-database/jsonWebAPI");
+
+var root_1 = require("./root");
+
+root_1.RootQuery.spreadSheet = {
+  get: function get(request) {
+    return ContentService.createTextOutput(jsonWebAPI_1.handleGet(parseQuery(request.parameter), SpreadsheetApp.getActive(), request.parameter.spreadSheet)).setMimeType(ContentService.MimeType.JSON);
+  },
+  post: function post(request) {
+    if (!request.isAdmin) {
+      return app_script_router_1.Helpers.returnUnauthorised();
+    }
+
+    return ContentService.createTextOutput(jsonWebAPI_1.handlePost(parseQuery(request.parameter), request.postData.contents, SpreadsheetApp.getActive(), request.parameter.spreadSheet)).setMimeType(ContentService.MimeType.JSON);
+  }
+};
+
+function parseQuery(param) {
+  switch (param.operation) {
+    case "all":
+      {
+        return {
+          type: "all"
+        };
+      }
+
+    default:
+      {
+        return {
+          type: "unknown"
+        };
+      }
+  }
+}
+},{"../../lib/app-script-router":"imHk","../../lib/spreadsheet-database/jsonWebAPI":"Z2HK","./root":"XoxW"}],"Tnxw":[function(require,module,exports) {
 "use strict";
 
 function __export(m) {
@@ -2016,19 +2415,41 @@ function __export(m) {
   }
 }
 
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-__export(require("./Root"));
+__export(require("./root"));
 
-__export(require("./Admin"));
+__export(require("./admin"));
 
-__export(require("./Ping"));
+__export(require("./ping"));
 
-__export(require("./Reflect"));
-},{"./Root":"u8hW","./Admin":"AsN6","./Ping":"VJRv","./Reflect":"Jl1m"}],"nYeO":[function(require,module,exports) {
+__export(require("./reflect"));
+
+__export(require("./spreadSheet"));
+},{"./root":"XoxW","./admin":"C4mA","./ping":"jafE","./reflect":"uCwy","./spreadSheet":"WPUf"}],"s6MI":[function(require,module,exports) {
 "use strict";
 
-exports.__esModule = true;
+function __export(m) {
+  for (var p in m) {
+    if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+  }
+}
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+__export(require("./entitySystem"));
+},{"./entitySystem":"Xa8j"}],"nYeO":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var spreadsheet_database_1 = require("../lib/spreadsheet-database");
 
 function toHexString(byteArray) {
   return Array.from(byteArray, function (byte) {
@@ -2037,14 +2458,34 @@ function toHexString(byteArray) {
 }
 
 function test() {
-  Logger.log(toHexString(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_1, [Math.random(), Math.random(), Math.random()].join(""))));
+  var es = new spreadsheet_database_1.EntitySet({
+    spreadSheet: SpreadsheetApp.getActive(),
+    tableName: "Test"
+  });
+  var testSet = [];
+
+  for (var index = 0; index < 1000; index++) {
+    testSet.push({
+      date: new Date(),
+      value: index,
+      boolean: index % 2 == 0,
+      string: "test" + index,
+      object: [1, 2, 3, 4]
+    });
+  }
+
+  es.updateAll(testSet);
+  var values = es.loadAll();
+  Logger.log(JSON.stringify(values));
 }
 
 exports.test = test;
-},{}],"G9Js":[function(require,module,exports) {
+},{"../lib/spreadsheet-database":"s6MI"}],"G9Js":[function(require,module,exports) {
 "use strict";
 
-exports.__esModule = true; //#region Polyfills
+Object.defineProperty(exports, "__esModule", {
+  value: true
+}); //#region Polyfills
 
 require("core-js/features/array/from");
 
@@ -2052,7 +2493,9 @@ require("core-js/features/array/find");
 
 require("core-js/features/array/includes");
 
-require("core-js/features/string/includes"); //#endregion
+require("core-js/features/string/includes");
+
+require("core-js/features/object/values"); //#endregion
 
 
 require("./web-app");
@@ -2080,4 +2523,4 @@ function doTest() {
 }
 
 exports.doTest = doTest;
-},{"core-js/features/array/from":"dFZx","core-js/features/array/find":"Omtf","core-js/features/array/includes":"Oll8","core-js/features/string/includes":"zzVt","./web-app":"Tnxw","../lib/app-script-router":"imHk","./test":"nYeO"}]},{},["G9Js"], "MKOTH")
+},{"core-js/features/array/from":"dFZx","core-js/features/array/find":"Omtf","core-js/features/array/includes":"Oll8","core-js/features/string/includes":"zzVt","core-js/features/object/values":"EmCD","./web-app":"Tnxw","../lib/app-script-router":"imHk","./test":"nYeO"}]},{},["G9Js"], "MKOTH")

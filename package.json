@@ -4,7 +4,6 @@
   "description": "Spreadsheet and API end points for Mobile KOTH",
   "main": "app/main.js",
   "scripts": {
-    "buildRouter": "tsc --project ./src/app-script-router",
     "build": "node timestamper ./app/code.js & parcel build ./src/MKOTH.ts --out-dir ./app --global MKOTH --no-source-maps --no-minify",
     "push": "npm run build & cd ./app & clasp push"
   },

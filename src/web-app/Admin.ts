@@ -1,6 +1,6 @@
 import { RequestGetBase, RequestPostBase, Helpers } from "../../lib/app-script-router";
-import { ScriptHelpers } from "../common/ScriptHelpers";
-import { RootQuery } from "./Root";
+import { getAndCache } from "../common/appsScript";
+import { RootQuery } from "./root";
 
 type AdminRequestParam = {
     admin?: string
@@ -20,7 +20,7 @@ export function administer<T extends AnyRequest>(request: AdminRequest<T>)
     const adminKey = "adminKey"
     if (request.parameter.admin)
     {
-        let adminKeyValue = CacheService.getScriptCache()?.get(adminKey) ?? ScriptHelpers.getAndCache(adminKey, () => PropertiesService.getScriptProperties().getProperty(adminKey) as string)
+        let adminKeyValue = CacheService.getScriptCache()?.get(adminKey) ?? getAndCache(adminKey, () => PropertiesService.getScriptProperties().getProperty(adminKey) as string)
         request.isAdmin = request.parameter.admin === adminKeyValue
     }
     return request

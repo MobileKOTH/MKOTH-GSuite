@@ -1,3 +1,5 @@
+import { EntitySet } from "../lib/spreadsheet-database";
+
 function toHexString(byteArray: number[])
 {
     return Array.from(byteArray, function (byte)
@@ -8,5 +10,22 @@ function toHexString(byteArray: number[])
 
 export function test()
 {
-    Logger.log(toHexString(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_1, [Math.random(), Math.random(), Math.random()].join(""))))
+    type TestEntity = { date: Date, value: number, boolean: boolean, string: string, object: any }
+
+    const es = new EntitySet<TestEntity>({ spreadSheet: SpreadsheetApp.getActive(), tableName: "Test" })
+
+
+    const testSet: TestEntity[] = []
+
+
+    for (let index = 0; index < 1000; index++)
+    {
+        testSet.push({ date: new Date(), value: index, boolean: index % 2 == 0, string: "test" + index, object: [1, 2, 3, 4] })
+    }
+
+    es.updateAll(testSet);
+
+    const values = es.loadAll()
+
+    Logger.log(JSON.stringify(values))
 }

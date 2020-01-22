@@ -1,6 +1,6 @@
-import { RoutingRoot, RootQuery } from './Root'
 import { RequestGetBase, Helpers } from '../../lib/app-script-router'
-import { AdminRequest } from './Admin'
+import { RoutingRoot, RootQuery } from './root'
+import { AdminRequest } from './admin'
 
 RoutingRoot.reflect = {
     get(request: AdminRequest<RequestGetBase<any>>)
