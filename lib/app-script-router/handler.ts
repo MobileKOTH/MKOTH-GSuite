@@ -7,12 +7,12 @@ export class Handler
         private readonly routingRoot: Routable
     ) { }
 
-    handleGet(request: RequestGetBase<any>): WebAppOutput
+    handleGet(request: GoogleAppsScript.Events.DoGet): WebAppOutput
     {
         return this.handle(request, router => router.get)
     }
 
-    handlePost(request: RequestPostBase<any>): WebAppOutput
+    handlePost(request: GoogleAppsScript.Events.DoPost): WebAppOutput
     {
         return this.handle(request, router => router.post)
     }

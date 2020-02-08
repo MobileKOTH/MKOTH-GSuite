@@ -6,9 +6,14 @@ export interface IQueryOperation
     expression?: string
 }
 
-function getCacheKey(name: string)
+function getCacheKey(sheetName: string)
 {
-    return "entity_cache-" + name
+    return "entity_cache-" + sheetName
+}
+
+export function clearCache(sheetName: string)
+{
+    CacheService.getScriptCache()?.remove(getCacheKey(sheetName))
 }
 
 export function handleGet(operation: IQueryOperation, spreadSheet: GoogleAppsScript.Spreadsheet.Spreadsheet, sheetName: string)
@@ -37,7 +42,7 @@ export function handleGet(operation: IQueryOperation, spreadSheet: GoogleAppsScr
 
 export function handlePost(operation: IQueryOperation, postData: string, spreadSheet: GoogleAppsScript.Spreadsheet.Spreadsheet, sheetName: string)
 {
-    CacheService.getScriptCache()?.remove(getCacheKey(sheetName))
+    clearCache(sheetName)
     switch (operation.type)
     {
         case "all": {

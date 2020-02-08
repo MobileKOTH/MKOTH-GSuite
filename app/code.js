@@ -13,6 +13,11 @@ function doPost(request)
     return MKOTH.doPost(request)
 }
 
+function onEdit(e)
+{
+    MKOTH.onEdit(e)
+}
+
 function doTest()
 {
     MKOTH.doTest()

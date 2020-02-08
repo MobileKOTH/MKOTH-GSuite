@@ -566,9 +566,17 @@ Object.defineProperty(exports, "__esModule", {
 
 const entitySystem_1 = require("./entitySystem");
 
-function getCacheKey(name) {
-  return "entity_cache-" + name;
+function getCacheKey(sheetName) {
+  return "entity_cache-" + sheetName;
 }
+
+function clearCache(sheetName) {
+  var _a;
+
+  (_a = CacheService.getScriptCache()) === null || _a === void 0 ? void 0 : _a.remove(getCacheKey(sheetName));
+}
+
+exports.clearCache = clearCache;
 
 function handleGet(operation, spreadSheet, sheetName) {
   const cache = CacheService.getScriptCache();
@@ -599,9 +607,7 @@ function handleGet(operation, spreadSheet, sheetName) {
 exports.handleGet = handleGet;
 
 function handlePost(operation, postData, spreadSheet, sheetName) {
-  var _a;
-
-  (_a = CacheService.getScriptCache()) === null || _a === void 0 ? void 0 : _a.remove(getCacheKey(sheetName));
+  clearCache(sheetName);
 
   switch (operation.type) {
     case "all":
@@ -753,6 +759,8 @@ const web_app_1 = require("./web-app");
 
 const test_1 = require("./test");
 
+const jsonWebAPI_1 = require("../lib/spreadsheet-database/jsonWebAPI");
+
 function doGet(request) {
   return new app_script_router_1.Handler(web_app_1.RoutingRoot).handleGet(web_app_1.administer(request));
 }
@@ -764,6 +772,14 @@ function doPost(request) {
 }
 
 exports.doPost = doPost;
+
+function onEdit(e) {
+  const sheetName = e.source.getSheetName();
+  console.log("Sheet Edit", sheetName);
+  jsonWebAPI_1.clearCache(sheetName);
+}
+
+exports.onEdit = onEdit;
 
 function doTest() {
   var testSet = Array.from(Array(5).keys());
@@ -777,4 +793,4 @@ function doTest() {
 }
 
 exports.doTest = doTest;
-},{"./web-app":"Tnxw","../lib/app-script-router":"imHk","./test":"nYeO"}]},{},["G9Js"], "MKOTH")
+},{"./web-app":"Tnxw","../lib/app-script-router":"imHk","./test":"nYeO","../lib/spreadsheet-database/jsonWebAPI":"Z2HK"}]},{},["G9Js"], "MKOTH")
