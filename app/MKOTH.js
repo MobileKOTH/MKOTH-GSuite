@@ -739,7 +739,13 @@ function test() {
 
 exports.test = test;
 },{"../lib/spreadsheet-database":"s6MI"}],"G9Js":[function(require,module,exports) {
-"use strict";
+"use strict"; //#region Polyfills
+// import 'core-js/features/array/from'
+// import 'core-js/features/array/find'
+// import 'core-js/features/array/includes'
+// import 'core-js/features/string/includes'
+// import 'core-js/features/object/values'
+//#endregion
 
 Object.defineProperty(exports, "__esModule", {
   value: true
