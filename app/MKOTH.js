@@ -120,64 +120,57 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 })({"Uhbr":[function(require,module,exports) {
 "use strict";
 
-exports.__esModule = true; // App Script is unable to raise a HTTP error code, any errors will return a error page (default or a preset below) with code 200.
+Object.defineProperty(exports, "__esModule", {
+  value: true
+}); // App Script is unable to raise a HTTP error code, any errors will return a error page (default or a preset below) with code 200.
 
-var Helpers =
-/** @class */
-function () {
-  function Helpers() {}
+class Helpers {
+  static returnEmpty(request) {
+    return ContentService.createTextOutput(`error: executed with no returns \n${JSON.stringify(request, undefined, 2)}`).setMimeType(ContentService.MimeType.TEXT);
+  }
 
-  Helpers.returnEmpty = function (request) {
-    return ContentService.createTextOutput("error: executed with no returns \n" + JSON.stringify(request, undefined, 2)).setMimeType(ContentService.MimeType.TEXT);
-  };
+  static returnError(error, request) {
+    return ContentService.createTextOutput(`error: ${error.name}\n${error.message}\n${error.stack}\n${JSON.stringify(request, undefined, 2)}`).setMimeType(ContentService.MimeType.TEXT);
+  }
 
-  Helpers.returnError = function (error, request) {
-    return ContentService.createTextOutput("error: " + error.name + "\n" + error.message + "\n" + error.stack + "\n" + JSON.stringify(request, undefined, 2)).setMimeType(ContentService.MimeType.TEXT);
-  };
-
-  Helpers.returnJSON = function (data) {
+  static returnJSON(data) {
     return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);
-  };
+  }
 
-  Helpers.returnUnauthorised = function () {
+  static returnUnauthorised() {
     return ContentService.createTextOutput("Unauthorised").setMimeType(ContentService.MimeType.TEXT);
-  };
+  }
 
-  return Helpers;
-}();
+}
 
 exports.Helpers = Helpers;
 },{}],"kt80":[function(require,module,exports) {
 "use strict";
 
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-var helpers_1 = require("./helpers");
+const helpers_1 = require("./helpers");
 
-var Handler =
-/** @class */
-function () {
-  function Handler(routingRoot) {
+class Handler {
+  constructor(routingRoot) {
     this.routingRoot = routingRoot;
   }
 
-  Handler.prototype.handleGet = function (request) {
-    return this.handle(request, function (router) {
-      return router.get;
-    });
-  };
+  handleGet(request) {
+    return this.handle(request, router => router.get);
+  }
 
-  Handler.prototype.handlePost = function (request) {
-    return this.handle(request, function (router) {
-      return router.post;
-    });
-  };
+  handlePost(request) {
+    return this.handle(request, router => router.post);
+  }
 
-  Handler.prototype.handle = function (request, selector) {
-    var router = this.traversePath(request.pathInfo || "");
+  handle(request, selector) {
+    const router = this.traversePath(request.pathInfo || "");
 
     if (router) {
-      var selected = selector(router);
+      const selected = selector(router);
 
       if (selected) {
         try {
@@ -189,45 +182,38 @@ function () {
     }
 
     return helpers_1.Helpers.returnEmpty(request);
-  };
+  }
 
-  Handler.prototype.traversePath = function (path) {
+  traversePath(path) {
     if (path === "") {
       return this.routingRoot;
     }
 
-    var paths = path.split("/");
-    var controllers = this.routingRoot;
-    var routers = controllers;
-
-    var _loop_1 = function () {
-      var current = paths.shift();
-      routers = routers[Object.getOwnPropertyNames(routers).filter(function (x) {
-        return x.toLowerCase() === current.toLowerCase();
-      })[0]];
-
-      if (!routers) {
-        return "break";
-      }
-    };
+    const paths = path.split("/");
+    const controllers = this.routingRoot;
+    let routers = controllers;
 
     while (paths.length > 0) {
-      var state_1 = _loop_1();
+      const current = paths.shift();
+      routers = routers[Object.getOwnPropertyNames(routers).filter(x => x.toLowerCase() === current.toLowerCase())[0]];
 
-      if (state_1 === "break") break;
+      if (!routers) {
+        break;
+      }
     }
 
     return routers;
-  };
+  }
 
-  return Handler;
-}();
+}
 
 exports.Handler = Handler;
 },{"./helpers":"Uhbr"}],"uWSP":[function(require,module,exports) {
 "use strict";
 
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 },{}],"imHk":[function(require,module,exports) {
 "use strict";
 
@@ -235,7 +221,9 @@ function __export(m) {
   for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
 __export(require("./handler"));
 
@@ -751,13 +739,7 @@ function test() {
 
 exports.test = test;
 },{"../lib/spreadsheet-database":"s6MI"}],"G9Js":[function(require,module,exports) {
-"use strict"; //#region Polyfills
-// import 'core-js/features/array/from'
-// import 'core-js/features/array/find'
-// import 'core-js/features/array/includes'
-// import 'core-js/features/string/includes'
-// import 'core-js/features/object/values'
-//#endregion
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
