@@ -1,9 +1,11 @@
+import './polyfills.js'
+
 import './web-app'
 
 import { Handler, RequestGetBase, RequestPostBase } from "../lib/app-script-router"
+import { clearCache as clearEntityCache } from '../lib/spreadsheet-database/jsonWebAPI'
 import { administer, RoutingRoot } from './web-app'
 import { test } from './test'
-import { clearCache as clearEntityCache } from '../lib/spreadsheet-database/jsonWebAPI'
 
 export function doGet(request: GoogleAppsScript.Events.DoGet & RequestGetBase<any>)
 {
@@ -28,6 +30,7 @@ export function doTest()
     Logger.log(testSet.find(x => x == 1))
     Logger.log(testSet.includes(1))
     Logger.log("test".includes("t"))
-    Logger.log(Object.values({test: "lol"}))
-    test();
+    Logger.log(Object.values({ test: "lol" }))
+
+    test()
 }
