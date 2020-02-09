@@ -29,7 +29,8 @@ export class Handler
                 try
                 {
                     return selected(request)
-                } catch (error)
+                }
+                catch (error)
                 {
                     return Helpers.returnError(error, request)
                 }
