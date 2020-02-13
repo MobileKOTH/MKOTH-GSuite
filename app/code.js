@@ -1,7 +1,7 @@
-// Compiled on Sat Feb 08 2020 18:18:41 GMT+0800 (Singapore Standard Time)
+// Compiled on Thu Feb 13 2020 10:08:17 GMT+0800 (Singapore Standard Time)
 // DriveApp.getFiles()
 
-const InstanceTime = Date.now()
+var InstanceTime = Date.now()
 
 function doGet(request)
 {
@@ -11,6 +11,16 @@ function doGet(request)
 function doPost(request)
 {
     return MKOTH.doPost(request)
+}
+
+function onEdit(e)
+{
+    MKOTH.onEdit(e)
+}
+
+function onChange(e)
+{
+    MKOTH.onEdit(e)
 }
 
 function doTest()

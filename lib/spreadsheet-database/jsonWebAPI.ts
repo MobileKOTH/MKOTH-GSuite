@@ -6,19 +6,37 @@ export interface IQueryOperation
     expression?: string
 }
 
-function getCacheKey(name: string)
+function getCacheKey(sheetName: string)
 {
-    return "entity_cache-" + name
+    return "entity_cache-" + sheetName.toLowerCase()
+}
+
+export function clearCache(sheetName: string)
+{
+    CacheService.getScriptCache()?.remove(getCacheKey(sheetName))
+}
+
+function putZippedCache(key: string, value: string)
+{
+    CacheService.getScriptCache()?.put(key, Utilities.base64Encode(Utilities.gzip(Utilities.newBlob(value)).getBytes()))
+}
+
+function getZippedCache(key: string)
+{
+    const zipped = CacheService.getScriptCache()?.get(key)
+    if (!zipped) {
+        return null;
+    }
+    return Utilities.ungzip(Utilities.newBlob(Utilities.base64Decode(zipped), "application/x-gzip")).getDataAsString()
 }
 
 export function handleGet(operation: IQueryOperation, spreadSheet: GoogleAppsScript.Spreadsheet.Spreadsheet, sheetName: string)
 {
-    const cache = CacheService.getScriptCache() as GoogleAppsScript.Cache.Cache
     const cacheKey = getCacheKey(sheetName);
     switch (operation.type)
     {
         case "all": {
-            let data = cache.get(cacheKey)
+            let data = getZippedCache(cacheKey)
 
             if (data)
             {
@@ -26,7 +44,7 @@ export function handleGet(operation: IQueryOperation, spreadSheet: GoogleAppsScr
             }
 
             data = JSON.stringify(new EntitySet({ spreadSheet, tableName: sheetName }).loadAll())
-            cache.put(cacheKey, data)
+            putZippedCache(cacheKey, data)
 
             return data
         }
@@ -37,7 +55,7 @@ export function handleGet(operation: IQueryOperation, spreadSheet: GoogleAppsScr
 
 export function handlePost(operation: IQueryOperation, postData: string, spreadSheet: GoogleAppsScript.Spreadsheet.Spreadsheet, sheetName: string)
 {
-    CacheService.getScriptCache()?.remove(getCacheKey(sheetName))
+    clearCache(sheetName)
     switch (operation.type)
     {
         case "all": {

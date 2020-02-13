@@ -21,6 +21,6 @@
     "@types/google-apps-script": "^1.0.9"
   },
   "devDependencies": {
-    "typescript": "^3.7.4"
+    "typescript": "^3.7.5"
   }
 }

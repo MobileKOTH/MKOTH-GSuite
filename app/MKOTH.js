@@ -566,18 +566,43 @@ Object.defineProperty(exports, "__esModule", {
 
 const entitySystem_1 = require("./entitySystem");
 
-function getCacheKey(name) {
-  return "entity_cache-" + name;
+function getCacheKey(sheetName) {
+  return "entity_cache-" + sheetName.toLowerCase();
+}
+
+function clearCache(sheetName) {
+  var _a;
+
+  (_a = CacheService.getScriptCache()) === null || _a === void 0 ? void 0 : _a.remove(getCacheKey(sheetName));
+}
+
+exports.clearCache = clearCache;
+
+function putZippedCache(key, value) {
+  var _a;
+
+  (_a = CacheService.getScriptCache()) === null || _a === void 0 ? void 0 : _a.put(key, Utilities.base64Encode(Utilities.gzip(Utilities.newBlob(value)).getBytes()));
+}
+
+function getZippedCache(key) {
+  var _a;
+
+  const zipped = (_a = CacheService.getScriptCache()) === null || _a === void 0 ? void 0 : _a.get(key);
+
+  if (!zipped) {
+    return null;
+  }
+
+  return Utilities.ungzip(Utilities.newBlob(Utilities.base64Decode(zipped), "application/x-gzip")).getDataAsString();
 }
 
 function handleGet(operation, spreadSheet, sheetName) {
-  const cache = CacheService.getScriptCache();
   const cacheKey = getCacheKey(sheetName);
 
   switch (operation.type) {
     case "all":
       {
-        let data = cache.get(cacheKey);
+        let data = getZippedCache(cacheKey);
 
         if (data) {
           return data;
@@ -587,7 +612,7 @@ function handleGet(operation, spreadSheet, sheetName) {
           spreadSheet,
           tableName: sheetName
         }).loadAll());
-        cache.put(cacheKey, data);
+        putZippedCache(cacheKey, data);
         return data;
       }
 
@@ -599,9 +624,7 @@ function handleGet(operation, spreadSheet, sheetName) {
 exports.handleGet = handleGet;
 
 function handlePost(operation, postData, spreadSheet, sheetName) {
-  var _a;
-
-  (_a = CacheService.getScriptCache()) === null || _a === void 0 ? void 0 : _a.remove(getCacheKey(sheetName));
+  clearCache(sheetName);
 
   switch (operation.type) {
     case "all":
@@ -668,7 +691,36 @@ function parseQuery(param) {
       }
   }
 }
-},{"../../lib/app-script-router":"imHk","../../lib/spreadsheet-database/jsonWebAPI":"Z2HK","./root":"XoxW"}],"Tnxw":[function(require,module,exports) {
+},{"../../lib/app-script-router":"imHk","../../lib/spreadsheet-database/jsonWebAPI":"Z2HK","./root":"XoxW"}],"oAgR":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+const root_1 = require("./root");
+
+root_1.RootQuery.gzip = {
+  get(request) {
+    return ContentService.createTextOutput(Utilities.base64Encode(Utilities.gzip(Utilities.newBlob(request.parameter.gzip)).getBytes()));
+  },
+
+  post(request) {
+    return ContentService.createTextOutput(Utilities.base64Encode(Utilities.gzip(Utilities.newBlob(request.postData.contents)).getBytes()));
+  }
+
+};
+root_1.RootQuery.ungzip = {
+  get(request) {
+    return ContentService.createTextOutput(Utilities.ungzip(Utilities.newBlob(Utilities.base64Decode(request.parameter.ungzip), "application/x-gzip")).getDataAsString());
+  },
+
+  post(request) {
+    return ContentService.createTextOutput(Utilities.ungzip(Utilities.newBlob(Utilities.base64Decode(request.postData.contents), "application/x-gzip")).getDataAsString());
+  }
+
+};
+},{"./root":"XoxW"}],"Tnxw":[function(require,module,exports) {
 "use strict";
 
 function __export(m) {
@@ -688,7 +740,9 @@ __export(require("./ping"));
 __export(require("./reflect"));
 
 __export(require("./spreadSheet"));
-},{"./root":"XoxW","./admin":"C4mA","./ping":"jafE","./reflect":"uCwy","./spreadSheet":"WPUf"}],"s6MI":[function(require,module,exports) {
+
+__export(require("./gzip"));
+},{"./root":"XoxW","./admin":"C4mA","./ping":"jafE","./reflect":"uCwy","./spreadSheet":"WPUf","./gzip":"oAgR"}],"s6MI":[function(require,module,exports) {
 "use strict";
 
 function __export(m) {
@@ -749,6 +803,8 @@ require("./web-app");
 
 const app_script_router_1 = require("../lib/app-script-router");
 
+const jsonWebAPI_1 = require("../lib/spreadsheet-database/jsonWebAPI");
+
 const web_app_1 = require("./web-app");
 
 const test_1 = require("./test");
@@ -765,6 +821,14 @@ function doPost(request) {
 
 exports.doPost = doPost;
 
+function onEdit(e) {
+  const sheetName = e.source.getSheetName();
+  console.log("Sheet Edit", sheetName);
+  jsonWebAPI_1.clearCache(sheetName);
+}
+
+exports.onEdit = onEdit;
+
 function doTest() {
   var testSet = Array.from(Array(5).keys());
   Logger.log(testSet.find(x => x == 1));
@@ -777,4 +841,4 @@ function doTest() {
 }
 
 exports.doTest = doTest;
-},{"./web-app":"Tnxw","../lib/app-script-router":"imHk","./test":"nYeO"}]},{},["G9Js"], "MKOTH")
+},{"./web-app":"Tnxw","../lib/app-script-router":"imHk","../lib/spreadsheet-database/jsonWebAPI":"Z2HK","./test":"nYeO"}]},{},["G9Js"], "MKOTH")
