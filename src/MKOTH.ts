@@ -1,5 +1,3 @@
-import './polyfills.js'
-
 import './web-app'
 
 import { Handler, RequestGetBase, RequestPostBase } from "../lib/app-script-router"
